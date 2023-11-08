@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"CrocsClub/pkg/domain"
+	helper_interface "CrocsClub/pkg/helper/interface"
 	interfaces "CrocsClub/pkg/repository/interfaces"
 	services "CrocsClub/pkg/usecase/interfaces"
 	"errors"
@@ -9,11 +10,13 @@ import (
 
 type categoryUseCase struct {
 	repository interfaces.CategoryRepository
+	helper     helper_interface.Helper
 }
 
-func NewCategoryUseCase(repo interfaces.CategoryRepository) services.CategoryUseCase {
+func NewCategoryUseCase(repo interfaces.CategoryRepository, h helper_interface.Helper) services.CategoryUseCase {
 	return &categoryUseCase{
 		repository: repo,
+		helper:     h,
 	}
 }
 

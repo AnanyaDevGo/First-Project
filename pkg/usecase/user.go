@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"CrocsClub/pkg/config"
-	"CrocsClub/pkg/helper"
-	"CrocsClub/pkg/repository/interfaces"
+	helper_interfaces "CrocsClub/pkg/helper/interface"
+	interfaces "CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"fmt"
@@ -13,18 +13,22 @@ import (
 )
 
 type userUseCase struct {
-	userRepo      interfaces.UserRepository
-	cfg           config.Config
-	otpRepository interfaces.OtpRepository
+	userRepo            interfaces.UserRepository
+	cfg                 config.Config
+	otpRepository       interfaces.OtpRepository
+	inventoryRepository interfaces.InventoryRepository
+	helper              helper_interfaces.Helper
 }
 
-func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository) *userUseCase {
+func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, h helper_interfaces.Helper) *userUseCase {
 	return &userUseCase{
 		userRepo:      repo,
 		cfg:           cfg,
 		otpRepository: otp,
+		helper:        h,
 	}
 }
+
 func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, error) {
 	fmt.Println("add users")
 
@@ -50,7 +54,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 		return models.TokenUsers{}, err
 	}
 
-	tokenString, err := helper.GenerateTokenClients(userData)
+	tokenString, err := u.helper.GenerateTokenClients(userData)
 	if err != nil {
 		return models.TokenUsers{}, errors.New("could not create token due to some internal error")
 	}
@@ -68,7 +72,6 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 }
 func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, error) {
 
-	// checking if a username exist with this email address
 	ok := u.userRepo.CheckUserAvailability(user.Email)
 	if !ok {
 		return models.TokenUsers{}, errors.New("the user does not exist")
@@ -83,7 +86,6 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 		return models.TokenUsers{}, errors.New("user is blocked by admin")
 	}
 
-	// Get the user details in order to check the password, in this case ( The same function can be reused in future )
 	user_details, err := u.userRepo.FindUserByEmail(user)
 	if err != nil {
 		return models.TokenUsers{}, err
@@ -100,7 +102,7 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 		return models.TokenUsers{}, err
 	}
 
-	tokenString, err := helper.GenerateTokenClients(userDetails)
+	tokenString, err := u.helper.GenerateTokenClients(userDetails)
 	if err != nil {
 		return models.TokenUsers{}, errors.New("could not create token")
 	}

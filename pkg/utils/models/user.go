@@ -19,13 +19,12 @@ type Address struct {
 	Pin       string `json:"pin" validate:"required"`
 }
 
-// user details along with embedded token which can be used by the user to access protected routes
 type TokenUsers struct {
 	Users UserDetailsResponse
 	Token string
 }
 
-// user details shown after logging in
+
 type UserDetailsResponse struct {
 	Id    int    `json:"id"`
 	Name  string `json:"name"`

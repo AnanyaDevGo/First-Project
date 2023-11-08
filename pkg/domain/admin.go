@@ -2,8 +2,6 @@ package domain
 
 import "CrocsClub/pkg/utils/models"
 
-
-
 type Admin struct {
 	ID       uint   `json:"id" gorm:"unique;not null"`
 	Name     string `json:"name" gorm:"validate:required"`
@@ -12,6 +10,7 @@ type Admin struct {
 }
 
 type TokenAdmin struct {
-	Admin models.AdminDetailsResponse
-	Token string
+	Admin        models.AdminDetailsResponse
+	AccessToken  string
+	RefreshToken string
 }

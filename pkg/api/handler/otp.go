@@ -60,6 +60,6 @@ func (ot *OtpHandler) VerifyOTP(c *gin.Context) {
 	fmt.Println(3)
 
 	successRes := response.ClientResponse(http.StatusOK, "Successfully verified OTP", users, nil)
-	c.JSON(http.StatusOK, successRes)
+	c.JSON(http.StatusAccepted, successRes)
 
 }
