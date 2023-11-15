@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, categoryHandler *handler.CategoryHandler, inventoryHandler *handler.InventoryHandler) {
+func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, categoryHandler *handler.CategoryHandler, inventoryHandler *handler.InventoryHandler, orderHandler *handler.OrderHandler) {
 	engine.POST("/adminlogin", adminHandler.LoginHandler)
 
 	engine.Use(middleware.AdminAuthMiddleware)
@@ -15,8 +15,8 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		usermanagement := engine.Group("/users")
 		{
 			usermanagement.GET("/", adminHandler.GetUsers)
-			usermanagement.POST("/block", adminHandler.BlockUser)
-			usermanagement.POST("/unblock", adminHandler.UnBlockUser)
+			usermanagement.PUT("/block", adminHandler.BlockUser)
+			usermanagement.PUT("/unblock", adminHandler.UnBlockUser)
 		}
 
 		categorymanagement := engine.Group("/category")
@@ -31,8 +31,15 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		{
 			inventorymanagement.POST("", inventoryHandler.AddInventory)
 			inventorymanagement.DELETE("", inventoryHandler.DeleteInventory)
-			inventorymanagement.PUT("/:id/stock", inventoryHandler.UpdateInventory)
 			inventorymanagement.GET("", inventoryHandler.ListProductsForAdmin)
+
+			inventorymanagement.PUT("/:id/stock", inventoryHandler.UpdateInventory)
+		}
+		order := engine.Group("/order")
+		{
+
+			order.PUT("/status", orderHandler.EditOrderStatus)
+
 		}
 
 	}

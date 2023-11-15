@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"CrocsClub/pkg/config"
+	"CrocsClub/pkg/domain"
 	helper_interfaces "CrocsClub/pkg/helper/interface"
 	interfaces "CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
@@ -17,17 +18,22 @@ type userUseCase struct {
 	cfg                 config.Config
 	otpRepository       interfaces.OtpRepository
 	inventoryRepository interfaces.InventoryRepository
+	orderRepository     interfaces.OrderRepository
 	helper              helper_interfaces.Helper
 }
 
-func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, h helper_interfaces.Helper) *userUseCase {
+func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository, h helper_interfaces.Helper) *userUseCase {
 	return &userUseCase{
-		userRepo:      repo,
-		cfg:           cfg,
-		otpRepository: otp,
-		helper:        h,
+		userRepo:            repo,
+		cfg:                 cfg,
+		otpRepository:       otp,
+		inventoryRepository: inv,
+		orderRepository:     order,
+		helper:              h,
 	}
 }
+
+var InternalError = "Internal Server Error"
 
 func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, error) {
 	fmt.Println("add users")
@@ -48,7 +54,6 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 	}
 	user.Password = string(hashedPassword)
 
-	// add user details to the database
 	userData, err := u.userRepo.UserSignUp(user)
 	if err != nil {
 		return models.TokenUsers{}, err
@@ -70,6 +75,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 		Token: tokenString,
 	}, nil
 }
+
 func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, error) {
 
 	ok := u.userRepo.CheckUserAvailability(user.Email)
@@ -112,4 +118,154 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 		Token: tokenString,
 	}, nil
 
+}
+
+func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
+	cart_id, err := u.userRepo.GetCartID(id)
+	if err != nil {
+		return models.GetCartResponse{}, errors.New(InternalError)
+	}
+
+	products, err := u.userRepo.GetProductsInCart(cart_id)
+	if err != nil {
+		return models.GetCartResponse{}, errors.New(InternalError)
+	}
+
+	var product_names []string
+	for i := range products {
+		product_name, err := u.userRepo.FindProductNames(products[i])
+		if err != nil {
+			return models.GetCartResponse{}, errors.New(InternalError)
+		}
+		product_names = append(product_names, product_name)
+	}
+
+	var quantity []int
+	for i := range products {
+		q, err := u.userRepo.FindCartQuantity(cart_id, products[i])
+		if err != nil {
+			return models.GetCartResponse{}, errors.New(InternalError)
+		}
+		quantity = append(quantity, q)
+	}
+
+	var categories []int
+	for i := range products {
+		c, err := u.userRepo.FindCategory(products[i])
+		if err != nil {
+			return models.GetCartResponse{}, errors.New(InternalError)
+		}
+		categories = append(categories, c)
+	}
+
+	var getcart []models.GetCart
+	for i := range product_names {
+		var get models.GetCart
+		get.ID = products[i]
+		get.ProductName = product_names[i]
+		get.Category_id = categories[i]
+		get.Quantity = quantity[i]
+		getcart = append(getcart, get)
+	}
+
+	var response models.GetCartResponse
+	response.ID = cart_id
+	response.Data = getcart
+
+	return response, nil
+
+}
+
+func (u *userUseCase) RemoveFromCart(cart, inventory int) error {
+
+	err := u.userRepo.RemoveFromCart(cart, inventory)
+	if err != nil {
+
+		return err
+
+	}
+	return nil
+
+}
+
+func (i *userUseCase) UpdateQuantityAdd(id, inv int) error {
+
+	err := i.userRepo.UpdateQuantityAdd(id, inv)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (i *userUseCase) UpdateQuantityLess(id, inv int) error {
+
+	err := i.userRepo.UpdateQuantityLess(id, inv)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (u *userUseCase) AddAddress(id int, address models.AddAddress) error {
+	rslt := u.userRepo.CheckIfFirstAddress(id)
+	var result bool
+
+	if !rslt {
+		result = true
+	} else {
+		result = false
+	}
+
+	err := u.userRepo.AddAddress(id, address, result)
+	if err != nil {
+		return errors.New("error in adding address")
+	}
+	return nil
+}
+
+func (u *userUseCase) GetAddress(id int) ([]domain.Address, error) {
+
+	address, err := u.userRepo.GetAddress(id)
+
+	if err != nil {
+		return []domain.Address{}, errors.New("error in getting address")
+	}
+	return address, nil
+}
+
+func (u *userUseCase) GetUserDetails(id int) (models.UserDetailsResponse, error) {
+	details, err := u.userRepo.GetUserDetails(id)
+
+	if err != nil {
+		return models.UserDetailsResponse{}, errors.New("error in getting details")
+	}
+	return details, err
+}
+
+func (u *userUseCase) EditName(id int, name string) error {
+	err := u.userRepo.EditName(id, name)
+	if err != nil {
+		return errors.New("could not change")
+	}
+	return nil
+}
+
+func (u *userUseCase) EditEmail(id int, email string) error {
+	err := u.userRepo.EditEmail(id, email)
+	if err != nil {
+		return errors.New("could not change")
+	}
+	return nil
+}
+
+func (u *userUseCase) EditPhone(id int, phone string) error {
+	err := u.userRepo.EditPhone(id, phone)
+	if err != nil {
+		return errors.New("could not change")
+	}
+	return nil
 }
