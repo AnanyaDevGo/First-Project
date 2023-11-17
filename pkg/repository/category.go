@@ -19,6 +19,12 @@ func NewCategoryRepository(DB *gorm.DB) interfaces.CategoryRepository {
 
 func (p *categoryRepository) AddCategory(c domain.Category) (domain.Category, error) {
 
+	var count int64
+	p.DB.Model(&domain.Category{}).Where("category = ?", c.Category).Count(&count)
+	if count > 0 {
+		return domain.Category{}, errors.New("category already exists in the database")
+	}
+
 	var b string
 	err := p.DB.Raw("INSERT INTO categories (category) VALUES (?) RETURNING category", c.Category).Scan(&b).Error
 	if err != nil {

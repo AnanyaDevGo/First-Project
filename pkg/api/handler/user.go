@@ -84,12 +84,8 @@ func (u *UserHandler) LoginHandler(c *gin.Context) {
 }
 
 func (u *UserHandler) GetCart(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
 
 	products, err := u.userUseCase.GetCart(id)
 	if err != nil {
@@ -101,38 +97,47 @@ func (u *UserHandler) GetCart(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
-func (u *UserHandler) RemoveFromCart(c *gin.Context) {
+func (i *UserHandler) RemoveFromCart(c *gin.Context) {
+	cartIDStr := c.Query("cart_id")
+	if cartIDStr == "" {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "cart_id is required", nil, nil)
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
 
-	cartID, err := strconv.Atoi(c.Query("cart_id"))
+	cartID, err := strconv.Atoi(cartIDStr)
 	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters", nil, err.Error())
+		errorRes := response.ClientResponse(http.StatusBadRequest, "invalid cart_id", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	InventoryID, err := strconv.Atoi(c.Query("inventory_id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+
+	inventoryIDStr := c.Query("inventory_id")
+	if inventoryIDStr == "" {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "inventory_id is required", nil, nil)
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	if err := u.userUseCase.RemoveFromCart(cartID, InventoryID); err != nil {
+
+	inventoryID, err := strconv.Atoi(inventoryIDStr)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "invalid inventory_id", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	if err := i.userUseCase.RemoveFromCart(cartID, inventoryID); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not remove from cart", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	successRes := response.ClientResponse(http.StatusOK, "Successfully removed from cart", nil, nil)
-	c.JSON(http.StatusOK, successRes)
 
+	successRes := response.ClientResponse(http.StatusOK, "Successfully Removed product from cart", nil, nil)
+	c.JSON(http.StatusOK, successRes)
 }
 
 func (u *UserHandler) AddAddress(c *gin.Context) {
 	id, _ := c.Get("id")
-	// id, err := strconv.Atoi(c.Query("id"))
-	// if err != nil {
-	// 	errorRes := response.ClientResponse(http.StatusBadRequest, "check your path parameters", nil, err.Error())
-	// 	c.JSON(http.StatusBadRequest, errorRes)
-	// 	return
-	// }
 	var address models.AddAddress
 	if err := c.BindJSON(&address); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields are in wrong format", nil, err.Error())
@@ -150,13 +155,8 @@ func (u *UserHandler) AddAddress(c *gin.Context) {
 }
 
 func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
 	inv, err := strconv.Atoi(c.Query("inventory"))
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
@@ -175,12 +175,8 @@ func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 }
 
 func (i *UserHandler) UpdateQuantityLess(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
 
 	inv, err := strconv.Atoi(c.Query("inventory"))
 	if err != nil {
@@ -228,12 +224,8 @@ func (u *UserHandler) GetUserDetails(c *gin.Context) {
 }
 
 func (u *UserHandler) EditName(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
 
 	var model models.EditName
 	if err := c.BindJSON(&model); err != nil {
@@ -252,12 +244,8 @@ func (u *UserHandler) EditName(c *gin.Context) {
 }
 
 func (u *UserHandler) EditEmail(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
 
 	var model models.EditEmail
 	if err := c.BindJSON(&model); err != nil {
@@ -276,12 +264,8 @@ func (u *UserHandler) EditEmail(c *gin.Context) {
 }
 
 func (u *UserHandler) EditPhone(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
 
 	var model models.EditPhone
 	if err := c.BindJSON(&model); err != nil {
@@ -297,4 +281,25 @@ func (u *UserHandler) EditPhone(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully edited the phonenumber", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 
+}
+
+func (u *UserHandler) ChangePassword(c *gin.Context) {
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
+
+	var ChangePassword models.ChangePassword
+	if err := c.BindJSON(&ChangePassword); err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	if err := u.userUseCase.ChangePassword(id, ChangePassword.Oldpassword, ChangePassword.Password, ChangePassword.Repassword); err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not change the password", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "password changed Successfully ", nil, nil)
+	c.JSON(http.StatusOK, successRes)
 }

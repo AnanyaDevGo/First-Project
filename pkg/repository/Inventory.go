@@ -18,18 +18,25 @@ func NewInventoryRepository(DB *gorm.DB) *inventoryRepository {
 
 func (i *inventoryRepository) AddInventory(inventory models.AddInventories) (models.InventoryResponse, error) {
 
-	query := ` INSERT into inventories(category_id, product_name, size, stock, price) 
-	VALUES (?, ?, ?, ?, ?);`
-	err := i.DB.Exec(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price).Error
+	var count int64
+	i.DB.Model(&models.Inventories{}).Where("product_name = ? AND category_id = ?", inventory.ProductName, inventory.CategoryID).Count(&count)
+	if count > 0 {
 
+		return models.InventoryResponse{}, errors.New("product already exists in the database")
+	}
+
+	query := `
+        INSERT INTO inventories (category_id, product_name, color, stock, price)
+        VALUES (?, ?, ?, ?, ?);
+    `
+	err := i.DB.Exec(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price).Error
 	if err != nil {
 		return models.InventoryResponse{}, err
 	}
 
-	var productsResponse models.InventoryResponse
+	var inventoryResponse models.InventoryResponse
 
-	return productsResponse, nil
-
+	return inventoryResponse, nil
 }
 
 func (i *inventoryRepository) CheckInventory(pid int) (bool, error) {
@@ -48,17 +55,14 @@ func (i *inventoryRepository) CheckInventory(pid int) (bool, error) {
 
 func (i *inventoryRepository) UpdateInventory(pid int, stock int) (models.InventoryResponse, error) {
 
-	// Check the database connection
 	if i.DB == nil {
 		return models.InventoryResponse{}, errors.New("database connection is nil")
 	}
 
-	// Update the
 	if err := i.DB.Exec("UPDATE inventories SET stock = stock + $1 WHERE id= $2", stock, pid).Error; err != nil {
 		return models.InventoryResponse{}, err
 	}
 
-	// Retrieve the update
 	var newdetails models.InventoryResponse
 	var newstock int
 	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=?", pid).Scan(&newstock).Error; err != nil {

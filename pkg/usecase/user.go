@@ -269,3 +269,25 @@ func (u *userUseCase) EditPhone(id int, phone string) error {
 	}
 	return nil
 }
+func (u *userUseCase) ChangePassword(id int, old string, password string, repassword string) error {
+	userPassword, err := u.userRepo.GetPassword(id)
+	if err != nil {
+		return errors.New(InternalError)
+	}
+
+	err = u.helper.CompareHashAndPassword(userPassword, old)
+	if err != nil {
+		return errors.New("password incorrect")
+	}
+
+	if password != repassword {
+		return errors.New("passwords does not match")
+	}
+
+	newpassword, err := u.helper.PasswordHashing(password)
+	if err != nil {
+		return errors.New("error in hashing password")
+	}
+
+	return u.userRepo.ChangePassword(id, string(newpassword))
+}

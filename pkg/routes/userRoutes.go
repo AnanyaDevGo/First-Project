@@ -17,17 +17,29 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 
 	engine.Use(middleware.UserAuthMiddleware)
 
+	home := engine.Group("/home")
+	{
+		home.POST("/addcart", cartHandler.AddToCart)
+	}
+
 	profile := engine.Group("/profile")
 	{
 		profile.GET("/address", userHandler.GetAddress)
 		profile.POST("/addaddress", userHandler.AddAddress)
 		profile.GET("/details", userHandler.GetUserDetails)
+
+		edit := profile.Group("/edit")
+		{
+			edit.PUT("/name", userHandler.EditName)
+			edit.PUT("/email", userHandler.EditEmail)
+			edit.PUT("/phone", userHandler.EditPhone)
+		}
+
 	}
-	edit := engine.Group("/edit")
+
+	security := profile.Group("/security")
 	{
-		edit.PUT("/name", userHandler.EditName)
-		edit.PUT("/email", userHandler.EditEmail)
-		edit.PUT("/phone", userHandler.EditPhone)
+		security.PUT("/change-password", userHandler.ChangePassword)
 	}
 
 	cart := engine.Group("/cart")
@@ -38,15 +50,15 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 		cart.PUT("/updateQuantity/minus", userHandler.UpdateQuantityLess)
 
 	}
-
-	checkout := engine.Group("/check-out")
-	{
-		checkout.GET("", cartHandler.CheckOut)
-	}
 	order := engine.Group("/order")
 	{
 		order.POST("", orderHandler.GetOrders)
 		order.DELETE("", orderHandler.CancelOrder)
+	}
+
+	checkout := engine.Group("/check-out")
+	{
+		checkout.GET("", cartHandler.CheckOut)
 	}
 
 }

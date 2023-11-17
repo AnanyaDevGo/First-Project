@@ -9,6 +9,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/twilio/twilio-go"
 	twilioApi "github.com/twilio/twilio-go/rest/verify/v2"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type helper struct {
@@ -128,4 +129,23 @@ func (h *helper) GenerateTokenClients(user models.UserDetailsResponse) (string, 
 	}
 
 	return tokenString, nil
+}
+
+func (h *helper) PasswordHashing(password string) (string, error) {
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if err != nil {
+		return "", errors.New("internal server error")
+	}
+
+	hash := string(hashedPassword)
+	return hash, nil
+}
+
+func (h *helper) CompareHashAndPassword(a string, b string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(a), []byte(b))
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -19,4 +19,5 @@ type UserUseCase interface {
 	EditName(id int, name string) error
 	EditEmail(id int, email string) error
 	EditPhone(id int, phone string) error
+	ChangePassword(id int, old string, password string, repassword string) error
 }
