@@ -4,6 +4,7 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -21,15 +22,9 @@ func NewOrderHandler(useCase services.OrderUseCase) *OrderHandler {
 }
 
 func (i *OrderHandler) GetOrders(c *gin.Context) {
-	idString := c.Query("id")
-	id, err := strconv.Atoi(idString)
-
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check your id again", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-
+	idString, _ := c.Get("id")
+	id, _ := idString.(int)
+	fmt.Println("id", id)
 	orders, err := i.orderUseCase.GetOrders(id)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
@@ -76,4 +71,15 @@ func (i *OrderHandler) CancelOrder(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully canceled the order", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 
+}
+func (i *OrderHandler) AdminOrders(c *gin.Context) {
+
+	orders, err := i.orderUseCase.AdminOrders()
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", orders, nil)
+	c.JSON(http.StatusOK, successRes)
 }

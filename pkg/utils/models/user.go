@@ -78,10 +78,12 @@ type GetCartResponse struct {
 }
 
 type CheckOut struct {
-	CartID    int
-	Addresses []Address
-	Products  []GetCart
+	CartID         int
+	Addresses      []Address
+	Products       []GetCart
+	PaymentMethods []NewPaymentMethod
 }
+
 type EditName struct {
 	Name string `json:"name"`
 }

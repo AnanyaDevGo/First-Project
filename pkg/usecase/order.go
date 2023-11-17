@@ -5,6 +5,7 @@ import (
 	"CrocsClub/pkg/repository/interfaces"
 	services "CrocsClub/pkg/usecase/interfaces"
 	"errors"
+	"fmt"
 )
 
 type orderUseCase struct {
@@ -22,6 +23,8 @@ func (o *orderUseCase) GetOrders(id int) ([]domain.Order, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("order", order)
 	return order, nil
 }
 
@@ -32,6 +35,45 @@ func (i *orderUseCase) EditOrderStatus(status string, id int) error {
 		return err
 	}
 	return nil
+
+}
+
+func (i *orderUseCase) AdminOrders() (domain.AdminOrdersResponse, error) {
+
+	var response domain.AdminOrdersResponse
+
+	pending, err := i.orderRepository.AdminOrders("PENDING")
+	if err != nil {
+		return domain.AdminOrdersResponse{}, err
+	}
+
+	shipped, err := i.orderRepository.AdminOrders("SHIPPED")
+	if err != nil {
+		return domain.AdminOrdersResponse{}, err
+	}
+
+	delivered, err := i.orderRepository.AdminOrders("DELIVERED")
+	if err != nil {
+		return domain.AdminOrdersResponse{}, err
+	}
+
+	returned, err := i.orderRepository.AdminOrders("RETURNED")
+	if err != nil {
+		return domain.AdminOrdersResponse{}, err
+	}
+
+	canceled, err := i.orderRepository.AdminOrders("CANCELED")
+	if err != nil {
+		return domain.AdminOrdersResponse{}, err
+	}
+
+	response.Canceled = canceled
+	response.Pending = pending
+	response.Shipped = shipped
+	response.Returned = returned
+	response.Delivered = delivered
+
+	return response, nil
 
 }
 

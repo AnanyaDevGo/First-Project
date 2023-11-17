@@ -28,6 +28,12 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 		profile.POST("/addaddress", userHandler.AddAddress)
 		profile.GET("/details", userHandler.GetUserDetails)
 
+		order := profile.Group("/order")
+		{
+			order.GET("/get", orderHandler.GetOrders)
+			order.DELETE("", orderHandler.CancelOrder)
+		}
+
 		edit := profile.Group("/edit")
 		{
 			edit.PUT("/name", userHandler.EditName)
@@ -35,11 +41,11 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 			edit.PUT("/phone", userHandler.EditPhone)
 		}
 
-	}
+		security := profile.Group("/security")
+		{
+			security.PUT("/change-password", userHandler.ChangePassword)
+		}
 
-	security := profile.Group("/security")
-	{
-		security.PUT("/change-password", userHandler.ChangePassword)
 	}
 
 	cart := engine.Group("/cart")
@@ -49,11 +55,6 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 		cart.PUT("/updateQuantity/plus", userHandler.UpdateQuantityAdd)
 		cart.PUT("/updateQuantity/minus", userHandler.UpdateQuantityLess)
 
-	}
-	order := engine.Group("/order")
-	{
-		order.POST("", orderHandler.GetOrders)
-		order.DELETE("", orderHandler.CancelOrder)
 	}
 
 	checkout := engine.Group("/check-out")

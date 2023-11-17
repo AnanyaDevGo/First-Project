@@ -37,7 +37,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		}
 		order := engine.Group("/order")
 		{
-
+			order.GET("/get", orderHandler.AdminOrders)
 			order.PUT("/status", orderHandler.EditOrderStatus)
 
 		}

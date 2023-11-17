@@ -1,8 +1,8 @@
 package models
 
 type ProductsReceiver struct {
-	CategoryID 	uint `json:"Category_id"`
-	ProductName	string	`json:"product_name"`
+	CategoryID  uint    `json:"Category_id"`
+	ProductName string  `json:"product_name"`
 	Size_id     uint    `json:"size_id"`
 	Stock       int     `json:"stock"`
 	Price       float64 `json:"price"`
@@ -26,10 +26,12 @@ type ProductsResponse struct {
 	Price       float64 `json:"price"`
 }
 type MakeOrder struct {
-	UserID          int       `json:"user_id"`
-	AddressID       int       `json:"address_id"`
+	UserID          int `json:"user_id"`
+	AddressID       int `json:"address_id"`
+	PaymentMethodID int `json:"payment_id"`
 }
 type Order struct {
 	UserID          int `json:"user_id"`
 	AddressID       int `json:"address_id"`
+	PaymentMethodID int `json:"payment_id"`
 }

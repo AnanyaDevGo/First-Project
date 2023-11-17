@@ -155,8 +155,12 @@ func (u *UserHandler) AddAddress(c *gin.Context) {
 }
 
 func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
-	idString, _ := c.Get("id")
-	id, _ := idString.(int)
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
 	inv, err := strconv.Atoi(c.Query("inventory"))
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
@@ -175,9 +179,12 @@ func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
 }
 
 func (i *UserHandler) UpdateQuantityLess(c *gin.Context) {
-	idString, _ := c.Get("id")
-	id, _ := idString.(int)
-
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
 	inv, err := strconv.Atoi(c.Query("inventory"))
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())

@@ -1,15 +1,17 @@
 package models
 
 type OrderDetails struct {
-	ID        int    `json:"order_id"`
-	UserName  string `json:"name"`
-	AddressID int    `json:"address_id"`
+	ID            int    `json:"order_id"`
+	UserName      string `json:"name"`
+	AddressID     int    `json:"address_id"`
+	PaymentMethod string `json:"payment_method"`
 }
 
 type CombinedOrderDetails struct {
 	OrderId        string  `json:"order_id"`
 	FinalPrice     float64 `json:"final_price"`
 	ShipmentStatus string  `json:"shipment_status"`
+	PaymentStatus  string  `json:"payment_status"`
 	Name           string  `json:"name"`
 	Email          string  `json:"email"`
 	Phone          string  `json:"phone"`

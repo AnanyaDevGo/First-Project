@@ -125,12 +125,13 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	if err != nil {
 		return models.GetCartResponse{}, errors.New(InternalError)
 	}
-
+	fmt.Println("cart id ", cart_id)
 	products, err := u.userRepo.GetProductsInCart(cart_id)
 	if err != nil {
 		return models.GetCartResponse{}, errors.New(InternalError)
 	}
 
+	fmt.Println("products ", products)
 	var product_names []string
 	for i := range products {
 		product_name, err := u.userRepo.FindProductNames(products[i])
@@ -139,6 +140,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 		}
 		product_names = append(product_names, product_name)
 	}
+	fmt.Println("product names", product_names)
 
 	var quantity []int
 	for i := range products {
@@ -148,6 +150,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 		}
 		quantity = append(quantity, q)
 	}
+	fmt.Println("quantity", quantity)
 
 	var categories []int
 	for i := range products {
@@ -157,6 +160,7 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 		}
 		categories = append(categories, c)
 	}
+	fmt.Println("categories", categories)
 
 	var getcart []models.GetCart
 	for i := range product_names {
@@ -168,10 +172,12 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 		getcart = append(getcart, get)
 	}
 
+	fmt.Println("get carts", getcart)
 	var response models.GetCartResponse
 	response.ID = cart_id
 	response.Data = getcart
 
+	fmt.Println("response", response)
 	return response, nil
 
 }
