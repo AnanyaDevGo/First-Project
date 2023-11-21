@@ -26,7 +26,7 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories) (mod
 	}
 
 	query := `
-        INSERT INTO inventories (category_id, product_name, color, stock, price)
+        INSERT INTO inventories (category_id, product_name, size, stock, price)
         VALUES (?, ?, ?, ?, ?);
     `
 	err := i.DB.Exec(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price).Error

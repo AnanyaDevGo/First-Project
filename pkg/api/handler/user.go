@@ -4,6 +4,7 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
+	"fmt"
 	"strconv"
 
 	"net/http"
@@ -154,51 +155,37 @@ func (u *UserHandler) AddAddress(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
-func (i *UserHandler) UpdateQuantityAdd(c *gin.Context) {
+func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
+		fmt.Println("here")
+		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properlyyyyy", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	inv, err := strconv.Atoi(c.Query("inventory"))
+	if err != nil {
+		fmt.Println("****here****")
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	inv, err := strconv.Atoi(c.Query("inventory"))
+
+	qty, err := strconv.Atoi(c.Query("quantity"))
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
-	if err := i.userUseCase.UpdateQuantityAdd(id, inv); err != nil {
+	if err := i.userUseCase.UpdateQuantity(id, inv, qty); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not Add the quantity", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
 	successRes := response.ClientResponse(http.StatusOK, "Successfully added quantity", nil, nil)
-	c.JSON(http.StatusOK, successRes)
-}
-
-func (i *UserHandler) UpdateQuantityLess(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-	inv, err := strconv.Atoi(c.Query("inventory"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-
-	if err := i.userUseCase.UpdateQuantityLess(id, inv); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "could not  subtract quantity", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-
-	successRes := response.ClientResponse(http.StatusOK, "Successfully subtracted quantity", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 }
 
@@ -229,65 +216,27 @@ func (u *UserHandler) GetUserDetails(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully retrived details", details, nil)
 	c.JSON(http.StatusOK, successRes)
 }
-
-func (u *UserHandler) EditName(c *gin.Context) {
+func (u *UserHandler) Edit(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
 
-	var model models.EditName
+	var model models.Edit
 	if err := c.BindJSON(&model); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided in wrong format", nil, err.Error())
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	if err := u.userUseCase.EditName(id, model.Name); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not change the name", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
+
+	result, err := u.userUseCase.Edit(id, model)
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadRequest, "error updating the values", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
-	successRes := response.ClientResponse(http.StatusOK, "Successfully edited the name", nil, nil)
-	c.JSON(http.StatusOK, successRes)
 
-}
+	successRes := response.ClientResponse(http.StatusCreated, "addresses fetched succesfully", result, nil)
 
-func (u *UserHandler) EditEmail(c *gin.Context) {
-	idString, _ := c.Get("id")
-	id, _ := idString.(int)
-
-	var model models.EditEmail
-	if err := c.BindJSON(&model); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided in wrong format", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-	if err := u.userUseCase.EditEmail(id, model.Email); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not change the name", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-	successRes := response.ClientResponse(http.StatusOK, "Successfully edited the email", nil, nil)
-	c.JSON(http.StatusOK, successRes)
-
-}
-
-func (u *UserHandler) EditPhone(c *gin.Context) {
-	idString, _ := c.Get("id")
-	id, _ := idString.(int)
-
-	var model models.EditPhone
-	if err := c.BindJSON(&model); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided in wrong format", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-	if err := u.userUseCase.EditEmail(id, model.Phone); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not change the name", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
-		return
-	}
-	successRes := response.ClientResponse(http.StatusOK, "Successfully edited the phonenumber", nil, nil)
-	c.JSON(http.StatusOK, successRes)
-
+	c.JSON(http.StatusCreated, successRes)
 }
 
 func (u *UserHandler) ChangePassword(c *gin.Context) {

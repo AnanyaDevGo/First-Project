@@ -78,26 +78,18 @@ type GetCartResponse struct {
 }
 
 type CheckOut struct {
-	CartID         int
-	Addresses      []Address
-	Products       []GetCart
-	PaymentMethods []NewPaymentMethod
+	CartID    int
+	Addresses []Address
+	Products  []GetCart
 }
 
-type EditName struct {
-	Name string `json:"name"`
-}
-
-type EditEmail struct {
-	Email string `json:"email"`
-}
-
-type EditPhone struct {
+type Edit struct {
+	Name  string `json:"name"`
+	Email string `json:"email" validate:"email"`
 	Phone string `json:"phone"`
 }
-
 type ChangePassword struct {
 	Oldpassword string `json:"old_password"`
-	Password    string `json:"password"`
-	Repassword  string `json:"re_password"`
+	Password    string `json:"new_password"`
+	Repassword  string `json:"re-enter_password"`
 }

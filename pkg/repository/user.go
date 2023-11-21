@@ -135,34 +135,30 @@ func (ad *userDataBase) RemoveFromCart(cart, inventory int) error {
 	}
 	return nil
 }
+func (ad *userDataBase) UpdateQuantity(id, invID, qty int) error {
 
-func (ad *userDataBase) UpdateQuantityAdd(id, inv_id int) error {
+	if id <= 0 || invID <= 0 || qty <= 0 {
+		return errors.New("negative or zero values are not allowed")
+	}
 
-	query := `
-		UPDATE line_items
-		SET quantity = quantity + 1
-		WHERE cart_id=$1 AND inventory_id=$2
-	`
+	if qty >= 25 {
+		return errors.New("choose number of items below 25")
+	}
 
-	result := ad.DB.Exec(query, id, inv_id)
-	if result.Error != nil {
-		return result.Error
+	if qty >= 0 {
+		query := `
+			UPDATE line_items
+			SET quantity = $1
+			WHERE cart_id = $2 AND inventory_id = $3
+		`
+
+		result := ad.DB.Exec(query, qty, id, invID)
+		if result.Error != nil {
+			return result.Error
+		}
 	}
 
 	return nil
-}
-
-func (ad *userDataBase) UpdateQuantityLess(id, inv_id int) error {
-
-	if err := ad.DB.Exec(`UPDATE line_items
-	SET quantity = quantity - 1
-	WHERE cart_id = $1 AND inventory_id=$2;
-	`, id, inv_id).Error; err != nil {
-		return err
-	}
-
-	return nil
-
 }
 
 func (ad *userDataBase) AddAddress(id int, address models.AddAddress, result bool) error {
@@ -204,26 +200,44 @@ func (ad *userDataBase) GetUserDetails(id int) (models.UserDetailsResponse, erro
 	return details, nil
 }
 
-func (ad *userDataBase) EditName(id int, name string) error {
-	err := ad.DB.Exec(`update users set name=$1 where id=$2`, name, id).Error
-	if err != nil {
-		return err
+func (ad *userDataBase) Edit(id int, user models.Edit) (models.Edit, error) {
+	var result models.Edit
+
+	args := []interface{}{}
+	query := "update users set"
+
+	if user.Email != "" {
+		query += " email = $1,"
+
+		args = append(args, user.Email)
 	}
-	return nil
-}
-func (ad *userDataBase) EditEmail(id int, email string) error {
-	err := ad.DB.Exec(`update users set email=$1 where id=$2`, email, id).Error
-	if err != nil {
-		return err
+
+	if user.Name != "" {
+		query += " name = $2,"
+		args = append(args, user.Name)
 	}
-	return nil
-}
-func (ad *userDataBase) EditPhone(id int, phone string) error {
-	err := ad.DB.Exec(`update users set phone=$1 where id=$2`, phone, id).Error
-	if err != nil {
-		return err
+
+	if user.Phone != "" {
+		query += " phone = $3,"
+
+		args = append(args, user.Phone)
 	}
-	return nil
+
+	query = query[:len(query)-1] + " where id = $4"
+
+	args = append(args, id)
+
+	err := ad.DB.Exec(query, args...).Error
+	if err != nil {
+		return models.Edit{}, err
+	}
+	query2 := "select * from users where id = ?"
+	if err := ad.DB.Raw(query2, id).Scan(&result).Error; err != nil {
+		return models.Edit{}, err
+	}
+
+	return result, nil
+
 }
 
 func (ad *userDataBase) ChangePassword(id int, password string) error {

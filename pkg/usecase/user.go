@@ -194,20 +194,9 @@ func (u *userUseCase) RemoveFromCart(cart, inventory int) error {
 
 }
 
-func (i *userUseCase) UpdateQuantityAdd(id, inv int) error {
+func (i *userUseCase) UpdateQuantity(id, inv_id, qty int) error {
 
-	err := i.userRepo.UpdateQuantityAdd(id, inv)
-	if err != nil {
-		return err
-	}
-
-	return nil
-
-}
-
-func (i *userUseCase) UpdateQuantityLess(id, inv int) error {
-
-	err := i.userRepo.UpdateQuantityLess(id, inv)
+	err := i.userRepo.UpdateQuantity(id, inv_id, qty)
 	if err != nil {
 		return err
 	}
@@ -252,29 +241,15 @@ func (u *userUseCase) GetUserDetails(id int) (models.UserDetailsResponse, error)
 	return details, err
 }
 
-func (u *userUseCase) EditName(id int, name string) error {
-	err := u.userRepo.EditName(id, name)
+func (u *userUseCase) Edit(id int, user models.Edit) (models.Edit, error) {
+	result, err := u.userRepo.Edit(id, user)
 	if err != nil {
-		return errors.New("could not change")
+		return models.Edit{}, err
 	}
-	return nil
+
+	return result, nil
 }
 
-func (u *userUseCase) EditEmail(id int, email string) error {
-	err := u.userRepo.EditEmail(id, email)
-	if err != nil {
-		return errors.New("could not change")
-	}
-	return nil
-}
-
-func (u *userUseCase) EditPhone(id int, phone string) error {
-	err := u.userRepo.EditPhone(id, phone)
-	if err != nil {
-		return errors.New("could not change")
-	}
-	return nil
-}
 func (u *userUseCase) ChangePassword(id int, old string, password string, repassword string) error {
 	userPassword, err := u.userRepo.GetPassword(id)
 	if err != nil {

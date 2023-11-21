@@ -36,9 +36,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 
 		edit := profile.Group("/edit")
 		{
-			edit.PUT("/name", userHandler.EditName)
-			edit.PUT("/email", userHandler.EditEmail)
-			edit.PUT("/phone", userHandler.EditPhone)
+			edit.PUT("/", userHandler.Edit)
 		}
 
 		security := profile.Group("/security")
@@ -52,8 +50,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 	{
 		cart.GET("/", userHandler.GetCart)
 		cart.DELETE("/remove", userHandler.RemoveFromCart)
-		cart.PUT("/updateQuantity/plus", userHandler.UpdateQuantityAdd)
-		cart.PUT("/updateQuantity/minus", userHandler.UpdateQuantityLess)
+		cart.PUT("", userHandler.UpdateQuantity)
 
 	}
 
