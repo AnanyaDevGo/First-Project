@@ -193,13 +193,13 @@ func (u *UserHandler) GetAddress(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
 
-	address, err := u.userUseCase.GetAddress(id)
+	addresses, err := u.userUseCase.GetAddress(id)
 	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrive address records", nil, err.Error())
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve records", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	successRes := response.ClientResponse(http.StatusOK, "Sucessfully fetched records", address, nil)
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all records", addresses, nil)
 	c.JSON(http.StatusOK, successRes)
 }
 

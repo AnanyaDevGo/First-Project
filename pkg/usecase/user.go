@@ -121,10 +121,13 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 }
 
 func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
+
+	fmt.Println("2222222222")
 	cart_id, err := u.userRepo.GetCartID(id)
 	if err != nil {
 		return models.GetCartResponse{}, errors.New(InternalError)
 	}
+
 	fmt.Println("cart id ", cart_id)
 	products, err := u.userRepo.GetProductsInCart(cart_id)
 	if err != nil {
@@ -181,7 +184,6 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	return response, nil
 
 }
-
 func (u *userUseCase) RemoveFromCart(cart, inventory int) error {
 
 	err := u.userRepo.RemoveFromCart(cart, inventory)
@@ -225,11 +227,12 @@ func (u *userUseCase) AddAddress(id int, address models.AddAddress) error {
 func (u *userUseCase) GetAddress(id int) ([]domain.Address, error) {
 
 	address, err := u.userRepo.GetAddress(id)
-
 	if err != nil {
-		return []domain.Address{}, errors.New("error in getting address")
+		return []domain.Address{}, errors.New("error in getting addresses")
 	}
+
 	return address, nil
+
 }
 
 func (u *userUseCase) GetUserDetails(id int) (models.UserDetailsResponse, error) {
@@ -250,13 +253,14 @@ func (u *userUseCase) Edit(id int, user models.Edit) (models.Edit, error) {
 	return result, nil
 }
 
-func (u *userUseCase) ChangePassword(id int, old string, password string, repassword string) error {
-	userPassword, err := u.userRepo.GetPassword(id)
+func (i *userUseCase) ChangePassword(id int, old string, password string, repassword string) error {
+
+	userPassword, err := i.userRepo.GetPassword(id)
 	if err != nil {
 		return errors.New(InternalError)
 	}
 
-	err = u.helper.CompareHashAndPassword(userPassword, old)
+	err = i.helper.CompareHashAndPassword(userPassword, old)
 	if err != nil {
 		return errors.New("password incorrect")
 	}
@@ -265,10 +269,11 @@ func (u *userUseCase) ChangePassword(id int, old string, password string, repass
 		return errors.New("passwords does not match")
 	}
 
-	newpassword, err := u.helper.PasswordHashing(password)
+	newpassword, err := i.helper.PasswordHashing(password)
 	if err != nil {
 		return errors.New("error in hashing password")
 	}
 
-	return u.userRepo.ChangePassword(id, string(newpassword))
+	return i.userRepo.ChangePassword(id, string(newpassword))
+
 }

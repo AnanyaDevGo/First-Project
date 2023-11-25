@@ -56,6 +56,42 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 	}, nil
 
 }
+func (ad *adminUseCase) DashBoard() (models.CompleteAdminDashboard, error) {
+
+	totalRevenue, err := ad.adminRepository.TotalRevenue()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
+
+	orderDetails, err := ad.adminRepository.DashBoardOrder()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
+
+	amountDetails, err := ad.adminRepository.AmountDetails()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
+
+	userDetails, err := ad.adminRepository.DashboardUserDetails()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
+
+	productDetails, err := ad.adminRepository.DashBoardProductDetails()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
+
+	return models.CompleteAdminDashboard{
+		DashboardRevenue: totalRevenue,
+		DashboardOrder:   orderDetails,
+		DashboardAmount:  amountDetails,
+		DashboardUser:    userDetails,
+		DashBoardProduct: productDetails,
+	}, nil
+
+}
 
 func (ad *adminUseCase) BlockUser(id string) error {
 
@@ -110,5 +146,45 @@ func (ad *adminUseCase) GetUsers(page int) ([]models.UserDetailsAtAdmin, error) 
 	}
 
 	return userDetails, nil
+
+}
+
+func (i *adminUseCase) NewPaymentMethod(id string) error {
+
+	exists, err := i.adminRepository.CheckIfPaymentMethodAlreadyExists(id)
+	if err != nil {
+		return err
+	}
+
+	if exists {
+		return errors.New("payment method already exists")
+	}
+
+	err = i.adminRepository.NewPaymentMethod(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (a *adminUseCase) ListPaymentMethods() ([]domain.PaymentMethod, error) {
+
+	categories, err := a.adminRepository.ListPaymentMethods()
+	if err != nil {
+		return []domain.PaymentMethod{}, err
+	}
+	return categories, nil
+
+}
+
+func (a *adminUseCase) DeletePaymentMethod(id int) error {
+
+	err := a.adminRepository.DeletePaymentMethod(id)
+	if err != nil {
+		return err
+	}
+	return nil
 
 }

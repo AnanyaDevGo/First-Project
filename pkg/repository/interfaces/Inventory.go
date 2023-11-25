@@ -8,7 +8,7 @@ type InventoryRepository interface {
 	UpdateInventory(pid int, stock int) (models.InventoryResponse, error)
 	DeleteInventory(id string) error
 	ShowIndividualProducts(id string) (models.Inventories, error)
-	ListProducts(page int) ([]models.Inventories, error)
+	ListProducts(int, int) ([]models.ProductsResponse, error)
 	ListProductsByCategory(id int) ([]models.Inventories, error)
 	CheckStock(inventory_id int) (int, error)
 	SearchProducts(key string) ([]models.Inventories, error)

@@ -12,6 +12,8 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 
 	engine.Use(middleware.AdminAuthMiddleware)
 	{
+		engine.GET("/dashboard", adminHandler.Dashboard)
+
 		usermanagement := engine.Group("/users")
 		{
 			usermanagement.GET("/", adminHandler.GetUsers)
@@ -31,7 +33,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		{
 			inventorymanagement.POST("", inventoryHandler.AddInventory)
 			inventorymanagement.DELETE("", inventoryHandler.DeleteInventory)
-			inventorymanagement.GET("", inventoryHandler.ListProductsForAdmin)
+			//inventorymanagement.GET("", inventoryHandler.ListProductsForAdmin)
 
 			inventorymanagement.PUT("/stock", inventoryHandler.UpdateInventory)
 		}
@@ -40,6 +42,12 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 			order.GET("/get", orderHandler.AdminOrders)
 			order.PUT("/status", orderHandler.EditOrderStatus)
 
+		}
+		payment := engine.Group("/payment-method")
+		{
+			payment.POST("/pay", adminHandler.NewPaymentMethod)
+			payment.GET("", adminHandler.ListPaymentMethods)
+			payment.DELETE("", adminHandler.DeletePaymentMethod)
 		}
 
 	}

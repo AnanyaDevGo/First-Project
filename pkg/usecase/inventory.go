@@ -29,6 +29,15 @@ func (i *inventoryUseCase) AddInventory(inventory models.AddInventories) (models
 	return InventoryResponse, nil
 
 }
+func (i *inventoryUseCase) ListProducts(pageNo, pageList int) ([]models.ProductsResponse, error) {
+
+	offset := (pageNo - 1) * pageList
+	productList, err := i.repository.ListProducts(pageList, offset)
+	if err != nil {
+		return []models.ProductsResponse{}, err
+	}
+	return productList, nil
+}
 
 func (i *inventoryUseCase) UpdateInventory(pid int, stock int) (models.InventoryResponse, error) {
 
@@ -61,15 +70,15 @@ func (i *inventoryUseCase) DeleteInventory(inventoryID string) error {
 
 }
 
-func (i *inventoryUseCase) ListProductsForAdmin(page int) ([]models.Inventories, error) {
+// func (i *inventoryUseCase) ListProductsForAdmin(page int) ([]models.Inventories, error) {
 
-	productDetails, err := i.repository.ListProducts(page)
-	if err != nil {
-		return []models.Inventories{}, err
-	}
+// 	productDetails, err := i.repository.ListProducts(page)
+// 	if err != nil {
+// 		return []models.Inventories{}, err
+// 	}
 
-	fmt.Println("product details is:", productDetails)
+// 	fmt.Println("product details is:", productDetails)
 
-	return productDetails, nil
+// 	return productDetails, nil
 
-}
+// }

@@ -3,6 +3,7 @@ package repository
 import (
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"gorm.io/gorm"
@@ -113,20 +114,23 @@ func (i *inventoryRepository) ShowIndividualProducts(id string) (models.Inventor
 
 }
 
-func (ad *inventoryRepository) ListProducts(page int) ([]models.Inventories, error) {
-	// pagination purpose -
-	if page == 0 {
-		page = 1
+func (prod *inventoryRepository) ListProducts(pageList, offset int) ([]models.ProductsResponse, error) {
+	var product_list []models.ProductsResponse
+
+	query := `
+		SELECT i.id, i.category_id, c.category, i.product_name, i.stock, i.price 
+		FROM inventories i 
+		INNER JOIN categories c ON i.category_id = c.id 
+		LIMIT $1 OFFSET $2
+	`
+	fmt.Println(pageList, offset)
+	err := prod.DB.Raw(query, pageList, offset).Scan(&product_list).Error
+
+	if err != nil {
+		return []models.ProductsResponse{}, errors.New("error checking user details")
 	}
-	offset := (page - 1) * 10
-	var productDetails []models.Inventories
-
-	if err := ad.DB.Raw("select id,category_id,product_name,size,stock,price from inventories limit $1 offset $2", 10, offset).Scan(&productDetails).Error; err != nil {
-		return []models.Inventories{}, err
-	}
-
-	return productDetails, nil
-
+	fmt.Println("product list", product_list)
+	return product_list, nil
 }
 
 func (ad *inventoryRepository) ListProductsByCategory(id int) ([]models.Inventories, error) {

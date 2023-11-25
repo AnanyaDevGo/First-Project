@@ -22,6 +22,14 @@ type CombinedOrderDetails struct {
 	City           string  `json:"city"`
 }
 
+type OrderPaymentDetails struct {
+	UserID     int     `json:"user_id"`
+	Username   string  `json:"username"`
+	Razor_id   string  `josn:"razor_id"`
+	OrderID    int     `json:"order_id"`
+	FinalPrice float64 `json:"final_price"`
+}
+
 type EditOrderStatus struct {
 	OrderID int    `json:"order_id"`
 	Status  string `json:"order_status"`
@@ -33,7 +41,6 @@ type IndividualOrderDetails struct {
 	Phone       string
 	Products    []ProductDetails `gorm:"-"`
 	TotalAmount float64
-	CouponUsed  string
 	OrderStatus string
 }
 
@@ -42,4 +49,9 @@ type ProductDetails struct {
 	Image       string
 	Quantity    int
 	Amount      float64
+}
+
+type PaymentMethodResponse struct {
+	ID           uint   `gorm:"primarykey"`
+	Payment_Name string `json:"payment_name"`
 }

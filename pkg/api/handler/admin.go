@@ -47,6 +47,19 @@ func (ad *AdminHandler) LoginHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+func (ad *AdminHandler) Dashboard(c *gin.Context) {
+
+	dashboard, err := ad.adminUseCase.DashBoard()
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "dashboard could not be displayed", nil, err.Error())
+		c.JSON(http.StatusInternalServerError, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "admin dashboard displayed fine", dashboard, nil)
+	c.JSON(http.StatusOK, successRes)
+}
+
 func (ad *AdminHandler) BlockUser(c *gin.Context) {
 
 	id := c.Query("id")
@@ -99,16 +112,70 @@ func (ad *AdminHandler) GetUsers(c *gin.Context) {
 
 }
 
+func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
+
+	var method models.NewPaymentMethod
+	if err := c.BindJSON(&method); err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	err := i.adminUseCase.NewPaymentMethod(method.PaymentMethod)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not add the payment method", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully added Payment Method", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}
+
+func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
+
+	categories, err := a.adminUseCase.ListPaymentMethods()
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all payment methods", categories, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}
+
+func (a *AdminHandler) DeletePaymentMethod(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	err = a.adminUseCase.DeletePaymentMethod(id)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "error in deleting data", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "Successfully deleted the Category", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}
+
 func (a *AdminHandler) ValidateRefreshTokenAndCreateNewAccess(c *gin.Context) {
 
 	refreshToken := c.Request.Header.Get("RefreshToken")
 
-	// Check if the refresh token is valid.
 	_, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte("refreshsecret"), nil
 	})
 	if err != nil {
-		// The refresh token is invalid.
 		c.AbortWithError(401, errors.New("refresh token is invalid:user have to login again"))
 		return
 	}

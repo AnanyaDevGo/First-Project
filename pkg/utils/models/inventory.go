@@ -18,7 +18,6 @@ type Inventories struct {
 	Stock           int     `json:"stock"`
 	IfPresentAtCart bool    `json:"if_present_at_cart"`
 	Price           float64 `json:"price"`
-	DiscountedPrice float64 `json:"discounted_price"`
 }
 
 type AddInventories struct {
@@ -38,5 +37,10 @@ type EditInventoryDetails struct {
 }
 type AddToCart struct {
 	UserID      int `json:"user_id"`
-	InventoryID int `json:"inventory_id"`
+	InventoryID int `json:"products_id"`
+}
+
+type InventoryDetails struct {
+	Price    float64 `json:"price"`
+	Quantity uint    `json:"quantity"`
 }

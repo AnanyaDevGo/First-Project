@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +9,7 @@ import (
 
 func AdminAuthMiddleware(c *gin.Context) {
 
-	fmt.Println("**** admin auth*****")
+	//fmt.Println("**** admin auth*****")
 	accessToken := c.Request.Header.Get("Authorization")
 
 	accessToken = strings.TrimPrefix(accessToken, "Bearer ")
@@ -18,7 +17,7 @@ func AdminAuthMiddleware(c *gin.Context) {
 	_, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte("accesssecret"), nil
 	})
-	fmt.Println("here  1")
+	//fmt.Println("here  1")
 	if err != nil {
 		c.AbortWithStatus(401)
 		return

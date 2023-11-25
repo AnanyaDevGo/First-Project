@@ -20,6 +20,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 	home := engine.Group("/home")
 	{
 		home.POST("/addcart", cartHandler.AddToCart)
+		home.GET("/list", inventoryHandler.ListProducts)
 	}
 
 	profile := engine.Group("/profile")
@@ -31,7 +32,9 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 		order := profile.Group("/order")
 		{
 			order.GET("/get", orderHandler.GetOrders)
+			order.GET("/all", orderHandler.GetAllOrders)
 			order.DELETE("", orderHandler.CancelOrder)
+
 		}
 
 		edit := profile.Group("/edit")
@@ -57,6 +60,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 	checkout := engine.Group("/check-out")
 	{
 		checkout.GET("", cartHandler.CheckOut)
+		checkout.POST("/order", orderHandler.OrderItemsFromCart)
 	}
 
 }

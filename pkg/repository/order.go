@@ -3,6 +3,7 @@ package repository
 import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/utils/models"
+	"errors"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -17,26 +18,42 @@ func NewOrderRepository(db *gorm.DB) *orderRepository {
 		DB: db,
 	}
 }
-
-func (o *orderRepository) GetOrders(id int) ([]domain.Order, error) {
-	var order []domain.Order
-	if err := o.DB.Raw("select * from orders where user_id=?", id).Scan(&order).Error; err != nil {
-		return []domain.Order{}, err
+func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
+	if orderID <= 0 {
+		return domain.OrderResponse{}, errors.New("order ID should'n be a negative number")
 	}
-	fmt.Println("order repo", order)
+
+	var order domain.OrderResponse
+
+	query := `SELECT * FROM orders WHERE id = $1`
+
+	if err := i.DB.Raw(query, orderID).First(&order).Error; err != nil {
+		return domain.OrderResponse{}, err
+	}
+
 	return order, nil
 }
 
-func (i *orderRepository) OrderItems(userid, addressid, paymentid int, total float64, coupon string) (int, error) {
+func (ad *orderRepository) GetCart(id int) ([]models.GetCart, error) {
+
+	var cart []models.GetCart
+
+	if err := ad.DB.Raw("SELECT inventories.product_name,cart_products.quantity,cart_products.total_price AS Total FROM cart_products JOIN inventories ON cart_products.inventory_id=inventories.id WHERE user_id=$1", id).Scan(&cart).Error; err != nil {
+		return []models.GetCart{}, err
+	}
+	return cart, nil
+
+}
+func (i *orderRepository) OrderItems(userid, addressid, paymentid int, total float64) (int, error) {
 
 	var id int
 	query := `
-    INSERT INTO orders (user_id,address_id, payment_method_id, final_price,coupon_used)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO orders (created_at,user_id,address_id, payment_method_id, final_price)
+    VALUES (Now(),?, ?, ?, ?)
     RETURNING id
     `
-	i.DB.Raw(query, userid, addressid, paymentid, total, coupon).Scan(&id)
-
+	i.DB.Raw(query, userid, addressid, paymentid, total).Scan(&id)
+	fmt.Println("id...........", id)
 	return id, nil
 
 }
@@ -54,7 +71,7 @@ func (i *orderRepository) AddOrderProducts(order_id int, cart []models.GetCart) 
 			return err
 		}
 
-		if err := i.DB.Exec(query, order_id, inv, v.Quantity).Error; err != nil {
+		if err := i.DB.Exec(query, order_id, inv, v.Quantity, v.Total).Error; err != nil {
 			return err
 		}
 	}
@@ -71,6 +88,21 @@ func (i *orderRepository) CancelOrder(id int) error {
 
 	return nil
 
+}
+
+func (i *orderRepository) GetAllOrders(userID, page, pageSize int) ([]models.OrderDetails, error) {
+	if page == 0 {
+		page = 1
+	}
+	offset := (page - 1) * pageSize
+	var order []models.OrderDetails
+
+	err := i.DB.Raw("SELECT id as order_id, address_id, payment_method_id, final_price as price, order_status, payment_status FROM orders WHERE user_id = ? OFFSET ? LIMIT ?", userID, offset, pageSize).Scan(&order).Error
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("Retrieved orders:", order)
+	return order, nil
 }
 
 func (o *orderRepository) EditOrderStatus(status string, id int) error {
@@ -92,6 +124,35 @@ func (o *orderRepository) CheckOrderStatusByID(id int) (string, error) {
 
 	return status, nil
 }
+
+func (o *orderRepository) FindPaymentMethodOfOrder(id int) (string, error) {
+
+	var payment string
+
+	if err := o.DB.Raw(`select payment_methods.payment_name
+	 from payment_methods
+	  join orders on orders.payment_method_id = payment_methods.id
+	   where orders.id = $1`, id).Scan(&payment).Error; err != nil {
+		return "", err
+	}
+	return payment, nil
+}
+
+func (o *orderRepository) GetProductImagesInAOrder(id int) ([]string, error) {
+
+	var images []string
+	err := o.DB.Raw(`SELECT inventories.image
+	FROM order_items 
+	JOIN inventories ON inventories.id = order_items.inventory_id
+	JOIN orders ON orders.id = order_items.order_id 
+	WHERE orders.id = $1`, id).Scan(&images).Error
+	if err != nil {
+		return []string{}, err
+	}
+
+	return images, nil
+}
+
 func (or *orderRepository) AdminOrders(status string) ([]domain.OrderDetails, error) {
 
 	var orders []domain.OrderDetails

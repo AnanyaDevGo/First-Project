@@ -68,6 +68,18 @@ func (c *userDataBase) FindUserByEmail(user models.UserLogin) (models.UserSignIn
 
 }
 
+func (ad *userDataBase) GetCart(id int) ([]models.GetCart, error) {
+
+	var cart []models.GetCart
+
+	if err := ad.DB.Raw("select inventories.product_name,cart_products.quantity,cart_products.total_price from cart_products inner join inventories on cart_products.inventory_id=inventories.id where user_id=?", id).Scan(&cart).Error; err != nil {
+		return []models.GetCart{}, err
+	}
+
+	return cart, nil
+
+}
+
 func (ad *userDataBase) GetCartID(id int) (int, error) {
 
 	var cart_id int
@@ -141,8 +153,8 @@ func (ad *userDataBase) UpdateQuantity(id, invID, qty int) error {
 		return errors.New("negative or zero values are not allowed")
 	}
 
-	if qty >= 25 {
-		return errors.New("choose number of items below 25")
+	if qty >= 30 {
+		return errors.New("choose number of items below 30")
 	}
 
 	if qty >= 0 {
@@ -186,10 +198,12 @@ func (c *userDataBase) CheckIfFirstAddress(id int) bool {
 func (ad *userDataBase) GetAddress(id int) ([]domain.Address, error) {
 	var address []domain.Address
 
-	if err := ad.DB.Raw("select * from addresses where user_id = ?", id).Scan(&address).Error; err != nil {
-		return []domain.Address{}, errors.New("error in getting address")
+	if err := ad.DB.Raw("select * from addresses where user_id=?", id).Scan(&address).Error; err != nil {
+		return []domain.Address{}, errors.New("error in getting addresses")
 	}
+
 	return address, nil
+
 }
 
 func (ad *userDataBase) GetUserDetails(id int) (models.UserDetailsResponse, error) {
@@ -242,6 +256,10 @@ func (ad *userDataBase) Edit(id int, user models.Edit) (models.Edit, error) {
 
 func (ad *userDataBase) ChangePassword(id int, password string) error {
 
+	if id <= 0 {
+		return errors.New("negative or zero values are not allowed")
+	}
+
 	err := ad.DB.Exec("UPDATE users SET password=$1 WHERE id=$2", password, id).Error
 	if err != nil {
 		return err
@@ -252,6 +270,10 @@ func (ad *userDataBase) ChangePassword(id int, password string) error {
 }
 
 func (u *userDataBase) GetPassword(id int) (string, error) {
+
+	if id <= 0 {
+		return "", errors.New("negative or zero values are not allowed")
+	}
 
 	var userPassword string
 	err := u.DB.Raw("select password from users where id = ?", id).Scan(&userPassword).Error

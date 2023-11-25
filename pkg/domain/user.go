@@ -20,5 +20,5 @@ type Address struct {
 	State     string `json:"state" validate:"required"`
 	Phone     string `json:"phone" validate:"require"`
 	Pin       string `json:"pin" validate:"required"`
-	Default   bool   `json:"default" validate:"required"`
+	// Default   bool   `json:"default" validate:"required"`
 }

@@ -1,6 +1,9 @@
 package interfaces
 
-import "CrocsClub/pkg/utils/models"
+import (
+	"CrocsClub/pkg/utils/models"
+	"time"
+)
 
 type Helper interface {
 	GenerateTokenAdmin(admin models.AdminDetailsResponse) (string, string, error)
@@ -10,4 +13,6 @@ type Helper interface {
 	GenerateTokenClients(user models.UserDetailsResponse) (string, error)
 	PasswordHashing(string) (string, error)
 	CompareHashAndPassword(a string, b string) error
+	Copy(a *models.UserDetailsResponse, b *models.UserSignInResponse) (models.UserDetailsResponse, error)
+	GetTimeFromPeriod(timePeriod string) (time.Time, time.Time)
 }

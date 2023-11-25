@@ -71,6 +71,7 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 	if err != nil {
 		return models.CheckOut{}, err
 	}
+
 	var checkout models.CheckOut
 
 	checkout.CartID = products.ID

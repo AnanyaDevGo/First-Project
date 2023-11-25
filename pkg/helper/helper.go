@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/jinzhu/copier"
 	"github.com/twilio/twilio-go"
 	twilioApi "github.com/twilio/twilio-go/rest/verify/v2"
 	"golang.org/x/crypto/bcrypt"
@@ -148,4 +149,35 @@ func (h *helper) CompareHashAndPassword(a string, b string) error {
 		return err
 	}
 	return nil
+}
+
+func (h *helper) Copy(a *models.UserDetailsResponse, b *models.UserSignInResponse) (models.UserDetailsResponse, error) {
+	err := copier.Copy(a, b)
+	if err != nil {
+		return models.UserDetailsResponse{}, err
+	}
+
+	return *a, nil
+}
+func (h *helper) GetTimeFromPeriod(timePeriod string) (time.Time, time.Time) {
+
+	endDate := time.Now()
+
+	if timePeriod == "week" {
+		startDate := endDate.AddDate(0, 0, -6)
+		return startDate, endDate
+	}
+
+	if timePeriod == "month" {
+		startDate := endDate.AddDate(0, -1, 0)
+		return startDate, endDate
+	}
+
+	if timePeriod == "year" {
+		startDate := endDate.AddDate(0, -1, 0)
+		return startDate, endDate
+	}
+
+	return endDate.AddDate(0, 0, -6), endDate
+
 }

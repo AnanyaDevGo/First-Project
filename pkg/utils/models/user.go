@@ -63,13 +63,14 @@ type UserDetailsAtAdmin struct {
 	Phone       string `json:"phone"`
 	BlockStatus bool   `json:"block_status"`
 }
+
 type GetCart struct {
-	ID          int    `json:"product_id"`
-	ProductName string `json:"product_name"`
-	Category_id int    `json:"category_id"`
-	Quantity    int    `json:"quantity"`
-	//Total           float64 `json:"total_price"`
-	//DiscountedPrice float64 `json:"discounted_price"`
+	ID          int     `json:"product_id"`
+	ProductName string  `json:"product_name"`
+	Category_id int     `json:"category_id"`
+	Quantity    int     `json:"quantity"`
+	Price       int     `json:"price"`
+	Total       float64 `json:"total_price"`
 }
 
 type GetCartResponse struct {
@@ -90,6 +91,6 @@ type Edit struct {
 }
 type ChangePassword struct {
 	Oldpassword string `json:"old_password"`
-	Password    string `json:"new_password"`
-	Repassword  string `json:"re-enter_password"`
+	Password    string `json:"password"`
+	Repassword  string `json:"resetted_password"`
 }

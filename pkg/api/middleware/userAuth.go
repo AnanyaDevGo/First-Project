@@ -53,7 +53,6 @@ func UserAuthMiddleware(c *gin.Context) {
 	}
 
 	c.Set("role", role)
-	c.Set("id", 8)
-
+	c.Set("id", int(id))
 	c.Next()
 }
