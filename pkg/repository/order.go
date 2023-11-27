@@ -18,9 +18,10 @@ func NewOrderRepository(db *gorm.DB) *orderRepository {
 		DB: db,
 	}
 }
+
 func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 	if orderID <= 0 {
-		return domain.OrderResponse{}, errors.New("order ID should'n be a negative number")
+		return domain.OrderResponse{}, errors.New("order ID should be a positive number")
 	}
 
 	var order domain.OrderResponse
@@ -32,17 +33,6 @@ func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 	}
 
 	return order, nil
-}
-
-func (ad *orderRepository) GetCart(id int) ([]models.GetCart, error) {
-
-	var cart []models.GetCart
-
-	if err := ad.DB.Raw("SELECT inventories.product_name,cart_products.quantity,cart_products.total_price AS Total FROM cart_products JOIN inventories ON cart_products.inventory_id=inventories.id WHERE user_id=$1", id).Scan(&cart).Error; err != nil {
-		return []models.GetCart{}, err
-	}
-	return cart, nil
-
 }
 func (i *orderRepository) OrderItems(userid, addressid, paymentid int, total float64) (int, error) {
 
@@ -59,7 +49,6 @@ func (i *orderRepository) OrderItems(userid, addressid, paymentid int, total flo
 }
 
 func (i *orderRepository) AddOrderProducts(order_id int, cart []models.GetCart) error {
-
 	query := `
     INSERT INTO order_items (order_id,inventory_id,quantity,total_price)
     VALUES (?, ?, ?, ?)
@@ -78,6 +67,28 @@ func (i *orderRepository) AddOrderProducts(order_id int, cart []models.GetCart) 
 
 	return nil
 
+}
+
+func (o *orderRepository) CheckOrderStatusByID(id int) (string, error) {
+
+	var status string
+	err := o.DB.Raw("select order_status from orders where id = ?", id).Scan(&status).Error
+	if err != nil {
+		return "", err
+	}
+
+	return status, nil
+}
+func (i *orderRepository) ReduceInventoryQuantity(productName string, quantity int) error {
+	query := `
+        UPDATE inventories
+        SET stock = stock - ?
+        WHERE product_name = ?
+    `
+	if err := i.DB.Exec(query, quantity, productName).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (i *orderRepository) CancelOrder(id int) error {
@@ -105,83 +116,85 @@ func (i *orderRepository) GetAllOrders(userID, page, pageSize int) ([]models.Ord
 	return order, nil
 }
 
-func (o *orderRepository) EditOrderStatus(status string, id int) error {
+func (o *orderRepository) GetOrderDetailsBrief(page int) ([]models.CombinedOrderDetails, error) {
 
-	if err := o.DB.Exec("update orders set order_status=$1 where id=$2", status, id).Error; err != nil {
-		return err
+	if page == 0 {
+		page = 1
 	}
+	offset := (page - 1) * 2
 
-	return nil
+	var orderDetails []models.CombinedOrderDetails
 
-}
-func (o *orderRepository) CheckOrderStatusByID(id int) (string, error) {
+	err := o.DB.Raw(`
+	SELECT orders.id AS order_id, orders.final_price, orders.order_status, orders.payment_status, 
+	users.name, users.email, users.phone, addresses.house_name, addresses.state, 
+	addresses.pin, addresses.street, addresses.city 
+	FROM orders 
+	INNER JOIN users ON orders.user_id = users.id 
+	INNER JOIN addresses ON users.id = addresses.user_id 
+	LIMIT ? OFFSET ?
+`, 2, offset).Scan(&orderDetails).Error
 
-	var status string
-	err := o.DB.Raw("select order_status from orders where id = ?", id).Scan(&status).Error
 	if err != nil {
-		return "", err
-	}
-
-	return status, nil
-}
-
-func (o *orderRepository) FindPaymentMethodOfOrder(id int) (string, error) {
-
-	var payment string
-
-	if err := o.DB.Raw(`select payment_methods.payment_name
-	 from payment_methods
-	  join orders on orders.payment_method_id = payment_methods.id
-	   where orders.id = $1`, id).Scan(&payment).Error; err != nil {
-		return "", err
-	}
-	return payment, nil
-}
-
-func (o *orderRepository) GetProductImagesInAOrder(id int) ([]string, error) {
-
-	var images []string
-	err := o.DB.Raw(`SELECT inventories.image
-	FROM order_items 
-	JOIN inventories ON inventories.id = order_items.inventory_id
-	JOIN orders ON orders.id = order_items.order_id 
-	WHERE orders.id = $1`, id).Scan(&images).Error
-	if err != nil {
-		return []string{}, err
-	}
-
-	return images, nil
-}
-
-func (or *orderRepository) AdminOrders(status string) ([]domain.OrderDetails, error) {
-
-	var orders []domain.OrderDetails
-	if err := or.DB.Raw("SELECT orders.id AS id, users.name AS username, CONCAT('House Name:',addresses.house_name, ',', 'Street:', addresses.street, ',', 'City:', addresses.city, ',', 'State', addresses.state, ',', 'Phone:', addresses.phone) AS address, payment_methods.payment_name AS payment_method, orders.final_price As total FROM orders JOIN users ON users.id = orders.user_id JOIN payment_methods ON payment_methods.id = orders.payment_method_id JOIN addresses ON orders.address_id = addresses.id WHERE order_status = $1", status).Scan(&orders).Error; err != nil {
-		return []domain.OrderDetails{}, err
-	}
-
-	return orders, nil
-
-}
-
-func (o *orderRepository) GetOrderDetail(orderID string) (domain.Order, error) {
-
-	var orderDetails domain.Order
-	err := o.DB.Raw("select * from orders where order_id = ?", orderID).Scan(&orderDetails).Error
-	if err != nil {
-		return domain.Order{}, err
+		return []models.CombinedOrderDetails{}, nil
 	}
 
 	return orderDetails, nil
+}
+
+func (o *orderRepository) CheckOrdersStatusByID(id string) (string, error) {
+	var status string
+	err := o.DB.Raw("SELECT order_status FROM orders WHERE id = ?", id).Scan(&status).Error
+	if err != nil {
+		return "", err
+	}
+	return status, nil
+}
+
+func (i *orderRepository) GetShipmentStatus(orderID string) (string, error) {
+	var shipmentStatus string
+	err := i.DB.Exec("UPDATE orders SET order_status = 'DELIVERED', payment_status = 'PAID' WHERE id = ?", orderID).Error
+	if err != nil {
+		return "", err
+	}
+	return shipmentStatus, nil
+}
+
+func (i *orderRepository) ApproveOrder(orderID string) error {
+	err := i.DB.Exec("UPDATE orders SET order_status = 'order_placed' WHERE id = ?", orderID).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (i *orderRepository) ChangeOrderStatus(orderID, status string) error {
+	err := i.DB.Exec("UPDATE orders SET order_status = ? WHERE id = ?", status, orderID).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (o *orderRepository) GetShipmentsStatus(orderID string) (string, error) {
+
+	var shipmentStatus string
+	err := o.DB.Raw("select order_status from orders where id = ?", orderID).Scan(&shipmentStatus).Error
+	if err != nil {
+		return "", err
+	}
+
+	return shipmentStatus, nil
 
 }
 
-func (o *orderRepository) MakePaymentStatusAsPaid(id int) error {
+func (o *orderRepository) ReturnOrder(shipmentStatus string, orderID string) error {
 
-	err := o.DB.Exec("UPDATE orders SET payment_status = 'PAID' WHERE id = $1", id).Error
+	err := o.DB.Exec("update orders set order_status = ? where id = ?", shipmentStatus, orderID).Error
 	if err != nil {
 		return err
 	}
 
 	return nil
+
 }

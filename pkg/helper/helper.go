@@ -2,6 +2,7 @@ package helper
 
 import (
 	cfg "CrocsClub/pkg/config"
+	interfaces "CrocsClub/pkg/helper/interface"
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"time"
@@ -17,7 +18,7 @@ type helper struct {
 	cfg cfg.Config
 }
 
-func NewHelper(config cfg.Config) *helper {
+func NewHelper(config cfg.Config) interfaces.Helper {
 	return &helper{
 		cfg: config,
 	}

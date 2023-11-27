@@ -122,7 +122,7 @@ func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, er
 
 func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 
-	fmt.Println("2222222222")
+	fmt.Println("2222222222", id)
 	cart_id, err := u.userRepo.GetCartID(id)
 	if err != nil {
 		return models.GetCartResponse{}, errors.New(InternalError)
@@ -155,6 +155,15 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 	}
 	fmt.Println("quantity", quantity)
 
+	var price []float64
+	for i := range products {
+		q, err := u.userRepo.FindPrice(products[i])
+		if err != nil {
+			return models.GetCartResponse{}, errors.New(InternalError)
+		}
+		price = append(price, q)
+	}
+
 	var categories []int
 	for i := range products {
 		c, err := u.userRepo.FindCategory(products[i])
@@ -172,6 +181,9 @@ func (u *userUseCase) GetCart(id int) (models.GetCartResponse, error) {
 		get.ProductName = product_names[i]
 		get.Category_id = categories[i]
 		get.Quantity = quantity[i]
+		get.Price = int(price[i])
+		get.Total = (price[i]) * float64(quantity[i])
+
 		getcart = append(getcart, get)
 	}
 

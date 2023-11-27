@@ -79,9 +79,10 @@ type GetCartResponse struct {
 }
 
 type CheckOut struct {
-	CartID    int
-	Addresses []Address
-	Products  []GetCart
+	CartID        int
+	Addresses     []Address
+	Products      []GetCart
+	PaymentMethod []PaymentMethodResponse
 }
 
 type Edit struct {

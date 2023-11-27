@@ -18,6 +18,8 @@ type UserRepository interface {
 
 	FindProductNames(inventory_id int) (string, error)
 	FindCartQuantity(cart_id, inventory_id int) (int, error)
+	FindPrice(inventory_id int) (float64, error)
+	FindStock(id int) (int, error)
 	FindCategory(inventory_id int) (int, error)
 	AddAddress(id int, address models.AddAddress, result bool) error
 	GetAddress(id int) ([]domain.Address, error)

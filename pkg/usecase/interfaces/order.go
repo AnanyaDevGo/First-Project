@@ -8,9 +8,9 @@ import (
 type OrderUseCase interface {
 	OrderItemsFromCart(userid int, addressid int, paymentid int) error
 	GetOrders(orderId int) (domain.OrderResponse, error)
-	CancelOrder(orderId int) error
-
 	GetAllOrders(userId, page, pageSize int) ([]models.OrderDetails, error)
-	EditOrderStatus(status string, id int) error
-	AdminOrders() (domain.AdminOrdersResponse, error)
+	CancelOrder(orderId int) error
+	GetAdminOrders(page int) ([]models.CombinedOrderDetails, error)
+	OrdersStatus(orderId string) error
+	ReturnOrder(orderID string) error
 }

@@ -54,7 +54,6 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 		cart.GET("/", userHandler.GetCart)
 		cart.DELETE("/remove", userHandler.RemoveFromCart)
 		cart.PUT("", userHandler.UpdateQuantity)
-
 	}
 
 	checkout := engine.Group("/check-out")

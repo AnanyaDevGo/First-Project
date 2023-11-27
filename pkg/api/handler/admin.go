@@ -56,8 +56,21 @@ func (ad *AdminHandler) Dashboard(c *gin.Context) {
 		return
 	}
 
-	successRes := response.ClientResponse(http.StatusOK, "admin dashboard displayed fine", dashboard, nil)
+	successRes := response.ClientResponse(http.StatusOK, "admin dashboard displayed", dashboard, nil)
 	c.JSON(http.StatusOK, successRes)
+}
+
+func (ad *AdminHandler) FilteredSalesReport(c *gin.Context) {
+
+	timePeriod := c.Query("period")
+	salesReport, err := ad.adminUseCase.FilteredSalesReport(timePeriod)
+	if err != nil {
+		errorRes := response.ClientResponse(http.StatusInternalServerError, "sales report could not be retrieved", nil, err.Error())
+		c.JSON(http.StatusInternalServerError, errorRes)
+		return
+	}
+	success := response.ClientResponse(http.StatusOK, "sales report retrieved successfully", salesReport, nil)
+	c.JSON(http.StatusOK, success)
 }
 
 func (ad *AdminHandler) BlockUser(c *gin.Context) {

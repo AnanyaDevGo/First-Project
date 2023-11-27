@@ -15,20 +15,14 @@ type NewPaymentMethod struct {
 	PaymentMethod string `json:"payment_method"`
 }
 
-type SalesReport struct {
-	TotalSales      float64
-	TotalOrders     int
-	CompletedOrders int
-	PendingOrders   int
-	TrendingProduct string
+type DashBoardUser struct {
+	TotalUsers  int `json:"Totaluser"`
+	BlockedUser int `json:"Blockuser"`
 }
-
-type DashboardRevenue struct {
-	TodayRevenue float64
-	MonthRevenue float64
-	YearRevenue  float64
+type DashBoardProduct struct {
+	TotalProducts     int `json:"Totalproduct"`
+	OutofStockProduct int `json:"Outofstock"`
 }
-
 type DashboardOrder struct {
 	CompletedOrder int
 	PendingOrder   int
@@ -36,28 +30,26 @@ type DashboardOrder struct {
 	TotalOrder     int
 	TotalOrderItem int
 }
-
+type DashboardRevenue struct {
+	TodayRevenue float64
+	MonthRevenue float64
+	YearRevenue  float64
+}
 type DashboardAmount struct {
 	CreditedAmount float64
 	PendingAmount  float64
 }
-
-type DashboardUser struct {
-	TotalUsers   int
-	BlockedUser  int
-	OrderedUsers int
-}
-
-type DashBoardProduct struct {
-	TotalProducts     int
-	OutOfStockProduct int
-	TopSellingProduct string
-}
-
 type CompleteAdminDashboard struct {
-	DashboardRevenue DashboardRevenue
+	DashboardUser    DashBoardUser
+	DashboardProduct DashBoardProduct
 	DashboardOrder   DashboardOrder
+	DashboardRevenue DashboardRevenue
 	DashboardAmount  DashboardAmount
-	DashboardUser    DashboardUser
-	DashBoardProduct DashBoardProduct
+}
+type SalesReport struct {
+	TotalSales      float64
+	TotalOrders     int
+	CompletedOrders int
+	PendingOrders   int
+	TrendingProduct string
 }

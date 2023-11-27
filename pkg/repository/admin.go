@@ -94,6 +94,16 @@ func (i *adminRepository) NewPaymentMethod(pay string) error {
 
 }
 
+func (a *adminRepository) GetPaymentMethod() ([]models.PaymentMethodResponse, error) {
+	var model []models.PaymentMethodResponse
+	err := a.DB.Raw("SELECT * FROM payment_methods").Scan(&model).Error
+	if err != nil {
+		return []models.PaymentMethodResponse{}, err
+	}
+
+	return model, nil
+}
+
 func (a *adminRepository) ListPaymentMethods() ([]domain.PaymentMethod, error) {
 	var model []domain.PaymentMethod
 	err := a.DB.Raw("SELECT * FROM payment_methods where is_deleted = false").Scan(&model).Error
@@ -184,47 +194,58 @@ func (ad *adminRepository) AmountDetails() (models.DashboardAmount, error) {
 	return amountDetails, nil
 
 }
-func (ad *adminRepository) DashboardUserDetails() (models.DashboardUser, error) {
-	var userDetails models.DashboardUser
-	err := ad.DB.Raw("select count(*) from users").Scan(&userDetails.TotalUsers).Error
+func (ad *adminRepository) DashBoardUserDetails() (models.DashBoardUser, error) {
+	var userDetails models.DashBoardUser
+	err := ad.DB.Raw("SELECT COUNT(*) FROM users WHERE isadmin='false'").Scan(&userDetails.TotalUsers).Error
 	if err != nil {
-		return models.DashboardUser{}, nil
+		return models.DashBoardUser{}, nil
 	}
-
-	err = ad.DB.Raw("select count(distinct user_id) from orders").Scan(&userDetails.OrderedUsers).Error
+	err = ad.DB.Raw("SELECT COUNT(*)  FROM users WHERE blocked=true").Scan(&userDetails.BlockedUser).Error
 	if err != nil {
-		return models.DashboardUser{}, nil
+		return models.DashBoardUser{}, nil
 	}
-
-	err = ad.DB.Raw("select count(*) from users where blocked = true").Scan(&userDetails.BlockedUser).Error
-	if err != nil {
-		return models.DashboardUser{}, nil
-	}
-
 	return userDetails, nil
 }
+
 func (ad *adminRepository) DashBoardProductDetails() (models.DashBoardProduct, error) {
 	var productDetails models.DashBoardProduct
-
-	err := ad.DB.Raw("select count(*) from products").Scan(&productDetails.TotalProducts).Error
+	err := ad.DB.Raw("SELECT COUNT(*) FROM inventories").Scan(&productDetails.TotalProducts).Error
 	if err != nil {
 		return models.DashBoardProduct{}, nil
 	}
-
-	err = ad.DB.Raw("select count(*) from products where quantity = 0").Scan(&productDetails.OutOfStockProduct).Error
-	if err != nil {
-		return models.DashBoardProduct{}, nil
-	}
-
-	var productID int
-	err = ad.DB.Raw("select product_id from order_items group by product_id order by sum(quantity) desc limit 1").Scan(&productID).Error
-	if err != nil {
-		return models.DashBoardProduct{}, nil
-	}
-
-	err = ad.DB.Raw("select movie_name from products where id = ?", productID).Scan(&productDetails.TopSellingProduct).Error
+	err = ad.DB.Raw("SELECT COUNT(*) FROM inventories WHERE stock<=0").Scan(&productDetails.OutofStockProduct).Error
 	if err != nil {
 		return models.DashBoardProduct{}, nil
 	}
 	return productDetails, nil
+}
+
+func (ad *adminRepository) FilteredSalesReport(startTime time.Time, endTime time.Time) (models.SalesReport, error) {
+	var salesReport models.SalesReport
+	result := ad.DB.Raw("SELECT COALESCE(SUM(final_price),0) FROM orders WHERE payment_status='paid' AND approval = true AND created_at >= ? AND created_at <= ?", startTime, endTime).Scan(&salesReport.TotalSales)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
+	result = ad.DB.Raw("SELECT COUNT(*) FROM orders").Scan(&salesReport.TotalOrders)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
+	result = ad.DB.Raw("SELECT COUNT(*) FROM orders WHERE payment_status = 'paid' and approval = true and created_at >= ? AND created_at <= ?", startTime, endTime).Scan(&salesReport.CompletedOrders)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
+	result = ad.DB.Raw("SELECT COUNT(*) FROM orders WHERE shipment_status = 'processing' AND approval = false AND created_at >= ? AND created_at<=?", startTime, endTime).Scan(&salesReport.PendingOrders)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
+	var productID int
+	result = ad.DB.Raw("SELECT product_id FROM order_items GROUP BY product_id order by SUM(quantity) DESC LIMIT 1").Scan(&productID)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
+	result = ad.DB.Raw("SELECT name FROM products WHERE id = ?", productID).Scan(&salesReport.TrendingProduct)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
+	return salesReport, nil
 }

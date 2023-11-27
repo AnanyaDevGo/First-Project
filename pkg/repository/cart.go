@@ -10,7 +10,7 @@ type cartRepository struct {
 	DB *gorm.DB
 }
 
-func NewCartRepository(db *gorm.DB) *cartRepository{
+func NewCartRepository(db *gorm.DB) *cartRepository {
 	return &cartRepository{
 		DB: db,
 	}
@@ -40,7 +40,6 @@ func (ad *cartRepository) GetCart(id int) ([]models.GetCart, error) {
 
 }
 
-
 func (ad *cartRepository) GetCartId(user_id int) (int, error) {
 
 	var id int
@@ -69,11 +68,11 @@ func (i *cartRepository) CreateNewCart(user_id int) (int, error) {
 	return id, nil
 }
 
-func (i *cartRepository) AddLineItems(cart_id, inventory_id int) error {
+func (i *cartRepository) AddLineItems(cart_id, inventory_id, qty int) error {
 
 	err := i.DB.Exec(`
-		INSERT INTO line_items (cart_id,inventory_id)
-		VALUES ($1,$2)`, cart_id, inventory_id).Error
+		INSERT INTO line_items (cart_id,inventory_id,quantity)
+		VALUES ($1,$2,$3)`, cart_id, inventory_id, qty).Error
 	if err != nil {
 		return err
 	}

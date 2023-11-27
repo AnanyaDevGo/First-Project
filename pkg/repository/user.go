@@ -84,9 +84,13 @@ func (ad *userDataBase) GetCartID(id int) (int, error) {
 
 	var cart_id int
 
-	if err := ad.DB.Raw("select id from carts where user_id=?", id).Scan(&cart_id).Error; err != nil {
+	fmt.Println("iddddddddddddd", id)
+
+	if err := ad.DB.Raw("SELECT id FROM carts WHERE user_id = ?", id).Scan(&cart_id).Error; err != nil {
 		return 0, err
 	}
+
+	fmt.Println("ccccccccccccc", cart_id)
 
 	return cart_id, nil
 
@@ -104,6 +108,18 @@ func (ad *userDataBase) FindCartQuantity(cart_id, inventory_id int) (int, error)
 
 }
 
+func (ad *userDataBase) FindPrice(inventory_id int) (float64, error) {
+
+	var price float64
+
+	if err := ad.DB.Raw("select price from inventories where id=?", inventory_id).Scan(&price).Error; err != nil {
+		return 0, err
+	}
+
+	return price, nil
+
+}
+
 func (ad *userDataBase) FindCategory(inventory_id int) (int, error) {
 
 	var category int
@@ -114,6 +130,16 @@ func (ad *userDataBase) FindCategory(inventory_id int) (int, error) {
 
 	return category, nil
 
+}
+
+func (i *userDataBase) FindStock(id int) (int, error) {
+	var stock int
+	err := i.DB.Raw("SELECT stock FROM inventories WHERE id = ?", id).Scan(&stock).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return stock, nil
 }
 
 func (ad *userDataBase) FindProductNames(inventory_id int) (string, error) {

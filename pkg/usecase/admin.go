@@ -57,40 +57,44 @@ func (ad *adminUseCase) LoginHandler(adminDetails models.AdminLogin) (domain.Tok
 
 }
 func (ad *adminUseCase) DashBoard() (models.CompleteAdminDashboard, error) {
-
-	totalRevenue, err := ad.adminRepository.TotalRevenue()
+	userDetails, err := ad.adminRepository.DashBoardUserDetails()
 	if err != nil {
 		return models.CompleteAdminDashboard{}, err
 	}
-
-	orderDetails, err := ad.adminRepository.DashBoardOrder()
-	if err != nil {
-		return models.CompleteAdminDashboard{}, err
-	}
-
-	amountDetails, err := ad.adminRepository.AmountDetails()
-	if err != nil {
-		return models.CompleteAdminDashboard{}, err
-	}
-
-	userDetails, err := ad.adminRepository.DashboardUserDetails()
-	if err != nil {
-		return models.CompleteAdminDashboard{}, err
-	}
-
 	productDetails, err := ad.adminRepository.DashBoardProductDetails()
 	if err != nil {
 		return models.CompleteAdminDashboard{}, err
 	}
-
+	orderDetails, err := ad.adminRepository.DashBoardOrder()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
+	totalRevenue, err := ad.adminRepository.TotalRevenue()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
+	amountDetails, err := ad.adminRepository.AmountDetails()
+	if err != nil {
+		return models.CompleteAdminDashboard{}, err
+	}
 	return models.CompleteAdminDashboard{
-		DashboardRevenue: totalRevenue,
-		DashboardOrder:   orderDetails,
-		DashboardAmount:  amountDetails,
 		DashboardUser:    userDetails,
-		DashBoardProduct: productDetails,
+		DashboardProduct: productDetails,
+		DashboardOrder:   orderDetails,
+		DashboardRevenue: totalRevenue,
+		DashboardAmount:  amountDetails,
 	}, nil
+}
 
+func (ad *adminUseCase) FilteredSalesReport(timePeriod string) (models.SalesReport, error) {
+
+	startTime, endTime := ad.helper.GetTimeFromPeriod(timePeriod)
+	saleReport, err := ad.adminRepository.FilteredSalesReport(startTime, endTime)
+
+	if err != nil {
+		return models.SalesReport{}, err
+	}
+	return saleReport, nil
 }
 
 func (ad *adminUseCase) BlockUser(id string) error {

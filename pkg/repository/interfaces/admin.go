@@ -3,6 +3,7 @@ package interfaces
 import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/utils/models"
+	"time"
 )
 
 type AdminRepository interface {
@@ -12,6 +13,7 @@ type AdminRepository interface {
 	GetUsers(page int) ([]models.UserDetailsAtAdmin, error)
 
 	NewPaymentMethod(string) error
+	GetPaymentMethod() ([]models.PaymentMethodResponse, error)
 	ListPaymentMethods() ([]domain.PaymentMethod, error)
 	CheckIfPaymentMethodAlreadyExists(payment string) (bool, error)
 	DeletePaymentMethod(id int) error
@@ -19,6 +21,7 @@ type AdminRepository interface {
 	TotalRevenue() (models.DashboardRevenue, error)
 	DashBoardOrder() (models.DashboardOrder, error)
 	AmountDetails() (models.DashboardAmount, error)
-	DashboardUserDetails() (models.DashboardUser, error)
+	DashBoardUserDetails() (models.DashBoardUser, error)
 	DashBoardProductDetails() (models.DashBoardProduct, error)
+	FilteredSalesReport(startTime time.Time, endTime time.Time) (models.SalesReport, error)
 }

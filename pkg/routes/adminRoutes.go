@@ -13,6 +13,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 	engine.Use(middleware.AdminAuthMiddleware)
 	{
 		engine.GET("/dashboard", adminHandler.Dashboard)
+		engine.GET("/salesreport", adminHandler.FilteredSalesReport)
 
 		usermanagement := engine.Group("/users")
 		{
@@ -39,8 +40,8 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		}
 		order := engine.Group("/order")
 		{
-			order.GET("/get", orderHandler.AdminOrders)
-			order.PUT("/status", orderHandler.EditOrderStatus)
+			order.GET("/get", orderHandler.GetAdminOrders)
+			order.GET("/status", orderHandler.ApproveOrder)
 
 		}
 		payment := engine.Group("/payment-method")

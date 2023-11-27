@@ -88,6 +88,8 @@ func (u *UserHandler) GetCart(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
 
+	fmt.Println("card id", id)
+
 	products, err := u.userUseCase.GetCart(id)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve cart", nil, err.Error())
