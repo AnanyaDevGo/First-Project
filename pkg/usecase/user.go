@@ -5,6 +5,7 @@ import (
 	"CrocsClub/pkg/domain"
 	helper_interfaces "CrocsClub/pkg/helper/interface"
 	interfaces "CrocsClub/pkg/repository/interfaces"
+	usecase "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"fmt"
@@ -22,7 +23,7 @@ type userUseCase struct {
 	helper              helper_interfaces.Helper
 }
 
-func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository, h helper_interfaces.Helper) *userUseCase {
+func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository, h helper_interfaces.Helper) usecase.UserUseCase {
 	return &userUseCase{
 		userRepo:            repo,
 		cfg:                 cfg,

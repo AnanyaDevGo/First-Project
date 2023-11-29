@@ -3,6 +3,7 @@ package usecase
 import (
 	helper_interface "CrocsClub/pkg/helper/interface"
 	interfaces "CrocsClub/pkg/repository/interfaces"
+	usecase "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"fmt"
@@ -13,7 +14,7 @@ type inventoryUseCase struct {
 	helper     helper_interface.Helper
 }
 
-func NewInventoryUseCase(repo interfaces.InventoryRepository, h helper_interface.Helper) *inventoryUseCase {
+func NewInventoryUseCase(repo interfaces.InventoryRepository, h helper_interface.Helper) usecase.InventoryUseCase {
 	return &inventoryUseCase{
 		repository: repo,
 		helper:     h,

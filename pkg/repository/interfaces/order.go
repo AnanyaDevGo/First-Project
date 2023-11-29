@@ -18,6 +18,9 @@ type OrderRepository interface {
 	ApproveOrder(orderId string) error
 	ChangeOrderStatus(orderID, status string) error
 	GetShipmentsStatus(orderID string) (string, error)
+	PaymentMethodID(orderID int) (int, error)
 	ReturnOrder(shipmentStatus string, orderID string) error
 	ReduceInventoryQuantity(productName string, quantity int) error
+	PaymentAlreadyPaid(orderID int) (bool, error)
+	GetOrderDetailsByOrderId(orderID int) (models.CombinedOrderDetails, error)
 }

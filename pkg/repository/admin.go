@@ -154,12 +154,12 @@ func (ad *adminRepository) DashBoardOrder() (models.DashboardOrder, error) {
 		return models.DashboardOrder{}, nil
 	}
 
-	err = ad.DB.Raw("select count(*) from orders where shipment_status = 'pending' or shipment_status = 'processing'").Scan(&orderDetails.PendingOrder).Error
+	err = ad.DB.Raw("select count(*) from orders where order_status = 'pending' or order_status = 'processing'").Scan(&orderDetails.PendingOrder).Error
 	if err != nil {
 		return models.DashboardOrder{}, nil
 	}
 
-	err = ad.DB.Raw("select count(*) from orders where shipment_status = 'cancelled'").Scan(&orderDetails.CancelledOrder).Error
+	err = ad.DB.Raw("select count(*) from orders where order_status = 'cancelled'").Scan(&orderDetails.CancelledOrder).Error
 	if err != nil {
 		return models.DashboardOrder{}, nil
 	}
@@ -234,16 +234,16 @@ func (ad *adminRepository) FilteredSalesReport(startTime time.Time, endTime time
 	if result.Error != nil {
 		return models.SalesReport{}, result.Error
 	}
-	result = ad.DB.Raw("SELECT COUNT(*) FROM orders WHERE shipment_status = 'processing' AND approval = false AND created_at >= ? AND created_at<=?", startTime, endTime).Scan(&salesReport.PendingOrders)
+	result = ad.DB.Raw("SELECT COUNT(*) FROM orders WHERE order_status = 'processing' AND approval = false AND created_at >= ? AND created_at<=?", startTime, endTime).Scan(&salesReport.PendingOrders)
 	if result.Error != nil {
 		return models.SalesReport{}, result.Error
 	}
 	var productID int
-	result = ad.DB.Raw("SELECT product_id FROM order_items GROUP BY product_id order by SUM(quantity) DESC LIMIT 1").Scan(&productID)
+	result = ad.DB.Raw("SELECT inventory_id FROM order_items GROUP BY inventory_id order by SUM(quantity) DESC LIMIT 1").Scan(&productID)
 	if result.Error != nil {
 		return models.SalesReport{}, result.Error
 	}
-	result = ad.DB.Raw("SELECT name FROM products WHERE id = ?", productID).Scan(&salesReport.TrendingProduct)
+	result = ad.DB.Raw("SELECT product_name FROM inventories WHERE id = ?", productID).Scan(&salesReport.TrendingProduct)
 	if result.Error != nil {
 		return models.SalesReport{}, result.Error
 	}

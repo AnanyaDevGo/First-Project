@@ -14,7 +14,7 @@ type cartUseCase struct {
 	adrepo              interfaces.AdminRepository
 }
 
-func NewCartUseCase(repo interfaces.CartRepository, inventoryRepo interfaces.InventoryRepository, userUseCase services.UserUseCase, adrepo interfaces.AdminRepository) *cartUseCase {
+func NewCartUseCase(repo interfaces.CartRepository, inventoryRepo interfaces.InventoryRepository, userUseCase services.UserUseCase, adrepo interfaces.AdminRepository) services.CartUseCase {
 	return &cartUseCase{
 		repo:                repo,
 		inventoryRepository: inventoryRepo,

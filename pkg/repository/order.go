@@ -2,6 +2,7 @@ package repository
 
 import (
 	"CrocsClub/pkg/domain"
+	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"fmt"
@@ -13,7 +14,7 @@ type orderRepository struct {
 	DB *gorm.DB
 }
 
-func NewOrderRepository(db *gorm.DB) *orderRepository {
+func NewOrderRepository(db *gorm.DB) interfaces.OrderRepository {
 	return &orderRepository{
 		DB: db,
 	}
@@ -160,6 +161,38 @@ func (i *orderRepository) GetShipmentStatus(orderID string) (string, error) {
 	return shipmentStatus, nil
 }
 
+func (or *orderRepository) GetOrderDetailsByOrderId(orderID int) (models.CombinedOrderDetails, error) {
+
+	var orderDetails models.CombinedOrderDetails
+	err := or.DB.Raw(`SELECT
+    orders.id as order_id,
+    orders.final_price,
+    orders.shipment_status,
+    orders.payment_status,
+    users.name,
+    users.email,
+    users.phone,
+    addresses.house_name,
+    addresses.state,
+    addresses.street,
+    addresses.city,
+    addresses.pin
+FROM
+    orders
+INNER JOIN
+    users ON orders.user_id = users.id
+INNER JOIN
+    addresses ON users.id = addresses.user_id
+WHERE
+    orders.id = ?`, orderID).Scan(&orderDetails).Error
+	if err != nil {
+		return models.CombinedOrderDetails{}, nil
+	}
+	fmt.Println("print", orderDetails.FinalPrice)
+
+	return orderDetails, nil
+}
+
 func (i *orderRepository) ApproveOrder(orderID string) error {
 	err := i.DB.Exec("UPDATE orders SET order_status = 'order_placed' WHERE id = ?", orderID).Error
 	if err != nil {
@@ -178,23 +211,40 @@ func (i *orderRepository) ChangeOrderStatus(orderID, status string) error {
 
 func (o *orderRepository) GetShipmentsStatus(orderID string) (string, error) {
 
-	var shipmentStatus string
-	err := o.DB.Raw("select order_status from orders where id = ?", orderID).Scan(&shipmentStatus).Error
+	var orderStatus string
+	err := o.DB.Raw("select order_status from orders where id = ?", orderID).Scan(&orderStatus).Error
 	if err != nil {
 		return "", err
 	}
 
-	return shipmentStatus, nil
+	return orderStatus, nil
 
 }
+func (or *orderRepository) PaymentMethodID(orderID int) (int, error) {
+	var a int
+	err := or.DB.Raw("SELECT payment_method_id FROM orders WHERE id = ?", orderID).Scan(&a).Error
+	if err != nil {
+		return 0, err
+	}
+	fmt.Println("order id 1", a)
+	return a, nil
+}
+func (o *orderRepository) ReturnOrder(orderStatus string, orderID string) error {
 
-func (o *orderRepository) ReturnOrder(shipmentStatus string, orderID string) error {
-
-	err := o.DB.Exec("update orders set order_status = ? where id = ?", shipmentStatus, orderID).Error
+	err := o.DB.Exec("update orders set order_status = ? where id = ?", orderStatus, orderID).Error
 	if err != nil {
 		return err
 	}
 
 	return nil
 
+}
+
+func (or *orderRepository) PaymentAlreadyPaid(orderID int) (bool, error) {
+	var a bool
+	err := or.DB.Raw("SELECT order_status = 'processing' AND payment_status = 'paid' FROM orders WHERE id = ?", orderID).Scan(&a).Error
+	if err != nil {
+		return false, err
+	}
+	return a, nil
 }

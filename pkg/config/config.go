@@ -14,10 +14,13 @@ type Config struct {
 	AUTHTOKEN  string `mapstructure:"DB_AUTHTOKEN"`
 	ACCOUNTSID string `mapstructure:"DB_ACCOUNTSID"`
 	SERVICESID string `mapstructure:"DB_SERVICESID"`
+
+	KEY_ID_FOR_PAY     string `mapstructure:"KEY_ID_FOR_PAY"`
+	SECRET_KEY_FOR_PAY string `mapstructure:"SECRET_KEY_FOR_PAY"`
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "DB_AUTHTOKEN", "DB_ACCOUNTSID", "DB_SERVICESID",
+	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "DB_AUTHTOKEN", "DB_ACCOUNTSID", "DB_SERVICESID", "KEY_ID_FOR_PAY", "SECRET_KEY_FOR_PAY",
 }
 
 func LoadConfig() (Config, error) {

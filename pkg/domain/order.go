@@ -19,6 +19,7 @@ type Order struct {
 	FinalPrice      float64       `json:"price"`
 	OrderStatus     string        `json:"order_status" gorm:"order_status:4;default:'PENDING';check:order_status IN ('PENDING', 'SHIPPED','DELIVERED','CANCELED','RETURNED')"`
 	PaymentStatus   string        `json:"payment_status" gorm:"payment_status:2;default:'NOT PAID';check:payment_status IN ('PAID', 'NOT PAID')"`
+	Approval        bool          `json:"approval" gorm:"default:false"`
 }
 
 type OrderResponse struct {

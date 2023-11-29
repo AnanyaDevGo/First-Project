@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"fmt"
@@ -13,7 +14,7 @@ type inventoryRepository struct {
 	DB *gorm.DB
 }
 
-func NewInventoryRepository(DB *gorm.DB) *inventoryRepository {
+func NewInventoryRepository(DB *gorm.DB) interfaces.InventoryRepository {
 	return &inventoryRepository{DB}
 }
 

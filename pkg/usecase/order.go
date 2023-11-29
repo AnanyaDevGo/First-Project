@@ -4,9 +4,11 @@ import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/repository/interfaces"
 	services "CrocsClub/pkg/usecase/interfaces"
+
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"fmt"
+	"log"
 )
 
 type orderUseCase struct {
@@ -14,7 +16,7 @@ type orderUseCase struct {
 	userUseCase     services.UserUseCase
 }
 
-func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserUseCase) *orderUseCase {
+func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserUseCase) services.OrderUseCase {
 	return &orderUseCase{
 		orderRepository: repo,
 		userUseCase:     userUseCase,
@@ -37,20 +39,15 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID int) erro
 	if err != nil {
 		return err
 	}
-	fmt.Println("orderid:......", orderID)
 	if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
 		return err
 	}
-
-	// Update inventory for each product in the cart after a successful order
 	for _, v := range cart.Data {
 		if err := i.orderRepository.ReduceInventoryQuantity(v.ProductName, v.Quantity); err != nil {
-			// Handle error if reducing inventory fails
 			return err
 		}
 	}
 
-	// Remove purchased items from the user's cart
 	for _, v := range cart.Data {
 		if err := i.userUseCase.RemoveFromCart(cart.ID, v.ID); err != nil {
 			return err
@@ -114,7 +111,6 @@ func (i *orderUseCase) OrdersStatus(orderID string) error {
 	case "CANCELED", "RETURNED", "DELIVERED":
 		return errors.New("cannot approve this order because it's in a processed or canceled state")
 	case "PENDING":
-		// For admin approval, change PENDING to SHIPPED
 		err := i.orderRepository.ChangeOrderStatus(orderID, "SHIPPED")
 		if err != nil {
 			return err
@@ -129,7 +125,6 @@ func (i *orderUseCase) OrdersStatus(orderID string) error {
 			return errors.New("cannot approve this order because it's cancelled")
 		}
 
-		// For admin approval, change SHIPPED to DELIVERED
 		err = i.orderRepository.ChangeOrderStatus(orderID, "DELIVERED")
 		if err != nil {
 			return err
@@ -139,9 +134,20 @@ func (i *orderUseCase) OrdersStatus(orderID string) error {
 	return nil
 }
 
+func (or *orderUseCase) PaymentMethodID(order_id int) (int, error) {
+	fmt.Println("here order")
+	id, err := or.orderRepository.PaymentMethodID(order_id)
+	// fmt.Println("id", id, err)
+	if err != nil {
+		log.Print(err)
+		return 0, err
+	}
+	fmt.Println("order inside order usecase", id)
+	return id, nil
+}
+
 func (o *orderUseCase) ReturnOrder(orderID string) error {
 
-	// check the shipment status - if the status cancelled, don't approve it
 	shipmentStatus, err := o.orderRepository.GetShipmentsStatus(orderID)
 	if err != nil {
 		return err
