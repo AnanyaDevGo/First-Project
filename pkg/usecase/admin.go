@@ -7,6 +7,7 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"fmt"
 
 	"github.com/jinzhu/copier"
 	"golang.org/x/crypto/bcrypt"
@@ -77,6 +78,11 @@ func (ad *adminUseCase) DashBoard() (models.CompleteAdminDashboard, error) {
 	if err != nil {
 		return models.CompleteAdminDashboard{}, err
 	}
+
+	fmt.Println(totalRevenue.MonthRevenue)
+	fmt.Println(totalRevenue.YearRevenue)
+	fmt.Println(totalRevenue.TodayRevenue)
+
 	return models.CompleteAdminDashboard{
 		DashboardUser:    userDetails,
 		DashboardProduct: productDetails,

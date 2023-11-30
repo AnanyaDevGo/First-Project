@@ -2,6 +2,8 @@ package repository
 
 import (
 	"CrocsClub/pkg/domain"
+	"log"
+
 	//"CrocsClub/pkg/helper"
 	interfaces "CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
@@ -142,6 +144,7 @@ func (a *adminRepository) TotalRevenue() (models.DashboardRevenue, error) {
 	if err != nil {
 		return models.DashboardRevenue{}, nil
 	}
+	log.Printf("sdhgsafasfgdf %v", revenueDetails.TodayRevenue)
 
 	return revenueDetails, nil
 }

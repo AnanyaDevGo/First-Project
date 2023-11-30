@@ -35,3 +35,6 @@ type Order struct {
 	AddressID       int `json:"address_id"`
 	PaymentMethodID int `json:"payment_id"`
 }
+type SearchItems struct {
+	ProductName string `json:"product_name"`
+}
