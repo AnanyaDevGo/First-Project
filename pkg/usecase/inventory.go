@@ -26,7 +26,8 @@ func NewInventoryUseCase(repo interfaces.InventoryRepository, h helper_interface
 
 func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *multipart.FileHeader) (models.ProductsResponse, error) {
 
-	if inventory.Stock < 0 || inventory.Price < 0 || inventory.CategoryID < 0 {
+	
+	if inventory.Stock <= 0 || inventory.Price <= 0 || inventory.CategoryID <= 0 {
 		err := errors.New("enter valid values")
 		return models.ProductsResponse{}, err
 	}
@@ -70,6 +71,10 @@ func (usecase *inventoryUseCase) DeleteInventory(inventoryID string) error {
 }
 
 func (i inventoryUseCase) UpdateInventory(pid int, stock int) (models.ProductsResponse, error) {
+
+	if stock <= 0 {
+		return models.ProductsResponse{}, errors.New("invalid input")
+	}
 
 	result, err := i.repository.CheckInventory(pid)
 	if err != nil {

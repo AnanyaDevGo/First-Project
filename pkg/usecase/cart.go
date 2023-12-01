@@ -5,6 +5,7 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"fmt"
 )
 
 type cartUseCase struct {
@@ -25,10 +26,14 @@ func NewCartUseCase(repo interfaces.CartRepository, inventoryRepo interfaces.Inv
 
 func (i *cartUseCase) AddToCart(userID, inventoryID, qty int) error {
 
+	fmt.Println("uuuuuuuuuu", inventoryID)
+
 	stock, err := i.inventoryRepository.CheckStock(inventoryID)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("stock", stock)
 
 	if stock <= 0 || qty > stock {
 		return errors.New("out of stock")

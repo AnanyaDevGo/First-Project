@@ -2,7 +2,9 @@ package handler
 
 import (
 	services "CrocsClub/pkg/usecase/interfaces"
+	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -19,27 +21,36 @@ func NewCartHandler(usecase services.CartUseCase) *CartHandler {
 		usecase: usecase,
 	}
 }
-
-func (i *CartHandler) AddToCart(c *gin.Context) {
-
-	idString, _ := c.Get("id")
-	UserID, _ := idString.(int)
-
-	InventoryID, err := strconv.Atoi(c.Query("inventory_id"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "Inventory Id not in right format", nil, err.Error())
+func (ch *CartHandler) AddToCart(c *gin.Context) {
+	// Get user ID from the context
+	idString, exists := c.Get("id")
+	if !exists {
+		err := errors.New("user ID not found in the context")
+		errorRes := response.ClientResponse(http.StatusBadRequest, "User ID not found in the context", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
-	qty, err := strconv.Atoi(c.Query("quantity"))
-	if err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
+	userID, ok := idString.(int)
+	if !ok {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "User ID not in the right format", nil, "")
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
 
-	if err := i.usecase.AddToCart(UserID, InventoryID, qty); err != nil {
+	// Bind JSON request to Cart model
+	var cart models.Cart
+	if err := c.BindJSON(&cart); err != nil {
+		errorRes := response.ClientResponse(http.StatusBadRequest, "Failed to parse request JSON", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
+	fmt.Println("inventory id ", cart.InventoryID)
+	fmt.Println("quantity", cart.Quantity)
+
+	// Call usecase to add to the cart
+	if err := ch.usecase.AddToCart(userID, cart.InventoryID, cart.Quantity); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not add to the cart", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
@@ -47,8 +58,8 @@ func (i *CartHandler) AddToCart(c *gin.Context) {
 
 	successRes := response.ClientResponse(http.StatusOK, "Successfully added to cart", nil, nil)
 	c.JSON(http.StatusOK, successRes)
-
 }
+
 func (i *CartHandler) CheckOut(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {

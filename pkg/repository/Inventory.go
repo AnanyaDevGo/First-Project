@@ -5,6 +5,7 @@ import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"gorm.io/gorm"
@@ -124,12 +125,12 @@ func (i *inventoryRepository) UpdateInventory(pid int, stock int) (models.Produc
 	if i.DB == nil {
 		return models.ProductsResponse{}, errors.New("database connection is nil")
 	}
-	if err := i.DB.Exec("UPDATE products SET stock = stock + $1 WHERE id= $2", stock, pid).Error; err != nil {
+	if err := i.DB.Exec("UPDATE inventories SET stock = stock + $1 WHERE id= $2", stock, pid).Error; err != nil {
 		return models.ProductsResponse{}, err
 	}
 	var newdetails models.ProductsResponse
 	var newstock int
-	if err := i.DB.Raw("SELECT stock FROM products WHERE id=?", pid).Scan(&newstock).Error; err != nil {
+	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=?", pid).Scan(&newstock).Error; err != nil {
 		return models.ProductsResponse{}, err
 	}
 	newdetails.ID = uint(pid)
@@ -163,12 +164,14 @@ func (i *inventoryRepository) ShowIndividualProducts(id string) (models.Products
 }
 
 func (i *inventoryRepository) CheckStock(pid int) (int, error) {
+	fmt.Println("pppppp", pid)
 	var k int
 	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=$1", pid).Scan(&k).Error; err != nil {
 		return 0, err
 	}
-	return k, nil
+	fmt.Println("kkkkkkkkk", k)
 
+	return k, nil
 }
 
 func (c *inventoryRepository) FetchProductDetails(productId uint) (models.Inventories, error) {

@@ -45,3 +45,8 @@ type InventoryDetails struct {
 	Price    float64 `json:"price"`
 	Quantity uint    `json:"quantity"`
 }
+
+type Cart struct {
+	InventoryID int `json:"products_id"`
+	Quantity    int `json:"quantity"`
+}
