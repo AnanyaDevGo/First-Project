@@ -15,12 +15,16 @@ type Config struct {
 	ACCOUNTSID string `mapstructure:"DB_ACCOUNTSID"`
 	SERVICESID string `mapstructure:"DB_SERVICESID"`
 
+	Access_key_ID     string `mapstructure:"Access_key_ID"`
+	Secret_access_key string `mapstructure:"Secret_access_key"`
+	AWSRegion         string `mapstructure:"AWSRegion"`
+
 	KEY_ID_FOR_PAY     string `mapstructure:"KEY_ID_FOR_PAY"`
 	SECRET_KEY_FOR_PAY string `mapstructure:"SECRET_KEY_FOR_PAY"`
 }
 
 var envs = []string{
-	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "DB_AUTHTOKEN", "DB_ACCOUNTSID", "DB_SERVICESID", "KEY_ID_FOR_PAY", "SECRET_KEY_FOR_PAY",
+	"DB_HOST", "DB_NAME", "DB_USER", "DB_PORT", "DB_PASSWORD", "DB_AUTHTOKEN", "DB_ACCOUNTSID", "DB_SERVICESID", "Access_key_ID", "Secret_access_key", "AWSRegion", "KEY_ID_FOR_PAY", "SECRET_KEY_FOR_PAY",
 }
 
 func LoadConfig() (Config, error) {

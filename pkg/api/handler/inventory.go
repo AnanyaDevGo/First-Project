@@ -5,7 +5,6 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -25,22 +24,28 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 func (i *InventoryHandler) AddInventory(c *gin.Context) {
 	var inventory models.AddInventories
 
-	if err := c.ShouldBindJSON(&inventory); err != nil {
-		errorRes := response.ClientResponse(http.StatusBadRequest, "form file error", nil, err.Error())
-		c.JSON(http.StatusBadRequest, errorRes)
+	cat := c.PostForm("category_id")
+	inventory.CategoryID, _ = strconv.Atoi(cat)
+	inventory.ProductName = c.PostForm("product_name")
+	inventory.Size = c.PostForm("size")
+	inventory.Stock, _ = strconv.Atoi(c.PostForm("stock"))
+	inventory.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadRequest, "retrieving image from the Form error", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
-	fmt.Println("kkkkkkkkkk", inventory)
-	InventoryResponse, err := i.InventoryUseCase.AddInventory(inventory)
+	productResponse, err := i.InventoryUseCase.AddInventory(inventory, file)
 	if err != nil {
-		errRes := response.ClientResponse(http.StatusBadRequest, "Could not add the Inventory", nil, err.Error())
+		errRes := response.ClientResponse(http.StatusBadRequest, "Could not add the product", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
 
-	successRes := response.ClientResponse(http.StatusOK, "Successfully added inventory", InventoryResponse, nil)
+	successRes := response.ClientResponse(http.StatusOK, "Successfully added Product", productResponse, nil)
 	c.JSON(http.StatusOK, successRes)
-
 }
 
 func (i *InventoryHandler) ListProducts(c *gin.Context) {

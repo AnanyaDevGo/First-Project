@@ -18,6 +18,7 @@ type Inventories struct {
 	Stock           int     `json:"stock"`
 	IfPresentAtCart bool    `json:"if_present_at_cart"`
 	Price           float64 `json:"price"`
+	Image           string  `json:"product_image"`
 }
 
 type AddInventories struct {

@@ -7,6 +7,7 @@ import (
 	usecase "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"mime/multipart"
 
 	"strings"
 )
@@ -23,18 +24,22 @@ func NewInventoryUseCase(repo interfaces.InventoryRepository, h helper_interface
 	}
 }
 
-func (i *inventoryUseCase) AddInventory(inventory models.AddInventories) (models.InventoryResponse, error) {
+func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *multipart.FileHeader) (models.ProductsResponse, error) {
 
 	if inventory.Stock < 0 || inventory.Price < 0 || inventory.CategoryID < 0 {
-		return models.InventoryResponse{}, errors.New("negative values not allowed for stock, price, or category ID")
+		err := errors.New("enter valid values")
+		return models.ProductsResponse{}, err
 	}
 
-	inventoryResponse, err := i.repository.AddInventory(inventory)
+	url, err := i.helper.AddImageToAwsS3(file)
 	if err != nil {
-		return models.InventoryResponse{}, err
+		return models.ProductsResponse{}, err
 	}
-
-	return inventoryResponse, nil
+	productResponse, err := i.repository.AddInventory(inventory, url)
+	if err != nil {
+		return models.ProductsResponse{}, err
+	}
+	return productResponse, err
 }
 
 func (i *inventoryUseCase) ListProducts(pageNo, pageList int) ([]models.ProductsResponse, error) {
@@ -64,20 +69,20 @@ func (usecase *inventoryUseCase) DeleteInventory(inventoryID string) error {
 	return nil
 }
 
-func (i inventoryUseCase) UpdateInventory(pid int, stock int) (models.InventoryResponse, error) {
+func (i inventoryUseCase) UpdateInventory(pid int, stock int) (models.ProductsResponse, error) {
 
 	result, err := i.repository.CheckInventory(pid)
 	if err != nil {
-		return models.InventoryResponse{}, err
+		return models.ProductsResponse{}, err
 	}
 
 	if !result {
-		return models.InventoryResponse{}, errors.New("there is no inventory as you mentioned")
+		return models.ProductsResponse{}, errors.New("there is no inventory as you mentioned")
 	}
 
 	newcat, err := i.repository.UpdateInventory(pid, stock)
 	if err != nil {
-		return models.InventoryResponse{}, err
+		return models.ProductsResponse{}, err
 	}
 
 	return newcat, err

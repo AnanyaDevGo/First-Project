@@ -19,11 +19,12 @@ type SetNewName struct {
 }
 type ProductsResponse struct {
 	ID          uint    `json:"id" gorm:"unique;not null"`
-	Category    string  `json:"Category"`
+	CategoryID  string  `json:"category_id"`
 	ProductName string  `json:"product_name"`
 	Size        string  `json:"size"`
 	Stock       int     `json:"stock"`
 	Price       float64 `json:"price"`
+	Image       string  `json:"product_image"`
 }
 type MakeOrder struct {
 	UserID          int `json:"user_id"`

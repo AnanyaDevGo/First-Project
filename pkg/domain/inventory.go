@@ -13,4 +13,5 @@ type Inventories struct {
 	Size        string   `json:"size" gorm:"size:W4;default:'W6';Check:size IN ('W4', 'W6', 'M6', 'W10', 'M10');"`
 	Stock       int      `json:"stock"`
 	Price       float64  `json:"price"`
+	Image       string   `json:"product_image"`
 }

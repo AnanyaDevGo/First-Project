@@ -5,7 +5,6 @@ import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"gorm.io/gorm"
@@ -19,52 +18,58 @@ func NewInventoryRepository(DB *gorm.DB) interfaces.InventoryRepository {
 	return &inventoryRepository{DB}
 }
 
-func (i *inventoryRepository) AddInventory(inventory models.AddInventories) (models.InventoryResponse, error) {
-	// Check if the product already exists based on product name and category ID
+func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url string) (models.ProductsResponse, error) {
 	var count int64
 	i.DB.Model(&models.Inventories{}).Where("product_name = ? AND category_id = ?", inventory.ProductName, inventory.CategoryID).Count(&count)
 	if count > 0 {
-		// Product already exists, return an error or handle as needed
-		return models.InventoryResponse{}, errors.New("product already exists in the database")
+		return models.ProductsResponse{}, errors.New("product already exists in the database")
 	}
 
-	// Check for negative stock or price values
 	if inventory.Stock < 0 || inventory.Price < 0 {
-		return models.InventoryResponse{}, errors.New("stock and price cannot be negative")
+		return models.ProductsResponse{}, errors.New("stock and price cannot be negative")
 	}
 
-	// If the product doesn't exist and values are valid, proceed with inserting it into the database
+	// Insert the product details
 	query := `
         INSERT INTO inventories (category_id, product_name, size, stock, price)
-        VALUES (?, ?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, ?)
+        RETURNING id,category_id,product_name,size,stock,price
     `
-	err := i.DB.Exec(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price).Error
+	var productsResponse models.ProductsResponse
+	err := i.DB.Raw(query, inventory.CategoryID, inventory.ProductName, inventory.Size, inventory.Stock, inventory.Price).Scan(&productsResponse).Error
 	if err != nil {
-		return models.InventoryResponse{}, err
+		return models.ProductsResponse{}, err
 	}
 
-	var inventoryResponse models.InventoryResponse
-	// Populate inventoryResponse as needed
-
-	return inventoryResponse, nil
+	// Insert the image with the generated product id
+	queryImage := "Update inventories  set image = ? where id = ?"
+	imgErr := i.DB.Exec(queryImage, url, productsResponse.ID).Error
+	if imgErr != nil {
+		return models.ProductsResponse{}, imgErr
+	}
+	var a string
+	err = i.DB.Raw("SELECT image FROM inventories WHERE id = ?", productsResponse.ID).Scan(&a).Error
+	if err != nil {
+		return models.ProductsResponse{}, err
+	}
+	a = productsResponse.Image
+	err = i.DB.Raw("SELECT * FROM inventories WHERE id = ?", productsResponse.ID).Scan(&productsResponse).Error
+	if err != nil {
+		return models.ProductsResponse{}, err
+	}
+	return productsResponse, nil
 }
 
 func (prod *inventoryRepository) ListProducts(pageList, offset int) ([]models.ProductsResponse, error) {
 	var product_list []models.ProductsResponse
 
-	query := `
-		SELECT i.id, i.category_id, c.category, i.product_name, i.size, i.price 
-		FROM inventories i 
-		INNER JOIN categories c ON i.category_id = c.id 
-		LIMIT $1 OFFSET $2
-	`
-	fmt.Println(pageList, offset)
+	query := "SELECT i.id,i.category_id,c.category,i.product_name,i.size,i.price,i.image AS image FROM inventories i INNER JOIN categories c ON i.category_id = c.id LIMIT $1 OFFSET $2"
 	err := prod.DB.Raw(query, pageList, offset).Scan(&product_list).Error
 
 	if err != nil {
-		return []models.ProductsResponse{}, errors.New("error checking user details")
+		return []models.ProductsResponse{}, errors.New("error checking Product details")
 	}
-	fmt.Println("product list", product_list)
+
 	return product_list, nil
 }
 
@@ -114,28 +119,24 @@ func (i *inventoryRepository) CheckInventory(pid int) (bool, error) {
 	return true, err
 }
 
-func (i *inventoryRepository) UpdateInventory(pid int, stock int) (models.InventoryResponse, error) {
+func (i *inventoryRepository) UpdateInventory(pid int, stock int) (models.ProductsResponse, error) {
 
-	// Check the database connection
 	if i.DB == nil {
-		return models.InventoryResponse{}, errors.New("database connection is nil")
+		return models.ProductsResponse{}, errors.New("database connection is nil")
 	}
-
-	// Update the
-	if err := i.DB.Exec("UPDATE inventories SET stock = stock + $1 WHERE id= $2", stock, pid).Error; err != nil {
-		return models.InventoryResponse{}, err
+	if err := i.DB.Exec("UPDATE products SET stock = stock + $1 WHERE id= $2", stock, pid).Error; err != nil {
+		return models.ProductsResponse{}, err
 	}
-
-	// Retrieve the update
-	var newdetails models.InventoryResponse
+	var newdetails models.ProductsResponse
 	var newstock int
-	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=?", pid).Scan(&newstock).Error; err != nil {
-		return models.InventoryResponse{}, err
+	if err := i.DB.Raw("SELECT stock FROM products WHERE id=?", pid).Scan(&newstock).Error; err != nil {
+		return models.ProductsResponse{}, err
 	}
-	newdetails.ProductID = pid
+	newdetails.ID = uint(pid)
 	newdetails.Stock = newstock
 
 	return newdetails, nil
+
 }
 
 func (i *inventoryRepository) ShowIndividualProducts(id string) (models.ProductsResponse, error) {

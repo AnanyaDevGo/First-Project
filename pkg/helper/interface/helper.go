@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"CrocsClub/pkg/utils/models"
+	"mime/multipart"
 	"time"
 )
 
@@ -15,4 +16,5 @@ type Helper interface {
 	CompareHashAndPassword(a string, b string) error
 	Copy(a *models.UserDetailsResponse, b *models.UserSignInResponse) (models.UserDetailsResponse, error)
 	GetTimeFromPeriod(timePeriod string) (time.Time, time.Time)
+	AddImageToAwsS3(file *multipart.FileHeader) (string, error)
 }

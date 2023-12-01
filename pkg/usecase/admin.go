@@ -8,6 +8,7 @@ import (
 	"CrocsClub/pkg/utils/models"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/copier"
 	"golang.org/x/crypto/bcrypt"
@@ -103,6 +104,13 @@ func (ad *adminUseCase) FilteredSalesReport(timePeriod string) (models.SalesRepo
 	return saleReport, nil
 }
 
+func (ad *adminUseCase) ExecuteSalesReportByDate(startDate, endDate time.Time) (models.SalesReport, error) {
+	orders, err := ad.adminRepository.FilteredSalesReport(startDate, endDate)
+	if err != nil {
+		return models.SalesReport{}, errors.New("report fetching failed")
+	}
+	return orders, nil
+}
 func (ad *adminUseCase) BlockUser(id string) error {
 
 	user, err := ad.adminRepository.GetUserByID(id)

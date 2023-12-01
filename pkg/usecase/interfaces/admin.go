@@ -3,6 +3,7 @@ package interfaces
 import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/utils/models"
+	"time"
 )
 
 type AdminUseCase interface {
@@ -15,4 +16,5 @@ type AdminUseCase interface {
 	DeletePaymentMethod(id int) error
 	DashBoard() (models.CompleteAdminDashboard, error)
 	FilteredSalesReport(timePeriod string) (models.SalesReport, error)
+	ExecuteSalesReportByDate(startDate, endDate time.Time) (models.SalesReport, error)
 }
