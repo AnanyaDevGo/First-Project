@@ -72,7 +72,7 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 		return
 	}
 
-	message := "product list"
+	message := "product list ended"
 
 	successRes := response.ClientResponse(http.StatusOK, message, products_list, nil)
 	c.JSON(http.StatusOK, successRes)
