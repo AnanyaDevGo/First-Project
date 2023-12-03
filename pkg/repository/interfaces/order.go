@@ -24,3 +24,4 @@ type OrderRepository interface {
 	PaymentAlreadyPaid(orderID int) (bool, error)
 	GetOrderDetailsByOrderId(orderID int) (models.CombinedOrderDetails, error)
 }
+

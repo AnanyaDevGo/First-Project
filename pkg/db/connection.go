@@ -49,6 +49,10 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 		return db, err
 	}
 
+	if err := db.AutoMigrate(domain.Wallet{}); err != nil {
+		return db, err
+	}
+
 	if err := db.AutoMigrate(domain.LineItems{}); err != nil {
 		return db, err
 	}

@@ -19,7 +19,8 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 	inventoryHandler *handler.InventoryHandler,
 	cartHandler *handler.CartHandler,
 	orderHandler *handler.OrderHandler,
-	paymentHandler *handler.PaymentHandler) *ServerHTTP {
+	paymentHandler *handler.PaymentHandler,
+	walletHandler *handler.WalletHandler) *ServerHTTP {
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
@@ -27,7 +28,7 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 	engine.LoadHTMLGlob("template/*")
 	engine.GET("/validate-token", adminHandler.ValidateRefreshTokenAndCreateNewAccess)
 
-	routes.UserRoutes(engine.Group("/user"), userHandler, otpHandler, inventoryHandler, cartHandler, orderHandler, paymentHandler)
+	routes.UserRoutes(engine.Group("/user"), userHandler, otpHandler, inventoryHandler, cartHandler, orderHandler, paymentHandler, walletHandler)
 	routes.AdminRoutes(engine.Group("/admin"), adminHandler, categoryHandler, inventoryHandler, orderHandler)
 
 	return &ServerHTTP{engine: engine}
