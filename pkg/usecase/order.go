@@ -45,6 +45,9 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID int) erro
 			total += float64(item.Quantity) * float64(item.Price)
 		}
 	}
+
+	fmt.Println("total at usecase", total)
+
 	orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, total)
 	if err != nil {
 		return err
@@ -89,7 +92,19 @@ func (i *orderUseCase) CancelOrder(orderID int) error {
 		return errors.New("order cannot be canceled, kindly return the product if accidentally booked")
 	}
 
-	err = i.orderRepository.CancelOrder(orderID)
+	if orderStatus == "CANCELED" {
+		return errors.New("order cannot be canceled")
+	}
+	if orderStatus == "DELIVERED" {
+		return errors.New("order cannot be canceled")
+	}
+
+	cart, err := i.orderRepository.GetOrders(orderID)
+	if err != nil {
+		return err
+	}
+
+	err = i.orderRepository.CancelOrder(orderID, int(cart.UserID), int(cart.FinalPrice), cart.PaymentStatus)
 	if err != nil {
 		return err
 	}

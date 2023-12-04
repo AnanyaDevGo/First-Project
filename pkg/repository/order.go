@@ -22,6 +22,7 @@ func NewOrderRepository(db *gorm.DB) interfaces.OrderRepository {
 func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 
 	var order domain.OrderResponse
+	fmt.Println("order id ............", orderID)
 
 	query := `SELECT * FROM orders WHERE id = $1`
 
@@ -33,6 +34,8 @@ func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 	return order, nil
 }
 func (i *orderRepository) OrderItems(userid, addressid, paymentid int, total float64) (int, error) {
+
+	fmt.Println("total at repoooo", total)
 
 	var id int
 	query := `
@@ -89,10 +92,19 @@ func (i *orderRepository) ReduceInventoryQuantity(productName string, quantity i
 	return nil
 }
 
-func (i *orderRepository) CancelOrder(id int) error {
+func (i *orderRepository) CancelOrder(orderId, userId, cartAmt int, paymentStatus string) error {
 
-	if err := i.DB.Exec("update orders set order_status='CANCELED' where id=$1", id).Error; err != nil {
+	if err := i.DB.Exec("update orders set order_status='CANCELED' where id=$1", orderId).Error; err != nil {
 		return err
+	}
+	fmt.Println("jdfghjkl...............", paymentStatus)
+	if paymentStatus == "PAID" {
+		if err := i.DB.Exec("update wallets set amount = amount + ?  where user_id= ?", cartAmt, userId).Error; err != nil {
+			return err
+		}
+		if err := i.DB.Exec("update orders set payment_status = 'RETURNED TO WALLET'  where user_id= ?", userId).Error; err != nil {
+			return err
+		}
 	}
 
 	return nil

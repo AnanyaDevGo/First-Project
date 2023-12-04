@@ -10,7 +10,7 @@ type OrderRepository interface {
 	OrderItems(userid, addressid, paymentid int, total float64) (int, error)
 	AddOrderProducts(order_id int, cart []models.GetCart) error
 	CheckOrderStatusByID(id int) (string, error)
-	CancelOrder(id int) error
+	CancelOrder(orderId, userId, cartAmt int, paymentStatus string) error
 	GetAllOrders(userId, page, pageSize int) ([]models.OrderDetails, error)
 	GetOrderDetailsBrief(page int) ([]models.CombinedOrderDetails, error)
 	CheckOrdersStatusByID(id string) (string, error)

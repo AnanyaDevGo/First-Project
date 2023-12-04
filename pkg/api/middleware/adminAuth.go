@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -19,8 +20,11 @@ func AdminAuthMiddleware(c *gin.Context) {
 	})
 	//fmt.Println("here  1")
 	if err != nil {
-		c.AbortWithStatus(401)
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing authorization token"})
+		c.Abort()
 		return
+		// c.AbortWithStatus(401)
+		// return
 	}
 	c.Next()
 }

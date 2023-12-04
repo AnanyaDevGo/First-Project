@@ -30,7 +30,7 @@ func (ch *CartHandler) AddToCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-
+fmt.Println("userid at handler",idString)
 	userID, ok := idString.(int)
 	if !ok {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "User ID not in the right format", nil, "")
@@ -67,7 +67,6 @@ func (i *CartHandler) CheckOut(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	fmt.Println("IDDDD", id)
 
 	products, err := i.usecase.CheckOut(id)
 	if err != nil {

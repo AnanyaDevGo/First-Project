@@ -43,7 +43,7 @@ func (i *cartUseCase) AddToCart(userID, inventoryID, qty int) error {
 	if err != nil {
 		return errors.New("some error in geting user cart")
 	}
-
+	fmt.Println("cart idjjjjjg", cart_id)
 	if cart_id == 0 {
 		cart_id, err = i.repo.CreateNewCart(userID)
 		if err != nil {
@@ -64,6 +64,8 @@ func (i *cartUseCase) AddToCart(userID, inventoryID, qty int) error {
 		return errors.New("error in adding products")
 	}
 
+	
+
 	return nil
 }
 
@@ -72,7 +74,7 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 	if id <= 0 {
 		return models.CheckOut{}, errors.New("invalid id")
 	}
-
+	fmt.Println("cart id .........", id)
 	address, err := i.repo.GetAddresses(id)
 	if err != nil {
 		return models.CheckOut{}, err
@@ -89,10 +91,15 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 	}
 	var checkout models.CheckOut
 
-	checkout.CartID = products.ID
+	checkout.CartID = id
 	checkout.Addresses = address
 	checkout.Products = products.Data
 	checkout.PaymentMethod = paymethods
+
+	fmt.Println("cartid", checkout.CartID)
+	fmt.Println("cartaddress", checkout.Addresses)
+	fmt.Println("cartproducts", checkout.Products)
+	fmt.Println("cartpay", checkout.PaymentMethod)
 
 	return checkout, err
 }
