@@ -39,7 +39,7 @@ type OrderItem struct {
 	OrderID     uint        `json:"order_id"`
 	Order       Order       `json:"-" gorm:"foreignkey:OrderID;constraint:OnDelete:CASCADE"`
 	InventoryID uint        `json:"inventory_id"`
-	inventories Inventories `json:"-" gorm:"foreignkey:InventoryID"`
+	Inventories Inventories `json:"-" gorm:"foreignkey:InventoryID"`
 	Quantity    int         `json:"quantity"`
 	TotalPrice  float64     `json:"total_price"`
 }
