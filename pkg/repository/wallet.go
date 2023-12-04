@@ -19,7 +19,7 @@ func NewWalletRepository(db *gorm.DB) interfaces.WalletRepository {
 
 func (w *walletRepository) GetWallet(userID int) (models.WalletAmount, error) {
 	var walletAmount models.WalletAmount
-	if err := w.DB.Raw("select amount from wallet where user_id = ?", userID).Scan(&walletAmount).Error; err != nil {
+	if err := w.DB.Raw("select amount from wallets where user_id = ?", userID).Scan(&walletAmount).Error; err != nil {
 		return models.WalletAmount{}, err
 	}
 	return walletAmount, nil

@@ -4,7 +4,6 @@ import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
-	"errors"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -21,9 +20,6 @@ func NewOrderRepository(db *gorm.DB) interfaces.OrderRepository {
 }
 
 func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
-	if orderID <= 0 {
-		return domain.OrderResponse{}, errors.New("order ID should be a positive number")
-	}
 
 	var order domain.OrderResponse
 
@@ -32,6 +28,7 @@ func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 	if err := i.DB.Raw(query, orderID).First(&order).Error; err != nil {
 		return domain.OrderResponse{}, err
 	}
+	fmt.Println("rrrrrr.....", order.FinalPrice)
 
 	return order, nil
 }

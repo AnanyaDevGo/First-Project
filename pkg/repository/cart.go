@@ -3,6 +3,7 @@ package repository
 import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -91,4 +92,20 @@ func (ad *cartRepository) CheckIfItemIsAlreadyAdded(cart_id, inventory_id int) (
 
 	return count > 0, nil
 
+}
+
+func (cr *cartRepository) CheckCart(userID int) (bool, error) {
+	var count int
+	querry := `	SELECT COUNT(*) 
+	FROM line_items 
+	WHERE cart_id IN (SELECT cart_id FROM carts WHERE user_id = ?)
+	`
+	err := cr.DB.Raw(querry, userID).Scan(&count).Error
+	if err != nil {
+		return false, errors.New("no cart found")
+	}
+	if count <= 0 {
+		return false, errors.New("no cart found")
+	}
+	return true, nil
 }

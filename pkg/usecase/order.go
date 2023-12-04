@@ -14,12 +14,14 @@ import (
 type orderUseCase struct {
 	orderRepository interfaces.OrderRepository
 	userUseCase     services.UserUseCase
+	cartRepo        interfaces.CartRepository
 }
 
-func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserUseCase) services.OrderUseCase {
+func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserUseCase, cartRepo interfaces.CartRepository) services.OrderUseCase {
 	return &orderUseCase{
 		orderRepository: repo,
 		userUseCase:     userUseCase,
+		cartRepo:        cartRepo,
 	}
 }
 
@@ -28,7 +30,15 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID int) erro
 	if err != nil {
 		return err
 	}
+	exist, err := i.cartRepo.CheckCart(userID)
 
+	if err != nil {
+		return err
+	}
+
+	if !exist {
+		return errors.New("cart is empty")
+	}
 	var total float64
 	for _, item := range cart.Data {
 		if item.Quantity > 0 && item.Price > 0 {
@@ -58,6 +68,9 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID int) erro
 }
 
 func (i *orderUseCase) GetOrders(orderId int) (domain.OrderResponse, error) {
+	if orderId <= 0 {
+		return domain.OrderResponse{}, errors.New("order ID should be a positive number")
+	}
 
 	orders, err := i.orderRepository.GetOrders(orderId)
 	if err != nil {
