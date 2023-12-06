@@ -6,15 +6,6 @@ import (
 )
 
 type InventoryRepository interface {
-	// AddInventory(inventory models.AddInventories) (models.InventoryResponse, error)
-	// CheckInventory(pid int) (bool, error)
-	// UpdateInventory(pid int, stock int) (models.InventoryResponse, error)
-	// DeleteInventory(id string) error
-	// ShowIndividualProducts(id string) (models.Inventories, error)
-	// ListProducts(int, int) ([]models.ProductsResponse, error)
-	// ListProductsByCategory(id int) ([]models.Inventories, error)
-	// CheckStock(inventory_id int) (int, error)
-	// SearchProducts(key string) ([]models.Inventories, error)
 	AddInventory(inventory models.AddInventories, url string) (models.ProductsResponse, error)
 	ListProducts(int, int) ([]models.ProductsResponse, error)
 	EditInventory(domain.Inventories, int) (domain.Inventories, error)

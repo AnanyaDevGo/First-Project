@@ -18,7 +18,6 @@ func AdminAuthMiddleware(c *gin.Context) {
 	_, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 		return []byte("accesssecret"), nil
 	})
-	//fmt.Println("here  1")
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing authorization token"})
 		c.Abort()

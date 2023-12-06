@@ -20,12 +20,6 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 
 	engine.Use(middleware.UserAuthMiddleware)
 
-	home := engine.Group("/home")
-	{
-		home.POST("/addcart", cartHandler.AddToCart)
-		home.GET("/list", inventoryHandler.ListProducts)
-	}
-
 	profile := engine.Group("/profile")
 	{
 		profile.GET("/address", userHandler.GetAddress)
@@ -37,28 +31,28 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 			order.GET("/get", orderHandler.GetOrders)
 			order.GET("/all", orderHandler.GetAllOrders)
 			order.DELETE("", orderHandler.CancelOrder)
-
 		}
-
 		edit := profile.Group("/edit")
 		{
 			edit.PUT("/", userHandler.Edit)
 		}
-
 		security := profile.Group("/security")
 		{
 			security.PUT("/change-password", userHandler.ChangePassword)
 		}
-
 	}
 
+	home := engine.Group("/home")
+	{
+		home.POST("/addcart", cartHandler.AddToCart)
+		home.GET("/list", inventoryHandler.ListProducts)
+	}
 	cart := engine.Group("/cart")
 	{
 		cart.GET("/", userHandler.GetCart)
 		cart.DELETE("/remove", userHandler.RemoveFromCart)
 		cart.PUT("", userHandler.UpdateQuantity)
 	}
-
 	checkout := engine.Group("/check-out")
 	{
 		checkout.GET("", cartHandler.CheckOut)
@@ -68,6 +62,10 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 	{
 		wallet.GET("", walletHandler.GetWallet)
 		wallet.GET("/history", walletHandler.WalletHistory)
+	}
+	product := engine.Group("/product")
+	{
+		product.GET("/filter", inventoryHandler.FilterCategory)
 	}
 
 }

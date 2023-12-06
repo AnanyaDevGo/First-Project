@@ -30,7 +30,6 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
 		return models.ProductsResponse{}, errors.New("stock and price cannot be negative")
 	}
 
-	// Insert the product details
 	query := `
         INSERT INTO inventories (category_id, product_name, size, stock, price)
         VALUES (?, ?, ?, ?, ?)
@@ -42,7 +41,6 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
 		return models.ProductsResponse{}, err
 	}
 
-	// Insert the image with the generated product id
 	queryImage := "Update inventories  set image = ? where id = ?"
 	imgErr := i.DB.Exec(queryImage, url, productsResponse.ID).Error
 	if imgErr != nil {
