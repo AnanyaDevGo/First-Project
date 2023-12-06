@@ -66,6 +66,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 	product := engine.Group("/product")
 	{
 		product.GET("/filter", inventoryHandler.FilterCategory)
+		product.GET("search", inventoryHandler.SearchProducts)
 	}
 
 }

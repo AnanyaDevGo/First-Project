@@ -26,7 +26,6 @@ func NewInventoryUseCase(repo interfaces.InventoryRepository, h helper_interface
 
 func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *multipart.FileHeader) (models.ProductsResponse, error) {
 
-	
 	if inventory.Stock <= 0 || inventory.Price <= 0 || inventory.CategoryID <= 0 {
 		err := errors.New("enter valid values")
 		return models.ProductsResponse{}, err
@@ -120,7 +119,7 @@ func (i *inventoryUseCase) SearchProductsOnPrefix(prefix string) ([]models.Produ
 	}
 
 	if len(filteredProducts) == 0 {
-		return nil, errors.New("no items matching your keyword")
+		return nil, errors.New("no items are matching")
 	}
 
 	return filteredProducts, nil
