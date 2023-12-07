@@ -63,6 +63,14 @@ func (p *categoryRepository) CheckCategory(current string) (bool, error) {
 
 	return true, err
 }
+func (i *categoryRepository) CategoryExists(categoryID int) (bool, error) {
+	var count int
+	if err := i.DB.Raw("SELECT COUNT(*) FROM categories WHERE id = ?", categoryID).Scan(&count).Error; err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
 
 func (p *categoryRepository) UpdateCategory(current, new string) (domain.Category, error) {
 

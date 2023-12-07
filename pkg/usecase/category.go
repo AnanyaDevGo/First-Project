@@ -69,3 +69,10 @@ func (Cat *categoryUseCase) GetCategory() ([]domain.Category, error) {
 	}
 	return categories, nil
 }
+func (c *categoryUseCase) CategoryExists(categoryID int) bool {
+	exists, err := c.repository.CategoryExists(categoryID)
+	if err != nil {
+		return false
+	}
+	return exists
+}

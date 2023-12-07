@@ -23,9 +23,11 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
 	var count int64
 	i.DB.Model(&models.Inventories{}).Where("product_name = ? AND category_id = ?", inventory.ProductName, inventory.CategoryID).Count(&count)
 	if count > 0 {
+		fmt.Println("kjhgfdsxz..............")
 		return models.ProductsResponse{}, errors.New("product already exists in the database")
 	}
 
+	fmt.Println("yyyyyyyyyyyyyyyyyyyyyyyyy")
 	if inventory.Stock < 0 || inventory.Price < 0 {
 		return models.ProductsResponse{}, errors.New("stock and price cannot be negative")
 	}
@@ -115,6 +117,18 @@ func (i *inventoryRepository) CheckInventory(pid int) (bool, error) {
 		return false, err
 	}
 
+	return true, err
+}
+
+func (i *inventoryRepository) CheckInventoryByCatAndName(cat int, prdct string) (bool, error) {
+	var count int
+	err := i.DB.Raw("select coun(*) from inventories where product_name =? and category_id = ?", prdct, cat).Scan(&count).Error
+	if err != nil {
+		return false, err
+	}
+	if count <= 0 {
+		return false, err
+	}
 	return true, err
 }
 

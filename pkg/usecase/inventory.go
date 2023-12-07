@@ -15,12 +15,14 @@ import (
 type inventoryUseCase struct {
 	repository interfaces.InventoryRepository
 	helper     helper_interface.Helper
+	catrepo    interfaces.CategoryRepository
 }
 
-func NewInventoryUseCase(repo interfaces.InventoryRepository, h helper_interface.Helper) usecase.InventoryUseCase {
+func NewInventoryUseCase(repo interfaces.InventoryRepository, h helper_interface.Helper, catrepo interfaces.CategoryRepository) usecase.InventoryUseCase {
 	return &inventoryUseCase{
 		repository: repo,
 		helper:     h,
+		catrepo:    catrepo,
 	}
 }
 
@@ -30,7 +32,13 @@ func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *m
 		err := errors.New("enter valid values")
 		return models.ProductsResponse{}, err
 	}
+	if ok, err := i.catrepo.CategoryExists(inventory.CategoryID); !ok {
+		return models.ProductsResponse{}, err
+	}
 
+	if ok, err := i.repository.CheckInventoryByCatAndName(inventory.CategoryID, inventory.ProductName); !ok {
+		return models.ProductsResponse{}, err
+	}
 	url, err := i.helper.AddImageToAwsS3(file)
 	if err != nil {
 		return models.ProductsResponse{}, err

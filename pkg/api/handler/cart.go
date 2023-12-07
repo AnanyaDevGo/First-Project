@@ -36,8 +36,6 @@ func (ch *CartHandler) AddToCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-
-	// Bind JSON request to Cart model
 	var cart models.Cart
 	if err := c.BindJSON(&cart); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Failed to parse request JSON", nil, err.Error())
@@ -48,7 +46,6 @@ func (ch *CartHandler) AddToCart(c *gin.Context) {
 	fmt.Println("inventory id ", cart.InventoryID)
 	fmt.Println("quantity", cart.Quantity)
 
-	// Call usecase to add to the cart
 	if err := ch.usecase.AddToCart(userID, cart.InventoryID, cart.Quantity); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not add to the cart", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)

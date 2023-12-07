@@ -11,6 +11,7 @@ type InventoryRepository interface {
 	EditInventory(domain.Inventories, int) (domain.Inventories, error)
 	DeleteInventory(id string) error
 	CheckInventory(pid int) (bool, error)
+	CheckInventoryByCatAndName(cat int, prdct string) (bool, error)
 	UpdateInventory(pid int, stock int) (models.ProductsResponse, error)
 	ShowIndividualProducts(id string) (models.ProductsResponse, error)
 	CheckStock(inventory_id int) (int, error)
