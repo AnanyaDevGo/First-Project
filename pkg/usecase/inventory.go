@@ -32,13 +32,14 @@ func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *m
 		err := errors.New("enter valid values")
 		return models.ProductsResponse{}, err
 	}
-	if ok, err := i.catrepo.CategoryExists(inventory.CategoryID); !ok {
-		return models.ProductsResponse{}, err
+	if ok, _ := i.catrepo.CategoryExists(inventory.CategoryID); !ok {
+		return models.ProductsResponse{}, errors.New("category does not exist")
 	}
 
-	if ok, err := i.repository.CheckInventoryByCatAndName(inventory.CategoryID, inventory.ProductName); !ok {
-		return models.ProductsResponse{}, err
+	if ok, _ := i.repository.CheckInventoryByCatAndName(inventory.CategoryID, inventory.ProductName); ok {
+		return models.ProductsResponse{}, errors.New("already added")
 	}
+
 	url, err := i.helper.AddImageToAwsS3(file)
 	if err != nil {
 		return models.ProductsResponse{}, err

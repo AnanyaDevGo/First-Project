@@ -122,7 +122,7 @@ func (i *inventoryRepository) CheckInventory(pid int) (bool, error) {
 
 func (i *inventoryRepository) CheckInventoryByCatAndName(cat int, prdct string) (bool, error) {
 	var count int
-	err := i.DB.Raw("select coun(*) from inventories where product_name =? and category_id = ?", prdct, cat).Scan(&count).Error
+	err := i.DB.Raw("select count(*) from inventories where product_name =? and category_id = ?", prdct, cat).Scan(&count).Error
 	if err != nil {
 		return false, err
 	}
