@@ -161,7 +161,7 @@ func (i *InventoryHandler) SearchProducts(c *gin.Context) {
 	var prefix models.SearchItems
 
 	if err := c.ShouldBindJSON(&prefix); err != nil {
-		errRes := response.ClientResponse(http.StatusBadRequest, "fields are provided in wrong format", nil, err.Error())
+		errRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
