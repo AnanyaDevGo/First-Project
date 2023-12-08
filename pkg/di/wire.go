@@ -28,6 +28,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		repository.NewCartRepository,
 		repository.NewPaymentRepository,
 		repository.NewWalletRepository,
+		repository.NewCouponRepository,
 
 		usecase.NewUserUseCase,
 		usecase.NewAdminUseCase,
@@ -38,6 +39,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		usecase.NewCartUseCase,
 		usecase.NewPaymentUseCase,
 		usecase.NewWalletUseCase,
+		usecase.NewCouponUsecase,
 
 		handler.NewUserHandler,
 		handler.NewAdminHandler,
@@ -48,6 +50,7 @@ func InitializeAPI(cfg config.Config) (*http.ServerHTTP, error) {
 		handler.NewCartHandler,
 		handler.NewPaymentHandler,
 		handler.NewWalletHandler,
+		handler.NewCouponHandler,
 
 		helper.NewHelper,
 

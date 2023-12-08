@@ -60,6 +60,10 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 		return db, err
 	}
 
+	if err := db.AutoMigrate(&domain.Coupon{}); err != nil {
+		return db, err
+	}
+
 	if err := db.AutoMigrate(&domain.Admin{}); err != nil {
 		return db, err
 	}
