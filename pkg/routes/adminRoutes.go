@@ -55,6 +55,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		{
 			coupon.POST("", couponHandler.AddCoupon)
 			coupon.GET("", couponHandler.GetCoupon)
+			coupon.PUT("", couponHandler.EditCoupon)
 		}
 
 	}

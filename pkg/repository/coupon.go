@@ -51,3 +51,20 @@ func (cr *couponRepository) GetCoupon() ([]models.CouponResp, error) {
 	}
 	return coupon, nil
 }
+func (cr *couponRepository) EditCoupon(Edit models.CouponResp) (models.CouponResp, error) {
+	query := "UPDATE table coupons SET name =?, is_available =?, discount_percentage =?, minimum_price =? WHERE id=?"
+	if err := cr.DB.Raw(query, Edit.Name, Edit.IsAvailable, Edit.DiscountPercentage, Edit.MinimumPrice, Edit.Id).Error; err != nil {
+		return models.CouponResp{}, errors.New("error in retriving data")
+	}
+	return Edit, nil
+}
+func (cr *couponRepository) CheckCouponById(CouponId int) (bool, error) {
+	var count int
+	if err := cr.DB.Raw("select count(*) from coupons where id=?", CouponId).Scan(&count).Error; err != nil {
+		return false, err
+	}
+	if count < 1 {
+		return false, nil
+	}
+	return true, nil
+}

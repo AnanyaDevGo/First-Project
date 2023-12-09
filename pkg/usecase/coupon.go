@@ -46,3 +46,24 @@ func (cu *couponUseCase) GetCoupon() ([]models.CouponResp, error) {
 	}
 	return couponResp, nil
 }
+func (cu *couponUseCase) EditCoupon(Edit models.CouponResp) (models.CouponResp, error){
+
+	if Edit.Name == "" {
+		return models.CouponResp{}, errors.New("cannot put empty values in name")
+	}
+	if Edit.DiscountPercentage <1 || Edit.MinimumPrice <1 {
+		return models.CouponResp{}, errors.New("cannot put negative values")
+	}
+	ok, err := cu.couponRepo.CheckCouponById(int(Edit.Id))
+	if err != nil {
+		return models.CouponResp{},errors.New("failed to get coupon details")
+	}
+	if ok{
+		return models.CouponResp{},errors.New("coupon already exist")
+	}
+	couponResp, err := cu.couponRepo.EditCoupon(Edit)
+	if err != nil {
+		return models.CouponResp{}, errors.New("failed to edit coupon")
+	}
+	return couponResp, nil
+}
