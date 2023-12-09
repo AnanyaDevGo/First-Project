@@ -7,4 +7,5 @@ import (
 
 type CouponUseCase interface {
 	AddCoupon(coupon domain.Coupon) (models.CouponResp, error)
+	GetCoupon() ([]models.CouponResp, error)
 }

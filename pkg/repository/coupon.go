@@ -43,3 +43,11 @@ func (cr *couponRepository) CouponExist(name string) (bool, error) {
 	}
 	return true, nil
 }
+
+func (cr *couponRepository) GetCoupon() ([]models.CouponResp, error) {
+	var coupon []models.CouponResp
+	if err := cr.DB.Raw("select * from coupons").Scan(&coupon).Error; err != nil {
+		return []models.CouponResp{}, errors.New("cannot retrive data")
+	}
+	return coupon, nil
+}
