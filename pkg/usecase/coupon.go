@@ -56,13 +56,13 @@ func (cu *couponUseCase) EditCoupon(edit domain.Coupon) (models.CouponResp, erro
 		return models.CouponResp{}, errors.New("discount percentage and minimum price must be greater than or equal to 1")
 	}
 
-	exists, err := cu.couponRepo.CheckCouponById(int(edit.Id))
-	if err != nil {
-		return models.CouponResp{}, fmt.Errorf("failed to check coupon details: %v", err)
-	}
-	if exists {
-		return models.CouponResp{}, errors.New("coupon with the specified ID already exists")
-	}
+	// exists, err := cu.couponRepo.CheckCouponById(int(edit.Id))
+	// if err != nil {
+	// 	return models.CouponResp{}, fmt.Errorf("failed to check coupon details: %v", err)
+	// }
+	// if exists {
+	// 	return models.CouponResp{}, errors.New("coupon with the specified ID already exists")
+	// }
 
 	couponResp, err := cu.couponRepo.EditCoupon(edit)
 	if err != nil {
