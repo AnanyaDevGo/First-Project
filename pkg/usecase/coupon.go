@@ -6,6 +6,7 @@ import (
 	"CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"fmt"
 )
 
 type couponUseCase struct {
@@ -46,24 +47,27 @@ func (cu *couponUseCase) GetCoupon() ([]models.CouponResp, error) {
 	}
 	return couponResp, nil
 }
-func (cu *couponUseCase) EditCoupon(Edit models.CouponResp) (models.CouponResp, error){
+func (cu *couponUseCase) EditCoupon(edit domain.Coupon) (models.CouponResp, error) {
+	if edit.Name == "" {
+		return models.CouponResp{}, errors.New("name cannot be empty")
+	}
 
-	if Edit.Name == "" {
-		return models.CouponResp{}, errors.New("cannot put empty values in name")
+	if edit.DiscountPercentage < 1 || edit.MinimumPrice < 1 {
+		return models.CouponResp{}, errors.New("discount percentage and minimum price must be greater than or equal to 1")
 	}
-	if Edit.DiscountPercentage <1 || Edit.MinimumPrice <1 {
-		return models.CouponResp{}, errors.New("cannot put negative values")
-	}
-	ok, err := cu.couponRepo.CheckCouponById(int(Edit.Id))
+
+	exists, err := cu.couponRepo.CheckCouponById(int(edit.Id))
 	if err != nil {
-		return models.CouponResp{},errors.New("failed to get coupon details")
+		return models.CouponResp{}, fmt.Errorf("failed to check coupon details: %v", err)
 	}
-	if ok{
-		return models.CouponResp{},errors.New("coupon already exist")
+	if exists {
+		return models.CouponResp{}, errors.New("coupon with the specified ID already exists")
 	}
-	couponResp, err := cu.couponRepo.EditCoupon(Edit)
+
+	couponResp, err := cu.couponRepo.EditCoupon(edit)
 	if err != nil {
-		return models.CouponResp{}, errors.New("failed to edit coupon")
+		return models.CouponResp{}, fmt.Errorf("failed to edit coupon: %v", err)
 	}
+
 	return couponResp, nil
 }

@@ -8,5 +8,5 @@ import (
 type CouponUseCase interface {
 	AddCoupon(coupon domain.Coupon) (models.CouponResp, error)
 	GetCoupon() ([]models.CouponResp, error)
-	EditCoupon(Edit models.CouponResp) (models.CouponResp, error)
+	EditCoupon(edit domain.Coupon) (models.CouponResp, error)
 }

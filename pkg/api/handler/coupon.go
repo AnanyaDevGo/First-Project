@@ -3,7 +3,6 @@ package handler
 import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/usecase/interfaces"
-	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
 	"net/http"
 
@@ -49,18 +48,20 @@ func (cu *CouponHandler) GetCoupon(c *gin.Context) {
 }
 
 func (cu *CouponHandler) EditCoupon(c *gin.Context) {
-	var edit models.CouponResp
+	var edit domain.Coupon
 	if err := c.BindJSON(&edit); err != nil {
-		errRes := response.ClientResponse(http.StatusBadRequest, "field provided in wrong format", nil, err.Error())
+		errRes := response.ClientResponse(http.StatusBadRequest, "field provided in the wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
-	couponRes, err := cu.couponUseCase.AddCoupon(domain.Coupon(edit))
+
+	couponRes, err := cu.couponUseCase.EditCoupon(edit)
 	if err != nil {
 		errRes := response.ClientResponse(http.StatusBadRequest, "cannot edit coupon", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
+
 	successRes := response.ClientResponse(http.StatusOK, "successfully edited coupon", couponRes, nil)
 	c.JSON(http.StatusOK, successRes)
 }

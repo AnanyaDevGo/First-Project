@@ -5,6 +5,7 @@ import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -51,13 +52,33 @@ func (cr *couponRepository) GetCoupon() ([]models.CouponResp, error) {
 	}
 	return coupon, nil
 }
-func (cr *couponRepository) EditCoupon(Edit models.CouponResp) (models.CouponResp, error) {
-	query := "UPDATE table coupons SET name =?, is_available =?, discount_percentage =?, minimum_price =? WHERE id=?"
-	if err := cr.DB.Raw(query, Edit.Name, Edit.IsAvailable, Edit.DiscountPercentage, Edit.MinimumPrice, Edit.Id).Error; err != nil {
-		return models.CouponResp{}, errors.New("error in retriving data")
+
+func (cr *couponRepository) EditCoupon(Edit domain.Coupon) (models.CouponResp, error) {
+	query := "UPDATE coupons SET name=?, is_available=?, discount_percentage=?, minimum_price=? WHERE id=?"
+	result := cr.DB.Exec(query, Edit.Name, Edit.IsAvailable, Edit.DiscountPercentage, Edit.MinimumPrice, Edit.Id)
+
+	// Check for errors during the update
+	if result.Error != nil {
+		return models.CouponResp{}, fmt.Errorf("error in updating data: %v", result.Error)
 	}
-	return Edit, nil
+
+	// Check if any rows were affected by the update
+	if result.RowsAffected == 0 {
+		return models.CouponResp{}, errors.New("no rows were affected, coupon with the specified ID may not exist")
+	}
+
+	// Create a models.CouponResp instance from domain.Coupon
+	couponResp := models.CouponResp{
+		Id:                 Edit.Id,
+		Name:               Edit.Name,
+		IsAvailable:        Edit.IsAvailable,
+		DiscountPercentage: Edit.DiscountPercentage,
+		MinimumPrice:       Edit.MinimumPrice,
+	}
+
+	return couponResp, nil
 }
+
 func (cr *couponRepository) CheckCouponById(CouponId int) (bool, error) {
 	var count int
 	if err := cr.DB.Raw("select count(*) from coupons where id=?", CouponId).Scan(&count).Error; err != nil {
