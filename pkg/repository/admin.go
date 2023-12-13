@@ -97,7 +97,7 @@ func (i *adminRepository) NewPaymentMethod(pay string) error {
 
 func (a *adminRepository) GetPaymentMethod() ([]models.PaymentMethodResponse, error) {
 	var model []models.PaymentMethodResponse
-	err := a.DB.Raw("SELECT * FROM payment_methods").Scan(&model).Error
+	err := a.DB.Raw("SELECT * FROM payment_methods where is_deleted = 'false'").Scan(&model).Error
 	if err != nil {
 		return []models.PaymentMethodResponse{}, err
 	}

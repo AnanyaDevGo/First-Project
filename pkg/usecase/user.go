@@ -8,7 +8,6 @@ import (
 	usecase "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
-	"fmt"
 
 	"github.com/jinzhu/copier"
 	"golang.org/x/crypto/bcrypt"
@@ -37,18 +36,34 @@ func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp inter
 var InternalError = "Internal Server Error"
 
 func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, error) {
-	fmt.Println("add users")
+
+	if user.Name == "" {
+		return models.TokenUsers{}, errors.New("username cannot be empty")
+	}
+	namevalidate, err := u.helper.ValidateDatatype(user.Name, "string")
+	if err != nil {
+		return models.TokenUsers{}, errors.New("invalid format for name")
+	}
+	if !namevalidate {
+		return models.TokenUsers{}, errors.New("not a string")
+	}
 
 	userExist := u.userRepo.CheckUserAvailability(user.Email)
-	fmt.Println("user exists", userExist)
 	if userExist {
 		return models.TokenUsers{}, errors.New("user already exist, sign in")
 	}
-	fmt.Println(user)
+
+	phonenumber := u.helper.ValidatePhoneNumber(user.Phone)
+	if !phonenumber {
+		return models.TokenUsers{}, errors.New("invalid phone")
+	}
+
 	if user.Password != user.ConfirmPassword {
 		return models.TokenUsers{}, errors.New("password does not match")
 	}
-
+	if user.Password == "" {
+		return models.TokenUsers{}, errors.New("password cannot be empty")
+	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
 		return models.TokenUsers{}, errors.New("internal server error")
@@ -251,6 +266,7 @@ func (u *userUseCase) GetUserDetails(id int) (models.UserDetailsResponse, error)
 
 func (u *userUseCase) Edit(id int, user models.Edit) (models.Edit, error) {
 	result, err := u.userRepo.Edit(id, user)
+
 	if err != nil {
 		return models.Edit{}, err
 	}

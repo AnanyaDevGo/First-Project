@@ -7,6 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"mime/multipart"
+	"reflect"
+	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -224,4 +227,36 @@ func (h *helper) AddImageToAwsS3(file *multipart.FileHeader) (string, error) {
 	}
 	url := fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, file.Filename)
 	return url, nil
+}
+
+func (h *helper) ValidatePhoneNumber(phone string) bool {
+	phoneNumber := phone
+	pattern := `^\d{10}$`
+	regex := regexp.MustCompile(pattern)
+	value := regex.MatchString(phoneNumber)
+	return value
+}
+
+func (h *helper) ValidatePin(pin string) bool {
+
+	match, _ := regexp.MatchString(`^\d{4}(\d{2})?$`, pin)
+	return match
+
+}
+
+func (h *helper) ValidateDatatype(data, intOrString string) (bool, error) {
+
+	switch intOrString {
+	case "int":
+		if _, err := strconv.Atoi(data); err != nil {
+			return false, errors.New("data is not an integer")
+		}
+		return true, nil
+	case "string":
+		kind := reflect.TypeOf(data).Kind()
+		return kind == reflect.String, nil
+	default:
+		return false, errors.New("data is not" + intOrString)
+	}
+
 }

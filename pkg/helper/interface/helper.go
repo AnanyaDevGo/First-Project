@@ -17,4 +17,7 @@ type Helper interface {
 	Copy(a *models.UserDetailsResponse, b *models.UserSignInResponse) (models.UserDetailsResponse, error)
 	GetTimeFromPeriod(timePeriod string) (time.Time, time.Time)
 	AddImageToAwsS3(file *multipart.FileHeader) (string, error)
+	ValidatePhoneNumber(phone string) bool
+	ValidatePin(pin string) bool
+	ValidateDatatype(data, intOrString string) (bool, error)
 }

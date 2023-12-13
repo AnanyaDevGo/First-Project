@@ -96,9 +96,9 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 	checkout.Products = products.Data
 	checkout.PaymentMethod = paymethods
 
-	fmt.Println("cartid", checkout.CartID)
-	fmt.Println("cartaddress", checkout.Addresses)
-	fmt.Println("cartproducts", checkout.Products)
+	// fmt.Println("cartid", checkout.CartID)
+	// fmt.Println("cartaddress", checkout.Addresses)
+	// fmt.Println("cartproducts", checkout.Products)
 	fmt.Println("cartpay", checkout.PaymentMethod)
 
 	return checkout, err
