@@ -34,7 +34,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 		}
 		edit := profile.Group("/edit")
 		{
-			edit.PUT("/", userHandler.Edit)
+			edit.PATCH("/", userHandler.Edit)
 		}
 		security := profile.Group("/security")
 		{

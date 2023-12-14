@@ -39,7 +39,16 @@ func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *m
 	if ok, _ := i.repository.CheckInventoryByCatAndName(inventory.CategoryID, inventory.ProductName); ok {
 		return models.ProductsResponse{}, errors.New("already added")
 	}
+	productname, err := i.helper.ValidateAlphabets(inventory.ProductName)
+	if err != nil{
+		return models.ProductsResponse{}, err
+	}
 
+	if !productname {
+		return models.ProductsResponse{}, errors.New("invalid format for name")
+	}
+	
+	
 	url, err := i.helper.AddImageToAwsS3(file)
 	if err != nil {
 		return models.ProductsResponse{}, err
@@ -112,6 +121,9 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.ProductsRes
 }
 
 func (i *inventoryUseCase) SearchProductsOnPrefix(prefix string) ([]models.ProductsResponse, error) {
+	if prefix == "" {
+		return []models.ProductsResponse{}, errors.New("name should not be empty")
+	}
 
 	inventoryList, err := i.repository.GetInventory(prefix)
 

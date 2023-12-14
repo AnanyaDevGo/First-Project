@@ -20,4 +20,5 @@ type Helper interface {
 	ValidatePhoneNumber(phone string) bool
 	ValidatePin(pin string) bool
 	ValidateDatatype(data, intOrString string) (bool, error)
+	ValidateAlphabets(data string) (bool, error)
 }

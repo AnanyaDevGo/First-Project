@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"time"
+	"unicode"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -259,4 +260,13 @@ func (h *helper) ValidateDatatype(data, intOrString string) (bool, error) {
 		return false, errors.New("data is not" + intOrString)
 	}
 
+}
+
+func (h *helper) ValidateAlphabets(data string) (bool, error) {
+	for _, char := range data {
+		if !unicode.IsLetter(char) {
+			return false, errors.New("data contains non-alphabetic characters")
+		}
+	}
+	return true, nil
 }

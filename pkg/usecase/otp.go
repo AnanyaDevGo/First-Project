@@ -33,6 +33,11 @@ func (ot *otpUseCase) SendOTP(phone string) error {
 		return errors.New("the user does not exist")
 	}
 
+	phonenumber := ot.helper.ValidatePhoneNumber(phone)
+	if !phonenumber {
+		return errors.New("invalid phone number")
+	}
+
 	ot.helper.TwilioSetup(ot.cfg.ACCOUNTSID, ot.cfg.AUTHTOKEN)
 	fmt.Println("accsid:", ot.cfg.SERVICESID)
 

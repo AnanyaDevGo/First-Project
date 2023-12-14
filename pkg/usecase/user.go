@@ -8,6 +8,7 @@ import (
 	usecase "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"fmt"
 
 	"github.com/jinzhu/copier"
 	"golang.org/x/crypto/bcrypt"
@@ -217,7 +218,7 @@ func (u *userUseCase) RemoveFromCart(cart, inventory int) error {
 }
 
 func (i *userUseCase) UpdateQuantity(id, inv_id, qty int) error {
-
+	
 	err := i.userRepo.UpdateQuantity(id, inv_id, qty)
 	if err != nil {
 		return err
@@ -228,6 +229,25 @@ func (i *userUseCase) UpdateQuantity(id, inv_id, qty int) error {
 }
 
 func (u *userUseCase) AddAddress(id int, address models.AddAddress) error {
+	if address.Name == "" || address.HouseName == "" || address.Street == "" || address.City == "" || address.State == "" || address.Phone == "" || address.Pin == "" {
+		return errors.New("field cannot be empty")
+	}
+	ok, err := u.helper.ValidateAlphabets(address.Name)
+	if err != nil {
+		return errors.New("invalid format for name")
+	}
+	if !ok {
+		return errors.New("invalid format for name")
+	}
+	phonenumber := u.helper.ValidatePhoneNumber(address.Phone)
+	if !phonenumber {
+		return errors.New("invalid phone")
+	}
+	pinnumber := u.helper.ValidatePin(address.Pin)
+	if !pinnumber {
+		return errors.New("invalid pin number")
+	}
+
 	rslt := u.userRepo.CheckIfFirstAddress(id)
 	var result bool
 
@@ -237,7 +257,7 @@ func (u *userUseCase) AddAddress(id int, address models.AddAddress) error {
 		result = false
 	}
 
-	err := u.userRepo.AddAddress(id, address, result)
+	err = u.userRepo.AddAddress(id, address, result)
 	if err != nil {
 		return errors.New("error in adding address")
 	}
@@ -265,6 +285,30 @@ func (u *userUseCase) GetUserDetails(id int) (models.UserDetailsResponse, error)
 }
 
 func (u *userUseCase) Edit(id int, user models.Edit) (models.Edit, error) {
+
+	if user.Name == "" {
+		return models.Edit{}, errors.New("name cannot be empty")
+	}
+	ok, err := u.helper.ValidateAlphabets(user.Name)
+	if err != nil {
+		return models.Edit{}, errors.New("invalid format for name")
+	}
+	if !ok {
+		return models.Edit{}, errors.New("invalid format for name")
+	}
+	// namevalidate, err := u.helper.ValidateDatatype(user.Name, "string")
+	// if err != nil {
+	// 	return models.Edit{}, errors.New("invalid format for name")
+	// }
+	// if !namevalidate {
+	// 	return models.Edit{}, errors.New("not a string")
+	// }
+
+	phonenumber := u.helper.ValidatePhoneNumber(user.Phone)
+	if !phonenumber {
+		return models.Edit{}, errors.New("invalid phone")
+	}
+
 	result, err := u.userRepo.Edit(id, user)
 
 	if err != nil {
@@ -275,6 +319,9 @@ func (u *userUseCase) Edit(id int, user models.Edit) (models.Edit, error) {
 }
 
 func (i *userUseCase) ChangePassword(id int, old string, password string, repassword string) error {
+	if password == "" {
+		return errors.New("password cannot be empty")
+	}
 
 	userPassword, err := i.userRepo.GetPassword(id)
 	if err != nil {
@@ -285,7 +332,8 @@ func (i *userUseCase) ChangePassword(id int, old string, password string, repass
 	if err != nil {
 		return errors.New("password incorrect")
 	}
-
+	fmt.Println("password", password)
+	fmt.Println("repassword", repassword)
 	if password != repassword {
 		return errors.New("passwords does not match")
 	}

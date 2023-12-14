@@ -4,6 +4,7 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -40,8 +41,7 @@ func (u *UserHandler) UserSignUp(c *gin.Context) {
 	err := validator.New().Struct(user)
 	if err != nil {
 		errRes := response.ClientResponse(http.StatusBadRequest, "constraints not satisfied", nil, err.Error())
-		c.JSON(http.StatusBadRequest,
-			errRes)
+		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
 	userCreated, err := u.userUseCase.UserSignUp(user)
@@ -228,6 +228,13 @@ func (u *UserHandler) Edit(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
+	err := validator.New().Struct(model)
+	if err != nil {
+		err = errors.New("missing constraints for email id")
+		errRes := response.ClientResponse(http.StatusBadRequest, "email id is not in correct format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
 
 	result, err := u.userUseCase.Edit(id, model)
 	if err != nil {
@@ -236,7 +243,7 @@ func (u *UserHandler) Edit(c *gin.Context) {
 		return
 	}
 
-	successRes := response.ClientResponse(http.StatusCreated, "addresses fetched succesfully", result, nil)
+	successRes := response.ClientResponse(http.StatusCreated, "details edited succesfully", result, nil)
 
 	c.JSON(http.StatusCreated, successRes)
 }

@@ -26,8 +26,9 @@ func NewCartUseCase(repo interfaces.CartRepository, inventoryRepo interfaces.Inv
 
 func (i *cartUseCase) AddToCart(userID, inventoryID, qty int) error {
 
-	fmt.Println("uuuuuuuuuu", inventoryID)
-
+	if qty <= 0 {
+		return errors.New("quantity must be 1 or more")
+	}
 	stock, err := i.inventoryRepository.CheckStock(inventoryID)
 	if err != nil {
 		return err
@@ -43,7 +44,7 @@ func (i *cartUseCase) AddToCart(userID, inventoryID, qty int) error {
 	if err != nil {
 		return errors.New("some error in geting user cart")
 	}
-	fmt.Println("cart idjjjjjg", cart_id)
+
 	if cart_id == 0 {
 		cart_id, err = i.repo.CreateNewCart(userID)
 		if err != nil {
@@ -63,8 +64,6 @@ func (i *cartUseCase) AddToCart(userID, inventoryID, qty int) error {
 	if err := i.repo.AddLineItems(cart_id, inventoryID, qty); err != nil {
 		return errors.New("error in adding products")
 	}
-
-	
 
 	return nil
 }
@@ -95,11 +94,6 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 	checkout.Addresses = address
 	checkout.Products = products.Data
 	checkout.PaymentMethod = paymethods
-
-	// fmt.Println("cartid", checkout.CartID)
-	// fmt.Println("cartaddress", checkout.Addresses)
-	// fmt.Println("cartproducts", checkout.Products)
-	fmt.Println("cartpay", checkout.PaymentMethod)
 
 	return checkout, err
 }

@@ -21,6 +21,9 @@ func NewCategoryUseCase(repo interfaces.CategoryRepository, h helper_interface.H
 }
 
 func (Cat *categoryUseCase) AddCategory(category domain.Category) (domain.Category, error) {
+	if category.Category == ""{
+		return domain.Category{}, errors.New("category should not be empty")
+	}
 
 	productResponse, err := Cat.repository.AddCategory(category)
 
