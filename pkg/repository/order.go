@@ -122,7 +122,6 @@ func (i *orderRepository) GetAllOrders(userID, page, pageSize int) ([]models.Ord
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Retrieved orders:", order)
 	return order, nil
 }
 

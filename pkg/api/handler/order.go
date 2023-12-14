@@ -4,6 +4,7 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -22,7 +23,23 @@ func NewOrderHandler(useCase services.OrderUseCase) *OrderHandler {
 
 func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 
+	id, ok := c.Get("id")
+	if !ok{
+		err := errors.New("error in getting userId")
+		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+	userId, ok := id.(int)
+	if !ok {
+		err := errors.New("invalid id ")
+		errorRes := response.ClientResponse(http.StatusBadRequest, "could not make the order", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errorRes)
+		return
+	}
+
 	var order models.Order
+	order.UserID = userId
 	if err := c.BindJSON(&order); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)

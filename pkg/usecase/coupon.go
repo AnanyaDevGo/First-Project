@@ -72,3 +72,13 @@ func (cu *couponUseCase) EditCoupon(edit domain.Coupon) (models.CouponResp, erro
 
 	return couponResp, nil
 }
+// func (cu *couponUseCase) Applycoupon(coupon string, userId int)error{
+// 	ok, err := cu.couponRepo.CouponExist(coupon)
+// 	if err != nil{
+// 		return err
+// 	}
+// 	if !ok {
+// 		return errors.New("coupon does not exist")
+// 	}
+	
+// }

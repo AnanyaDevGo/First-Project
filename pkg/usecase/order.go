@@ -15,13 +15,15 @@ type orderUseCase struct {
 	orderRepository interfaces.OrderRepository
 	userUseCase     services.UserUseCase
 	cartRepo        interfaces.CartRepository
+	couponRepo      interfaces.CouponRepository
 }
 
-func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserUseCase, cartRepo interfaces.CartRepository) services.OrderUseCase {
+func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserUseCase, cartRepo interfaces.CartRepository, couponRepo interfaces.CouponRepository) services.OrderUseCase {
 	return &orderUseCase{
 		orderRepository: repo,
 		userUseCase:     userUseCase,
 		cartRepo:        cartRepo,
+		couponRepo:      couponRepo,
 	}
 }
 
@@ -45,9 +47,15 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID int) erro
 			total += float64(item.Quantity) * float64(item.Price)
 		}
 	}
-
-	fmt.Println("total at usecase", total)
-
+	var couponId int
+	couponIdExist, err := i.couponRepo.CheckCouponById(couponId)
+	if err != nil {
+		return err
+	}
+	if !couponIdExist {
+		return errors.New("coupon does not exist")
+	}
+	
 	orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, total)
 	if err != nil {
 		return err
@@ -88,15 +96,15 @@ func (i *orderUseCase) CancelOrder(orderID int) error {
 		return err
 	}
 
-	if orderStatus != "PENDING" {
-		return errors.New("order cannot be canceled, kindly return the product if accidentally booked")
-	}
+	// if orderStatus != "PENDING" {
+	// 	return errors.New("order cannot be canceled, kindly return the product if accidentally booked")
+	// }
 
 	if orderStatus == "CANCELED" {
 		return errors.New("order cannot be canceled")
 	}
 	if orderStatus == "DELIVERED" {
-		return errors.New("order cannot be canceled")
+		return errors.New("order cannot be canceled, kindly return the product if accidentally booked")
 	}
 
 	cart, err := i.orderRepository.GetOrders(orderID)
