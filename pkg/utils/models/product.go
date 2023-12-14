@@ -14,8 +14,8 @@ type Category struct {
 }
 
 type SetNewName struct {
-	Id  int    `json:"id"`
-	New string `json:"new"`
+	Current string `json:"current"`
+	New     string `json:"new"`
 }
 type ProductsResponse struct {
 	ID          uint    `json:"id" gorm:"unique;not null"`
