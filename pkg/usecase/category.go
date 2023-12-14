@@ -36,6 +36,9 @@ func (Cat *categoryUseCase) AddCategory(category domain.Category) (domain.Catego
 }
 
 func (Cat *categoryUseCase) UpdateCategory(current string, new string) (domain.Category, error) {
+	if current == "" || new == "" {
+		return domain.Category{},errors.New("values should not be empty")
+	}
 
 	result, err := Cat.repository.CheckCategory(current)
 	if err != nil {
