@@ -7,6 +7,7 @@ import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/jinzhu/copier"
@@ -162,8 +163,14 @@ func (ad *adminUseCase) GetUsers(page int) ([]models.UserDetailsAtAdmin, error) 
 }
 
 func (i *adminUseCase) NewPaymentMethod(id string) error {
-
-	exists, err := i.adminRepository.CheckIfPaymentMethodAlreadyExists(id)
+	ok, err := i.helper.ValidateAlphabets(id)
+	if err != nil {
+		return errors.New("invalid format for name")
+	}
+	if !ok {
+		return errors.New("error in adding payment method")
+	}
+	exists, err := i.adminRepository.CheckIfPaymentMethodNameExists(id)
 	if err != nil {
 		return err
 	}
@@ -193,7 +200,19 @@ func (a *adminUseCase) ListPaymentMethods() ([]domain.PaymentMethod, error) {
 
 func (a *adminUseCase) DeletePaymentMethod(id int) error {
 
-	err := a.adminRepository.DeletePaymentMethod(id)
+	if id <= 0 {
+		return errors.New("cannot enter negative values")
+	}
+	idStr := strconv.Itoa(id)
+
+	ok, err := a.adminRepository.CheckIfPaymentMethodIdExists(idStr)
+	if err != nil {
+		return errors.New("invalid id")
+	}
+	if !ok {
+		return errors.New("id does not exist")
+	}
+	err = a.adminRepository.DeletePaymentMethod(id)
 	if err != nil {
 		return err
 	}

@@ -163,9 +163,7 @@ func (i *orderUseCase) OrdersStatus(orderID string) error {
 }
 
 func (or *orderUseCase) PaymentMethodID(order_id int) (int, error) {
-	fmt.Println("here order")
 	id, err := or.orderRepository.PaymentMethodID(order_id)
-	// fmt.Println("id", id, err)
 	if err != nil {
 		log.Print(err)
 		return 0, err

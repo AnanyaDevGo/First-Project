@@ -4,6 +4,7 @@ import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/response"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -55,6 +56,7 @@ func (cu *CouponHandler) EditCoupon(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("coupon ........", edit.IsAvailable)
 	couponRes, err := cu.couponUseCase.EditCoupon(edit)
 	if err != nil {
 		errRes := response.ClientResponse(http.StatusBadRequest, "cannot edit coupon", nil, err.Error())

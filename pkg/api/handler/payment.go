@@ -3,7 +3,6 @@ package handler
 import (
 	services "CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/response"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -21,7 +20,7 @@ func NewPaymentHandler(use services.PaymentUseCase) *PaymentHandler {
 }
 
 func (p *PaymentHandler) MakePaymentRazorPay(c *gin.Context) {
-	fmt.Println("here")
+
 	orderID := c.Query("id")
 	userID := c.Query("user_id")
 	usrid, _ := strconv.Atoi(userID)

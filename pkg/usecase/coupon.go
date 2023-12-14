@@ -56,6 +56,7 @@ func (cu *couponUseCase) EditCoupon(edit domain.Coupon) (models.CouponResp, erro
 		return models.CouponResp{}, errors.New("discount percentage and minimum price must be greater than or equal to 1")
 	}
 
+	fmt.Println("coupon avilable", edit.IsAvailable)
 	// exists, err := cu.couponRepo.CheckCouponById(int(edit.Id))
 	// if err != nil {
 	// 	return models.CouponResp{}, fmt.Errorf("failed to check coupon details: %v", err)

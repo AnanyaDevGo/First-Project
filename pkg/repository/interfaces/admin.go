@@ -15,7 +15,8 @@ type AdminRepository interface {
 	NewPaymentMethod(string) error
 	GetPaymentMethod() ([]models.PaymentMethodResponse, error)
 	ListPaymentMethods() ([]domain.PaymentMethod, error)
-	CheckIfPaymentMethodAlreadyExists(payment string) (bool, error)
+	CheckIfPaymentMethodIdExists(payment string) (bool, error)
+	CheckIfPaymentMethodNameExists(payment string) (bool, error)
 	DeletePaymentMethod(id int) error
 
 	TotalRevenue() (models.DashboardRevenue, error)

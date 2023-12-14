@@ -86,6 +86,9 @@ func (ad *adminRepository) GetUsers(page int) ([]models.UserDetailsAtAdmin, erro
 }
 
 func (i *adminRepository) NewPaymentMethod(pay string) error {
+	if pay == "" {
+		return errors.New("cannot enter empty values")
+	}
 
 	if err := i.DB.Exec("insert into payment_methods(payment_name)values($1)", pay).Error; err != nil {
 		return err
@@ -115,7 +118,17 @@ func (a *adminRepository) ListPaymentMethods() ([]domain.PaymentMethod, error) {
 	return model, nil
 }
 
-func (a *adminRepository) CheckIfPaymentMethodAlreadyExists(payment string) (bool, error) {
+func (a *adminRepository) CheckIfPaymentMethodIdExists(payment string) (bool, error) {
+	var count int64
+	err := a.DB.Raw("SELECT COUNT(*) FROM payment_methods WHERE id = $1 and is_deleted = false", payment).Scan(&count).Error
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
+func (a *adminRepository) CheckIfPaymentMethodNameExists(payment string) (bool, error) {
 	var count int64
 	err := a.DB.Raw("SELECT COUNT(*) FROM payment_methods WHERE payment_name = $1 and is_deleted = false", payment).Scan(&count).Error
 	if err != nil {
@@ -124,8 +137,8 @@ func (a *adminRepository) CheckIfPaymentMethodAlreadyExists(payment string) (boo
 
 	return count > 0, nil
 }
-
 func (a *adminRepository) DeletePaymentMethod(id int) error {
+
 	err := a.DB.Exec("UPDATE payment_methods SET is_deleted = true WHERE id = $1 ", id).Error
 	if err != nil {
 		return err
