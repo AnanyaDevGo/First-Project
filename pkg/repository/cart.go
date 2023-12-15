@@ -98,7 +98,7 @@ func (cr *cartRepository) CheckCart(userID int) (bool, error) {
 	var count int
 	querry := `	SELECT COUNT(*) 
 	FROM line_items 
-	WHERE cart_id IN (SELECT cart_id FROM carts WHERE user_id = ?)
+	WHERE cart_id IN (SELECT id FROM carts WHERE user_id = ?)
 	`
 	err := cr.DB.Raw(querry, userID).Scan(&count).Error
 	if err != nil {
@@ -109,6 +109,7 @@ func (cr *cartRepository) CheckCart(userID int) (bool, error) {
 	}
 	return true, nil
 }
+
 // func (cr *cartRepository) GetTotalPriceFromCart(cartId int)(int, error){
 // 	err := cr.DB.Raw("select ", userID).Scan(&count).Error
 // 	if err != nil {

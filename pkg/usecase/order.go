@@ -37,8 +37,9 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 	if err != nil {
 		return err
 	}
-
+	fmt.Println("qwerty....", exist)
 	if !exist {
+		fmt.Println("qwerty..error..", exist)
 		return errors.New("cart is empty")
 	}
 	var total float64
@@ -101,14 +102,14 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 		}
 	}
 	// for _, v := range cart.Data {
-    //     itemOrdered, err := i.orderRepository.CheckIfItemIsOrdered(v.ProductName, userID)
-    //     if err != nil {
-    //         return err
-    //     }
-    //     if itemOrdered {
-    //         return errors.New("some items in the cart have already been ordered")
-    //     }
-    // }
+	//     itemOrdered, err := i.orderRepository.CheckIfItemIsOrdered(v.ProductName, userID)
+	//     if err != nil {
+	//         return err
+	//     }
+	//     if itemOrdered {
+	//         return errors.New("some items in the cart have already been ordered")
+	//     }
+	// }
 
 	return nil
 }

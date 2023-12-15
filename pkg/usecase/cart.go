@@ -48,7 +48,7 @@ func (i *cartUseCase) AddToCart(userID, inventoryID, qty int) error {
 	if cart_id == 0 {
 		cart_id, err = i.repo.CreateNewCart(userID)
 		if err != nil {
-			return errors.New("cannot create cart fro user")
+			return errors.New("cannot create cart of user")
 		}
 	}
 
