@@ -100,15 +100,15 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 			return err
 		}
 	}
-	for _, v := range cart.Data {
-		itemOrdered, err := i.orderRepository.CheckIfItemIsOrdered(v.ProductName, userID)
-		if err != nil {
-			return err
-		}
-		if itemOrdered {
-			return errors.New("items in the cart have already been ordered")
-		}
-	}
+	// for _, v := range cart.Data {
+    //     itemOrdered, err := i.orderRepository.CheckIfItemIsOrdered(v.ProductName, userID)
+    //     if err != nil {
+    //         return err
+    //     }
+    //     if itemOrdered {
+    //         return errors.New("some items in the cart have already been ordered")
+    //     }
+    // }
 
 	return nil
 }
