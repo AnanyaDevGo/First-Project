@@ -151,26 +151,21 @@ func (a *adminRepository) TotalRevenue() (models.DashboardRevenue, error) {
 	var revenueDetails models.DashboardRevenue
 
 	startTime := time.Now().AddDate(0, 0, -1)
-	fmt.Println("TIMMMMMEEMEM", startTime)
-	// endTime := time.Now()
-	//fmt.Println("ednnnn........", endTime)
 	err := a.DB.Raw("select coalesce(sum(final_price),0) from orders where payment_status = 'PAID'  and created_at >= ?", startTime).Scan(&revenueDetails.TodayRevenue).Error
 	if err != nil {
-		return models.DashboardRevenue{}, nil
+		return models.DashboardRevenue{}, errors.New("error in getting today revenue details")
 	}
 
 	startTime = time.Now().AddDate(0, -1, 1).UTC()
 	err = a.DB.Raw("select coalesce(sum(final_price),0) from orders where payment_status = 'PAID'  and created_at >= ?", startTime).Scan(&revenueDetails.MonthRevenue).Error
 	if err != nil {
-		return models.DashboardRevenue{}, nil
+		return models.DashboardRevenue{}, errors.New("error in getting today revenue details")
 	}
 	startTime = time.Now().AddDate(-1, 1, 1).UTC()
 	err = a.DB.Raw("select coalesce(sum(final_price),0) from orders where payment_status = 'PAID'  and created_at >= ?", startTime).Scan(&revenueDetails.YearRevenue).Error
 	if err != nil {
-		return models.DashboardRevenue{}, nil
+		return models.DashboardRevenue{}, errors.New("error in getting today revenue details")
 	}
-
-	//log.Printf("sdhgsafasfgdf %v", revenueDetails.TodayRevenue)
 
 	return revenueDetails, nil
 }
@@ -180,27 +175,27 @@ func (ad *adminRepository) DashBoardOrder() (models.DashboardOrder, error) {
 	var orderDetails models.DashboardOrder
 	err := ad.DB.Raw("select count(*) from orders where payment_status = 'PAID'").Scan(&orderDetails.CompletedOrder).Error
 	if err != nil {
-		return models.DashboardOrder{}, nil
+		return models.DashboardOrder{}, errors.New("error in getting paidorder details")
 	}
 
 	err = ad.DB.Raw("select count(*) from orders where order_status = 'PENDING' or order_status = 'PROCESSING'").Scan(&orderDetails.PendingOrder).Error
 	if err != nil {
-		return models.DashboardOrder{}, nil
+		return models.DashboardOrder{}, errors.New("error in getting pendingorder details")
 	}
 
 	err = ad.DB.Raw("select count(*) from orders where order_status = 'CANCELED'").Scan(&orderDetails.CancelledOrder).Error
 	if err != nil {
-		return models.DashboardOrder{}, nil
+		return models.DashboardOrder{}, errors.New("error in getting canceled order details")
 	}
 
 	err = ad.DB.Raw("select count(*) from orders").Scan(&orderDetails.TotalOrder).Error
 	if err != nil {
-		return models.DashboardOrder{}, nil
+		return models.DashboardOrder{}, errors.New("error in getting totalorder details")
 	}
 
 	err = ad.DB.Raw("select sum(quantity) from order_items").Scan(&orderDetails.TotalOrderItem).Error
 	if err != nil {
-		return models.DashboardOrder{}, nil
+		return models.DashboardOrder{}, errors.New("error in getting order items details")
 	}
 
 	return orderDetails, nil
@@ -212,12 +207,12 @@ func (ad *adminRepository) AmountDetails() (models.DashboardAmount, error) {
 	var amountDetails models.DashboardAmount
 	err := ad.DB.Raw("select coalesce(sum(final_price),0) from orders where payment_status = 'PAID' ").Scan(&amountDetails.CreditedAmount).Error
 	if err != nil {
-		return models.DashboardAmount{}, nil
+		return models.DashboardAmount{}, errors.New("error in getting paid amount details")
 	}
 
 	err = ad.DB.Raw("select coalesce(sum(final_price),0) from orders where payment_status = 'NOT PAID' and order_status = 'PROCESSING' or order_status = 'PENDING' or order_status = 'ORDER PLACED' ").Scan(&amountDetails.PendingAmount).Error
 	if err != nil {
-		return models.DashboardAmount{}, nil
+		return models.DashboardAmount{}, errors.New("error in getting pending amount details")
 	}
 
 	return amountDetails, nil
@@ -227,11 +222,11 @@ func (ad *adminRepository) DashBoardUserDetails() (models.DashBoardUser, error) 
 	var userDetails models.DashBoardUser
 	err := ad.DB.Raw("SELECT COUNT(*) FROM users WHERE isadmin='false'").Scan(&userDetails.TotalUsers).Error
 	if err != nil {
-		return models.DashBoardUser{}, nil
+		return models.DashBoardUser{}, errors.New("error in getting total user details")
 	}
 	err = ad.DB.Raw("SELECT COUNT(*)  FROM users WHERE blocked=true").Scan(&userDetails.BlockedUser).Error
 	if err != nil {
-		return models.DashBoardUser{}, nil
+		return models.DashBoardUser{}, errors.New("error in getting blockeduser details")
 	}
 	return userDetails, nil
 }
@@ -240,11 +235,11 @@ func (ad *adminRepository) DashBoardProductDetails() (models.DashBoardProduct, e
 	var productDetails models.DashBoardProduct
 	err := ad.DB.Raw("SELECT COUNT(*) FROM inventories").Scan(&productDetails.TotalProducts).Error
 	if err != nil {
-		return models.DashBoardProduct{}, nil
+		return models.DashBoardProduct{}, errors.New("error in getting product details")
 	}
 	err = ad.DB.Raw("SELECT COUNT(*) FROM inventories WHERE stock<=0").Scan(&productDetails.OutofStockProduct).Error
 	if err != nil {
-		return models.DashBoardProduct{}, nil
+		return models.DashBoardProduct{}, errors.New("error in getting stock details")
 	}
 	return productDetails, nil
 }

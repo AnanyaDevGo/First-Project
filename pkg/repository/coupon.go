@@ -89,3 +89,10 @@ func (cr *couponRepository) CheckCouponById(CouponId int) (bool, error) {
 	}
 	return true, nil
 }
+func (cr *couponRepository) GetCouponById(CouponId int) (models.CouponResp, error) {
+	var coupon models.CouponResp
+	if err := cr.DB.Raw("select * from coupons where id=?", CouponId).Scan(&coupon).Error; err != nil {
+		return models.CouponResp{}, errors.New("cannot retrive data")
+	}
+	return coupon, nil
+}

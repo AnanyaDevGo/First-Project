@@ -27,7 +27,7 @@ func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserU
 	}
 }
 
-func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID int) error {
+func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId int) error {
 	cart, err := i.userUseCase.GetCart(userID)
 	if err != nil {
 		return err
@@ -47,22 +47,44 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID int) erro
 			total += float64(item.Quantity) * float64(item.Price)
 		}
 	}
-	var couponId int
-	couponIdExist, err := i.couponRepo.CheckCouponById(couponId)
-	if err != nil {
-		return err
+
+	// if coupon applied
+	// var orderID int
+	if couponId == 0 {
+		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, total)
+		if err != nil {
+			return err
+		}
+		if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
+			return err
+		}
 	}
-	if !couponIdExist {
-		return errors.New("coupon does not exist")
+	if couponId != 0 {
+		var couponId int
+		couponIdExist, err := i.couponRepo.CheckCouponById(couponId)
+		if err != nil {
+			return err
+		}
+		if !couponIdExist {
+			return errors.New("coupon does not exist")
+		}
+		coupondetails, err := i.couponRepo.GetCouponById(couponId)
+		if err != nil {
+			return errors.New("error in getting coupon")
+		}
+		// var finalprice float64
+		finalprice := total - ((total * float64(coupondetails.DiscountPercentage)) / 100)
+
+		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, finalprice)
+		if err != nil {
+			return err
+		}
+		if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
+			return err
+		}
 	}
-	
-	orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, total)
-	if err != nil {
-		return err
-	}
-	if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
-		return err
-	}
+
+	// last step
 	for _, v := range cart.Data {
 		if err := i.orderRepository.ReduceInventoryQuantity(v.ProductName, v.Quantity); err != nil {
 			return err

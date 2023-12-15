@@ -6,7 +6,7 @@ import (
 )
 
 type OrderUseCase interface {
-	OrderItemsFromCart(userid int, addressid int, paymentid int) error
+	OrderItemsFromCart(userid, addressid, paymentid, couponId int) error
 	GetOrders(orderId int) (domain.OrderResponse, error)
 	GetAllOrders(userId, page, pageSize int) ([]models.OrderDetails, error)
 	CancelOrder(orderId int) error

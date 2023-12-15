@@ -109,3 +109,9 @@ func (cr *cartRepository) CheckCart(userID int) (bool, error) {
 	}
 	return true, nil
 }
+// func (cr *cartRepository) GetTotalPriceFromCart(cartId int)(int, error){
+// 	err := cr.DB.Raw("select ", userID).Scan(&count).Error
+// 	if err != nil {
+// 		return false, errors.New("no cart found")
+// 	}
+// }

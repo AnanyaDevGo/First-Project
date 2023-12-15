@@ -11,4 +11,5 @@ type CouponRepository interface {
 	GetCoupon() ([]models.CouponResp, error)
 	EditCoupon(Edit domain.Coupon) (models.CouponResp, error)
 	CheckCouponById(CouponId int) (bool, error)
+	GetCouponById(CouponId int) (models.CouponResp, error)
 }
