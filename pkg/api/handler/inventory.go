@@ -197,6 +197,5 @@ func (i *InventoryHandler) FilterCategory(c *gin.Context) {
 
 	sucessRes := response.ClientResponse(http.StatusOK, "Products List", product_list, nil)
 	c.JSON(http.StatusOK, sucessRes)
-	return
 
 }
