@@ -256,3 +256,11 @@ func (or *orderRepository) PaymentAlreadyPaid(orderID int) (bool, error) {
 	}
 	return a, nil
 }
+func (or *orderRepository) CheckIfItemIsOrdered(productName string, orderId int) (bool, error) {
+	var count bool
+	err := or.DB.Raw("select count(*) from orders where product_name=? and order_id= ?", productName, orderId).Scan(&count).Error
+	if err != nil {
+		return false, err
+	}
+	return count, nil
+}

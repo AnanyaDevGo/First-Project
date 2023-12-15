@@ -60,13 +60,17 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 		}
 	}
 	if couponId != 0 {
-		var couponId int
+
 		couponIdExist, err := i.couponRepo.CheckCouponById(couponId)
+		fmt.Println("coupon id exist bool", couponIdExist)
 		if err != nil {
 			return err
 		}
 		if !couponIdExist {
 			return errors.New("coupon does not exist")
+		}
+		if couponId < 0 {
+			return errors.New("negative values are not accepted")
 		}
 		coupondetails, err := i.couponRepo.GetCouponById(couponId)
 		if err != nil {
@@ -94,6 +98,15 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 	for _, v := range cart.Data {
 		if err := i.userUseCase.RemoveFromCart(cart.ID, v.ID); err != nil {
 			return err
+		}
+	}
+	for _, v := range cart.Data {
+		itemOrdered, err := i.orderRepository.CheckIfItemIsOrdered(v.ProductName, userID)
+		if err != nil {
+			return err
+		}
+		if itemOrdered {
+			return errors.New("items in the cart have already been ordered")
 		}
 	}
 

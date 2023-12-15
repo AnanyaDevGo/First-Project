@@ -40,6 +40,7 @@ func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 
 	var order models.Order
 	order.UserID = userId
+	order.CouponID = 0
 	if err := c.BindJSON(&order); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
