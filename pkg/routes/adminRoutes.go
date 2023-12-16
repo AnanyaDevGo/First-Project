@@ -61,8 +61,11 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		{
 			offer.POST("/product-offer", offerHandler.AddProductOffer)
 			offer.GET("/get-product-offer", offerHandler.GetProductOffer)
+			offer.PUT("/expire-product-offer", offerHandler.ExpireProductOffer)
+
 			offer.POST("/category-offer", offerHandler.AddCategoryOffer)
 			offer.GET("/get-category-offer", offerHandler.GetCategoryOffer)
+			offer.PUT("/expire-category-offer", offerHandler.ExpireCategoryOffer)
 		}
 
 	}
