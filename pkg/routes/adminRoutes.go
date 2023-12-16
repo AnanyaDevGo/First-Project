@@ -59,8 +59,10 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		}
 		offer := engine.Group("offer")
 		{
-			offer.POST("", offerHandler.AddProductOffer)
-			offer.POST("/category", offerHandler.AddCategoryOffer)
+			offer.POST("/product-offer", offerHandler.AddProductOffer)
+			offer.GET("/get-product-offer", offerHandler.GetProductOffer)
+			offer.POST("/category-offer", offerHandler.AddCategoryOffer)
+			offer.GET("/get-category-offer", offerHandler.GetCategoryOffer)
 		}
 
 	}
