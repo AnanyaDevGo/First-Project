@@ -135,7 +135,7 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 	}
 	pageListInt, err := strconv.Atoi(pageList)
 	if err != nil {
-		errRes := response.ClientResponse(http.StatusBadRequest, "Product cannot be displayed", nil, err.Error())
+		errRes := response.ClientResponse(http.StatusBadRequest, "Product cannot be displayed!", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)
 	}
 
