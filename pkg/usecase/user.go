@@ -21,9 +21,10 @@ type userUseCase struct {
 	inventoryRepository interfaces.InventoryRepository
 	orderRepository     interfaces.OrderRepository
 	helper              helper_interfaces.Helper
+	wallet              interfaces.WalletRepository
 }
 
-func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository, h helper_interfaces.Helper) usecase.UserUseCase {
+func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, wallet interfaces.WalletRepository, otp interfaces.OtpRepository, inv interfaces.InventoryRepository, order interfaces.OrderRepository, h helper_interfaces.Helper) usecase.UserUseCase {
 	return &userUseCase{
 		userRepo:            repo,
 		cfg:                 cfg,
@@ -31,6 +32,7 @@ func NewUserUseCase(repo interfaces.UserRepository, cfg config.Config, otp inter
 		inventoryRepository: inv,
 		orderRepository:     order,
 		helper:              h,
+		wallet:              wallet,
 	}
 }
 
@@ -69,6 +71,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 	if err != nil {
 		return models.TokenUsers{}, errors.New("internal server error")
 	}
+
 	user.Password = string(hashedPassword)
 
 	userData, err := u.userRepo.UserSignUp(user)
@@ -87,6 +90,9 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 		return models.TokenUsers{}, err
 	}
 
+	if err = u.wallet.CreateWallet(userDetails.Id); err != nil {
+		return models.TokenUsers{}, err
+	}
 	return models.TokenUsers{
 		Users: userDetails,
 		Token: tokenString,
@@ -218,7 +224,7 @@ func (u *userUseCase) RemoveFromCart(cart, inventory int) error {
 }
 
 func (i *userUseCase) UpdateQuantity(id, inv_id, qty int) error {
-	
+
 	err := i.userRepo.UpdateQuantity(id, inv_id, qty)
 	if err != nil {
 		return err

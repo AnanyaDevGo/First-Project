@@ -3,6 +3,7 @@ package repository
 import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
+	"errors"
 
 	"gorm.io/gorm"
 )
@@ -31,4 +32,20 @@ func (w *walletRepository) WalletHistory(userID int) ([]models.WalletHistory, er
 		return []models.WalletHistory{}, err
 	}
 	return history, nil
+}
+func (w *walletRepository) CreateWallet(userID int) error {
+	err := w.DB.Raw("insert into wallets (user_id, amount) value (?,'0')", userID).Error
+	if err != nil {
+		return errors.New("cannot create wallet")
+	}
+	return nil
+}
+
+func (w *walletRepository) IsWalletExist(userID int) (bool, error) {
+	var count int
+	err := w.DB.Raw("select count(*) from wallets where user_id=?", userID).Scan(&count).Error
+	if err != nil {
+		return false, errors.New("cannot get wallet details")
+	}
+	return count >= 1, nil
 }

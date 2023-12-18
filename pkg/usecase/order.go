@@ -20,14 +20,16 @@ type orderUseCase struct {
 	userUseCase     services.UserUseCase
 	cartRepo        interfaces.CartRepository
 	couponRepo      interfaces.CouponRepository
+	wallet          interfaces.WalletRepository
 }
 
-func NewOrderUseCase(repo interfaces.OrderRepository, userUseCase services.UserUseCase, cartRepo interfaces.CartRepository, couponRepo interfaces.CouponRepository) services.OrderUseCase {
+func NewOrderUseCase(repo interfaces.OrderRepository, wallet interfaces.WalletRepository, userUseCase services.UserUseCase, cartRepo interfaces.CartRepository, couponRepo interfaces.CouponRepository) services.OrderUseCase {
 	return &orderUseCase{
 		orderRepository: repo,
 		userUseCase:     userUseCase,
 		cartRepo:        cartRepo,
 		couponRepo:      couponRepo,
+		wallet:          wallet,
 	}
 }
 
@@ -150,6 +152,17 @@ func (i *orderUseCase) CancelOrder(orderID int) error {
 	cart, err := i.orderRepository.GetOrders(orderID)
 	if err != nil {
 		return err
+	}
+	if cart.PaymentMethodID == 3 {
+		ok, err := i.wallet.IsWalletExist(int(cart.UserID))
+		if err != nil {
+			return err
+		}
+		if !ok {
+			if err = i.wallet.CreateWallet(int(cart.UserID)); err != nil {
+				return err
+			}
+		}
 	}
 
 	err = i.orderRepository.CancelOrder(orderID, int(cart.UserID), int(cart.FinalPrice), cart.PaymentStatus)

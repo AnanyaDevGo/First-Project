@@ -98,7 +98,6 @@ func (i *orderRepository) CancelOrder(orderId, userId, cartAmt int, paymentStatu
 	if err := i.DB.Exec("update orders set order_status='CANCELED' where id=$1", orderId).Error; err != nil {
 		return err
 	}
-	fmt.Println("jdfghjkl...............", paymentStatus)
 	if paymentStatus == "PAID" {
 		if err := i.DB.Exec("update wallets set amount = amount + ?  where user_id= ?", cartAmt, userId).Error; err != nil {
 			return err

@@ -309,3 +309,4 @@ func (u *userDataBase) GetPassword(id int) (string, error) {
 	return userPassword, nil
 
 }
+
