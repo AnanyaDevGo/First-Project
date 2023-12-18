@@ -262,6 +262,14 @@ func (ad *adminRepository) FilteredSalesReport(startTime time.Time, endTime time
 	if result.Error != nil {
 		return models.SalesReport{}, result.Error
 	}
+	result = ad.DB.Raw("SELECT COUNT(*) FROM orders WHERE order_status = 'CANCELED' AND approval = false AND created_at >= ? AND created_at<=?", startTime, endTime).Scan(&salesReport.CancelledOrder)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
+	result = ad.DB.Raw("SELECT COUNT(*) FROM orders WHERE order_status = 'RETURNED' AND approval = false AND created_at >= ? AND created_at<=?", startTime, endTime).Scan(&salesReport.ReturnOrder)
+	if result.Error != nil {
+		return models.SalesReport{}, result.Error
+	}
 	var productID int
 	result = ad.DB.Raw("SELECT inventory_id FROM order_items GROUP BY inventory_id order by SUM(quantity) DESC LIMIT 1").Scan(&productID)
 	if result.Error != nil {

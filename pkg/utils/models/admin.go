@@ -51,5 +51,7 @@ type SalesReport struct {
 	TotalOrders     int
 	CompletedOrders int
 	PendingOrders   int
+	CancelledOrder  int
+	ReturnOrder     int
 	TrendingProduct string
 }

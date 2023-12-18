@@ -5,6 +5,7 @@ import (
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -182,4 +183,50 @@ func (o *OrderHandler) ReturnOrder(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "successfully returned", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 
+}
+
+func (O *OrderHandler) PrintInvoice(c *gin.Context) {
+	orderId := c.Query("order_id")
+	orderIdInt, err := strconv.Atoi(orderId)
+	if err != nil {
+		err = errors.New("error in coverting order id" + err.Error())
+		errRes := response.ClientResponse(http.StatusBadGateway, "error in reading the order id", nil, err)
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+	pdf, err := O.orderUseCase.PrintInvoice(orderIdInt)
+	fmt.Println("error ", err)
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadGateway, "error in printing the invoice", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment;filename=invoice.pdf")
+
+	pdfFilePath := "salesReport/invoice.pdf"
+
+	err = pdf.OutputFileAndClose(pdfFilePath)
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadGateway, "error in printing invoice", nil, err)
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename=sales_report.pdf")
+	c.Header("Content-Type", "application/pdf")
+
+	c.File(pdfFilePath)
+
+	c.Header("Content-Type", "application/pdf")
+
+	err = pdf.Output(c.Writer)
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadGateway, "error in printing invoice", nil, err)
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+
+	successRes := response.ClientResponse(http.StatusOK, "the request was succesful", pdf, nil)
+	c.JSON(http.StatusOK, successRes)
 }

@@ -23,5 +23,6 @@ type OrderRepository interface {
 	ReduceInventoryQuantity(productName string, quantity int) error
 	PaymentAlreadyPaid(orderID int) (bool, error)
 	GetOrderDetailsByOrderId(orderID int) (models.CombinedOrderDetails, error)
-	// CheckIfItemIsOrdered(productId, orderId int) (bool, error)
+	GetItemsByOrderId(orderId int) ([]models.ItemDetails, error)
+	GetDetailedOrderThroughId(orderId int) (models.ItemOrderDetails, error)
 }

@@ -4,6 +4,7 @@ import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
+	"errors"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -118,7 +119,14 @@ func (i *orderRepository) GetAllOrders(userID, page, pageSize int) ([]models.Ord
 	offset := (page - 1) * pageSize
 	var order []models.OrderDetails
 
-	err := i.DB.Raw("SELECT id as order_id, address_id, payment_method_id, final_price as price, order_status, payment_status FROM orders WHERE user_id = ? OFFSET ? LIMIT ?", userID, offset, pageSize).Scan(&order).Error
+	query :=
+		`
+	SELECT id as order_id, address_id, payment_method_id, 
+	final_price, order_status, payment_status FROM 
+	orders WHERE user_id = ? OFFSET ? LIMIT ?
+	
+	`
+	err := i.DB.Raw(query, userID, offset, pageSize).Scan(&order).Error
 	if err != nil {
 		return nil, err
 	}
@@ -256,11 +264,47 @@ func (or *orderRepository) PaymentAlreadyPaid(orderID int) (bool, error) {
 	}
 	return a, nil
 }
-// func (or *orderRepository) CheckIfItemIsOrdered(productId, orderId int) (bool, error) {
-// 	var count bool
-// 	err := or.DB.Raw("select count(*) from orders where inventory_id=? and order_id= ?", productId, orderId).Scan(&count).Error
-// 	if err != nil {
-// 		return false, err
-// 	}
-// 	return count, nil
-// }
+func (o *orderRepository) GetItemsByOrderId(orderId int) ([]models.ItemDetails, error) {
+	var items []models.ItemDetails
+
+	query := `
+	select id, order_id, inventory_id, quantity, total_price
+	from order_items where id=?
+
+	`
+
+	if err := o.DB.Raw(query, orderId).Scan(&items).Error; err != nil {
+		return []models.ItemDetails{}, err
+	}
+
+	return items, nil
+}
+func (repo *orderRepository) GetDetailedOrderThroughId(orderId int) (models.ItemOrderDetails, error) {
+	var body models.ItemOrderDetails
+
+	query := `
+	SELECT 
+        o.id AS order_id,
+        o.final_price AS final_price,
+        o.order_status AS order_status,
+        o.payment_status AS payment_status,
+        u.name AS name,
+        u.email AS email,
+        u.phone AS phone,
+        a.house_name AS house_name,
+        a.state AS state,
+        a.pin AS pin,
+        a.street AS street,
+        a.city AS city
+	FROM orders o
+	JOIN users u ON o.user_id = u.id
+	JOIN addresses a ON o.address_id = a.id 
+	WHERE o.id = ?
+	`
+	if err := repo.DB.Raw(query, orderId).Scan(&body).Error; err != nil {
+		err = errors.New("error in getting detailed order through id in repository: " + err.Error())
+		return models.ItemOrderDetails{}, err
+	}
+	fmt.Println("body in repo", body.OrderId)
+	return body, nil
+}

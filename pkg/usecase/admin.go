@@ -79,6 +79,7 @@ func (ad *adminUseCase) DashBoard() (models.CompleteAdminDashboard, error) {
 	if err != nil {
 		return models.CompleteAdminDashboard{}, err
 	}
+
 	return models.CompleteAdminDashboard{
 		DashboardUser:    userDetails,
 		DashboardProduct: productDetails,

@@ -1,10 +1,12 @@
 package models
 
 type OrderDetails struct {
-	ID            int    `json:"order_id"`
-	UserName      string `json:"name"`
-	AddressID     int    `json:"address_id"`
-	PaymentMethod string `json:"payment_method"`
+	ID            int     `json:"order_id"`
+	UserName      string  `json:"name"`
+	AddressID     int     `json:"address_id"`
+	PaymentMethod int     `json:"payment_method_id"`
+	FinalPrice    float64 `json:"final_price"`
+	OrderStatus   string  `json:"order_status" gorm:"column:order_status"`
 }
 
 type CombinedOrderDetails struct {

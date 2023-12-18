@@ -3,6 +3,7 @@ package interfaces
 import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/utils/models"
+	"github.com/jung-kurt/gofpdf"
 )
 
 type OrderUseCase interface {
@@ -14,4 +15,5 @@ type OrderUseCase interface {
 	OrdersStatus(orderId string) error
 	ReturnOrder(orderID string) error
 	PaymentMethodID(order_id int) (int, error)
+	PrintInvoice(orderIdInt int) (*gofpdf.Fpdf, error)
 }

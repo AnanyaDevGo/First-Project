@@ -40,3 +40,24 @@ type Order struct {
 type SearchItems struct {
 	ProductName string `json:"product_name"`
 }
+type ItemOrderDetails struct {
+	OrderId       string  `json:"order_id"`
+	FinalPrice    float64 `json:"final_price"`
+	OrderStatus   string  `json:"order_status" gorm:"column:order_status"`
+	PaymentStatus string  `json:"payment_status"`
+	Name          string  `json:"name"`
+	Email         string  `json:"email"`
+	Phone         string  `json:"phone"`
+	HouseName     string  `json:"house_name" validate:"required"`
+	State         string  `json:"state" validate:"required"`
+	Pin           string  `json:"pin" validate:"required"`
+	Street        string  `json:"street"`
+	City          string  `json:"city"`
+}
+type ItemDetails struct {
+	ProductName string  `json:"product_name"`
+	FinalPrice  float64 `json:"final_price"`
+	Price       float64 `json:"price" `
+	Total       float64 `json:"total_price"`
+	Quantity    int     `json:"quantity"`
+}
