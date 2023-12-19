@@ -112,10 +112,24 @@ func (i inventoryUseCase) UpdateInventory(pid int, stock int) (models.ProductsRe
 
 func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.ProductsResponse, error) {
 
+
 	product, err := i.repository.ShowIndividualProducts(id)
 	if err != nil {
 		return models.ProductsResponse{}, err
 	}
+	// DiscountPercentage, err := i.offerRepository.FindDiscountPercentage(product.CategoryID)
+	// if err != nil {
+	// 	return models.Inventories{}, err
+	// }
+
+	// //make discounted price by calculation
+	// var discount float64
+	// if DiscountPercentage > 0 {
+	// 	discount = (product.Price * float64(DiscountPercentage)) / 100
+	// }
+
+	// product.DiscountedPrice = product.Price - discount
+
 
 	return product, nil
 }
