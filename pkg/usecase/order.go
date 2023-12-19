@@ -264,10 +264,14 @@ func (or *orderUseCase) PrintInvoice(orderId int) (*gofpdf.Fpdf, error) {
 		return nil, err
 	}
 
+	fmt.Println("order usecase ", order)
+
 	items, err := or.orderRepository.GetItemsByOrderId(orderId)
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("items usecase", items)
 
 	if order.OrderStatus != "DELIVERED" {
 		return nil, errors.New("wait for the invoice until the product is received")
@@ -313,14 +317,14 @@ func (or *orderUseCase) PrintInvoice(orderId int) (*gofpdf.Fpdf, error) {
 		pdf.CellFormat(40, 10, item.ProductName, "1", 0, "L", true, 0, "")
 		pdf.CellFormat(40, 10, "$"+strconv.FormatFloat(item.Price, 'f', 2, 64), "1", 0, "C", true, 0, "")
 		pdf.CellFormat(40, 10, strconv.Itoa(item.Quantity), "1", 0, "C", true, 0, "")
-		pdf.CellFormat(40, 10, "$"+strconv.FormatFloat(item.FinalPrice, 'f', 2, 64), "1", 0, "C", true, 0, "")
+		pdf.CellFormat(40, 10, "$"+strconv.FormatFloat(item.Price*float64(item.Quantity), 'f', 2, 64), "1", 0, "C", true, 0, "")
 		pdf.Ln(10)
 	}
 	pdf.Ln(10)
 
 	var totalPrice float64
 	for _, item := range items {
-		totalPrice += item.Total
+		totalPrice += item.Price * float64(item.Quantity)
 	}
 
 	pdf.SetFont("Arial", "B", 16)

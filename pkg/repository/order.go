@@ -266,14 +266,26 @@ func (o *orderRepository) GetItemsByOrderId(orderId int) ([]models.ItemDetails, 
 	var items []models.ItemDetails
 
 	query := `
-	select id, order_id, inventory_id, quantity, total_price
-	from order_items where id=?
-
+	SELECT
+    i.product_name,
+    oi.quantity,
+    i.price,
+    oi.total_price
+FROM
+    orders o
+JOIN
+    order_items oi ON o.id = oi.order_id
+JOIN
+    inventories i ON oi.inventory_id = i.id
+WHERE
+    o.id = ?;
 	`
 
 	if err := o.DB.Raw(query, orderId).Scan(&items).Error; err != nil {
 		return []models.ItemDetails{}, err
 	}
+
+	fmt.Println("order repo invoice", items)
 
 	return items, nil
 }
@@ -281,23 +293,27 @@ func (repo *orderRepository) GetDetailedOrderThroughId(orderId int) (models.Item
 	var body models.ItemOrderDetails
 
 	query := `
-	SELECT 
-        o.id AS order_id,
-        o.final_price AS final_price,
-        o.order_status AS order_status,
-        o.payment_status AS payment_status,
-        u.name AS name,
-        u.email AS email,
-        u.phone AS phone,
-        a.house_name AS house_name,
-        a.state AS state,
-        a.pin AS pin,
-        a.street AS street,
-        a.city AS city
-	FROM orders o
-	JOIN users u ON o.user_id = u.id
-	JOIN addresses a ON o.address_id = a.id 
-	WHERE o.id = ?
+	SELECT
+    o.id AS order_id,
+    o.final_price AS final_price,
+    o.order_status AS order_status,
+    o.payment_status AS payment_status,
+    u.name AS name,
+    u.email AS email,
+    u.phone AS phone,
+    a.house_name AS house_name,
+    a.state AS state,
+    a.pin AS pin,
+    a.street AS street,
+    a.city AS city
+FROM
+    orders o
+JOIN
+    users u ON o.user_id = u.id
+JOIN
+    addresses a ON o.address_id = a.id
+WHERE
+    o.id = ?;
 	`
 	if err := repo.DB.Raw(query, orderId).Scan(&body).Error; err != nil {
 		err = errors.New("error in getting detailed order through id in repository: " + err.Error())
