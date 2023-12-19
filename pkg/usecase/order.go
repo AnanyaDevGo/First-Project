@@ -250,7 +250,7 @@ func (o *orderUseCase) ReturnOrder(orderID string) error {
 	}
 	ReturnOrderResponse.CartAmount = int(cart.FinalPrice)
 	ReturnOrderResponse.UserId = int(cart.UserID)
-	ReturnOrderResponse.OrderStatus = "Returned To Wallet"
+	ReturnOrderResponse.OrderStatus = "Return To Wallet"
 	ReturnOrderResponse.OrderID = orderIDint
 	if cart.PaymentMethodID == 3 || cart.PaymentMethodID == 1 {
 		ok, err := o.wallet.IsWalletExist(int(cart.UserID))
@@ -266,17 +266,13 @@ func (o *orderUseCase) ReturnOrder(orderID string) error {
 		}
 	}
 
-
-
 	shipmentStatus, err := o.orderRepository.GetShipmentsStatus(orderID)
 	if err != nil {
 		return err
 	}
 
 	if shipmentStatus == "DELIVERED" {
-		
-		
-		
+
 		return o.orderRepository.ReturnOrder(ReturnOrderResponse)
 	}
 

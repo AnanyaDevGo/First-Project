@@ -175,7 +175,7 @@ func (o *OrderHandler) ReturnOrder(c *gin.Context) {
 	err := o.orderUseCase.ReturnOrder(orderID)
 
 	if err != nil {
-		errRes := response.ClientResponse(http.StatusInternalServerError, "order could not be returned", nil, err)
+		errRes := response.ClientResponse(http.StatusInternalServerError, "order could not be returned", nil, errors.New("error in returning"))
 		c.JSON(http.StatusInternalServerError, errRes)
 		return
 	}

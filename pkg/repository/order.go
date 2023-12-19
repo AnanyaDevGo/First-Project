@@ -248,7 +248,7 @@ func (o *orderRepository) ReturnOrder(returnOrderResp models.ReturnOrderResponse
 	if err := o.DB.Exec("update wallets set amount = amount + ?  where user_id= ?", returnOrderResp.CartAmount, returnOrderResp.UserId).Error; err != nil {
 		return err
 	}
-	if err := o.DB.Exec("update orders set order_status = ? payment_status = 'RETURNED TO WALLET'  where order_id= ?", returnOrderResp.OrderStatus, returnOrderResp.OrderID).Error; err != nil {
+	if err := o.DB.Exec("update orders set order_status = ? ,payment_status = 'RETURNED TO WALLET'  where id= ?", returnOrderResp.OrderStatus, returnOrderResp.OrderID).Error; err != nil {
 		return err
 	}
 
