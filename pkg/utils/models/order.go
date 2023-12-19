@@ -56,3 +56,9 @@ type PaymentMethodResponse struct {
 	ID           uint   `gorm:"primarykey"`
 	Payment_Name string `json:"payment_name"`
 }
+type ReturnOrderResponse struct {
+	UserId      int    `json:"user_id"`
+	OrderID     int    `json:"order_id"`
+	OrderStatus string `json:"order_status"`
+	CartAmount  int    `jsom:"cart_amount"`
+}

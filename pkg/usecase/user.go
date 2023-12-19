@@ -100,6 +100,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 }
 
 func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, error) {
+	
 
 	ok := u.userRepo.CheckUserAvailability(user.Email)
 	if !ok {
@@ -224,6 +225,7 @@ func (u *userUseCase) RemoveFromCart(cart, inventory int) error {
 }
 
 func (i *userUseCase) UpdateQuantity(id, inv_id, qty int) error {
+
 
 	err := i.userRepo.UpdateQuantity(id, inv_id, qty)
 	if err != nil {

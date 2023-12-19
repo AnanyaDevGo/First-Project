@@ -243,12 +243,19 @@ func (or *orderRepository) PaymentMethodID(orderID int) (int, error) {
 	}
 	return a, nil
 }
-func (o *orderRepository) ReturnOrder(orderStatus string, orderID string) error {
+func (o *orderRepository) ReturnOrder(returnOrderResp models.ReturnOrderResponse) error {
 
-	err := o.DB.Exec("update orders set order_status = ? where id = ?", orderStatus, orderID).Error
-	if err != nil {
+	if err := o.DB.Exec("update wallets set amount = amount + ?  where user_id= ?", returnOrderResp.CartAmount, returnOrderResp.UserId).Error; err != nil {
 		return err
 	}
+	if err := o.DB.Exec("update orders set order_status = ? payment_status = 'RETURNED TO WALLET'  where order_id= ?", returnOrderResp.OrderStatus, returnOrderResp.OrderID).Error; err != nil {
+		return err
+	}
+
+	// err := o.DB.Exec("update orders set order_status = ? where id = ?", returnOrderResp.OrderStatus).Error
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 

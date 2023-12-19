@@ -31,6 +31,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 			order.GET("/get", orderHandler.GetOrders)
 			order.GET("/all", orderHandler.GetAllOrders)
 			order.DELETE("", orderHandler.CancelOrder)
+			order.PUT("/return", orderHandler.ReturnOrder)
 		}
 		edit := profile.Group("/edit")
 		{

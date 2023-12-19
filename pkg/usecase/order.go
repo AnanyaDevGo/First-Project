@@ -238,6 +238,35 @@ func (or *orderUseCase) PaymentMethodID(order_id int) (int, error) {
 }
 
 func (o *orderUseCase) ReturnOrder(orderID string) error {
+	var ReturnOrderResponse models.ReturnOrderResponse
+
+	orderIDint, err := strconv.Atoi(orderID)
+	if err != nil {
+		return errors.New("string convertion failed")
+	}
+	cart, err := o.orderRepository.GetOrders(orderIDint)
+	if err != nil {
+		return err
+	}
+	ReturnOrderResponse.CartAmount = int(cart.FinalPrice)
+	ReturnOrderResponse.UserId = int(cart.UserID)
+	ReturnOrderResponse.OrderStatus = "Returned To Wallet"
+	ReturnOrderResponse.OrderID = orderIDint
+	if cart.PaymentMethodID == 3 || cart.PaymentMethodID == 1 {
+		ok, err := o.wallet.IsWalletExist(int(cart.UserID))
+		if err != nil {
+			return err
+		}
+		if !ok {
+
+			err := o.wallet.CreateWallet(int(cart.UserID))
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+
 
 	shipmentStatus, err := o.orderRepository.GetShipmentsStatus(orderID)
 	if err != nil {
@@ -245,8 +274,10 @@ func (o *orderUseCase) ReturnOrder(orderID string) error {
 	}
 
 	if shipmentStatus == "DELIVERED" {
-		shipmentStatus = "RETURNED"
-		return o.orderRepository.ReturnOrder(shipmentStatus, orderID)
+		
+		
+		
+		return o.orderRepository.ReturnOrder(ReturnOrderResponse)
 	}
 
 	return errors.New("can't return order")

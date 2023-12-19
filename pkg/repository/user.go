@@ -186,8 +186,8 @@ func (ad *userDataBase) UpdateQuantity(id, invID, qty int) error {
 		return errors.New("negative or zero values are not allowed")
 	}
 
-	if qty >= 30 {
-		return errors.New("choose number of items below 30")
+	if qty >= 20 {
+		return errors.New("choose number of items below 20")
 	}
 
 	if qty >= 0 {
