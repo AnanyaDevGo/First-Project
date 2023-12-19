@@ -89,7 +89,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 	if err != nil {
 		return models.TokenUsers{}, err
 	}
-
+	fmt.Println("user......", userDetails.Id)
 	if err = u.wallet.CreateWallet(userDetails.Id); err != nil {
 		return models.TokenUsers{}, err
 	}

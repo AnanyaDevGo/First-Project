@@ -34,10 +34,13 @@ func (w *walletRepository) WalletHistory(userID int) ([]models.WalletHistory, er
 	return history, nil
 }
 func (w *walletRepository) CreateWallet(userID int) error {
-	err := w.DB.Raw("insert into wallets (user_id, amount) value (?,'0')", userID).Error
+	var wid int
+	err := w.DB.Raw("INSERT INTO wallets (user_id) VALUES (?) returning id", userID).Scan(&wid).Error
 	if err != nil {
 		return errors.New("cannot create wallet")
 	}
+	// fmt.Println("userid at repo...", userID)
+	// fmt.Println("walletid at repo...", wid)
 	return nil
 }
 

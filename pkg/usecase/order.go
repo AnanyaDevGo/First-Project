@@ -159,9 +159,13 @@ func (i *orderUseCase) CancelOrder(orderID int) error {
 			return err
 		}
 		if !ok {
-			if err = i.wallet.CreateWallet(int(cart.UserID)); err != nil {
+			fmt.Println("gdgfdfgfdg", cart.UserID)
+			err := i.wallet.CreateWallet(int(cart.UserID))
+			fmt.Println("heere,,,,,,,,,,,,,")
+			if err != nil {
 				return err
 			}
+			fmt.Println("errrroooorrr", err)
 		}
 	}
 

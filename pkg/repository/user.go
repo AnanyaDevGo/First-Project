@@ -31,12 +31,19 @@ func (c *userDataBase) CheckUserAvailability(email string) bool {
 }
 
 func (c *userDataBase) UserSignUp(user models.UserDetails) (models.UserDetailsResponse, error) {
-
 	var userDetails models.UserDetailsResponse
-	err := c.DB.Raw("INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?) RETURNING id, name, email, phone", user.Name, user.Email, user.Password, user.Phone).Scan(&userDetails).Error
 
+	err := c.DB.Raw("INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?) RETURNING id, name, email, phone", user.Name, user.Email, user.Password, user.Phone).Scan(&userDetails).Error
 	if err != nil {
-		return models.UserDetailsResponse{}, err
+		return models.UserDetailsResponse{}, fmt.Errorf("failed to sign up user: %w", err)
+	}
+
+	userId := userDetails.Id
+
+	err = c.DB.Raw("INSERT INTO wallets (user_id, amount) VALUES (?, '0')", userId).Error
+	if err != nil {
+
+		return models.UserDetailsResponse{}, fmt.Errorf("failed to create wallet: %w", err)
 	}
 
 	return userDetails, nil
@@ -309,4 +316,3 @@ func (u *userDataBase) GetPassword(id int) (string, error) {
 	return userPassword, nil
 
 }
-

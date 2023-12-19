@@ -241,7 +241,6 @@ func (or *orderRepository) PaymentMethodID(orderID int) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	fmt.Println("order id 1", a)
 	return a, nil
 }
 func (o *orderRepository) ReturnOrder(orderStatus string, orderID string) error {
