@@ -43,7 +43,7 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 	if user.Name == "" {
 		return models.TokenUsers{}, errors.New("username cannot be empty")
 	}
-	namevalidate, err := u.helper.ValidateDatatype(user.Name, "string")
+	namevalidate, err := u.helper.ValidateAlphabets(user.Name)
 	if err != nil {
 		return models.TokenUsers{}, errors.New("invalid format for name")
 	}
@@ -100,7 +100,6 @@ func (u *userUseCase) UserSignUp(user models.UserDetails) (models.TokenUsers, er
 }
 
 func (u *userUseCase) LoginHandler(user models.UserLogin) (models.TokenUsers, error) {
-	
 
 	ok := u.userRepo.CheckUserAvailability(user.Email)
 	if !ok {
@@ -225,7 +224,6 @@ func (u *userUseCase) RemoveFromCart(cart, inventory int) error {
 }
 
 func (i *userUseCase) UpdateQuantity(id, inv_id, qty int) error {
-
 
 	err := i.userRepo.UpdateQuantity(id, inv_id, qty)
 	if err != nil {
