@@ -107,6 +107,7 @@ func (ad *adminUseCase) ExecuteSalesReportByDate(startDate, endDate time.Time) (
 	}
 	return orders, nil
 }
+
 func (ad *adminUseCase) BlockUser(id string) error {
 
 	user, err := ad.adminRepository.GetUserByID(id)
