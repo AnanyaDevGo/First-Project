@@ -27,7 +27,7 @@ func (w *walletRepository) GetWallet(userID int) (models.WalletAmount, error) {
 }
 func (w *walletRepository) WalletHistory(userID int) ([]models.WalletHistory, error) {
 	var history []models.WalletHistory
-	err := w.DB.Raw("SELECT id,order_id,description,amount,is_credited FROM wallet_histories WHERE user_id = ?", userID).Scan(&history).Error
+	err := w.DB.Raw("SELECT id,order_id,amount,is_credited FROM wallet_histories WHERE user_id = ?", userID).Scan(&history).Error
 	if err != nil {
 		return []models.WalletHistory{}, err
 	}
@@ -39,8 +39,6 @@ func (w *walletRepository) CreateWallet(userID int) error {
 	if err != nil {
 		return errors.New("cannot create wallet")
 	}
-	// fmt.Println("userid at repo...", userID)
-	// fmt.Println("walletid at repo...", wid)
 	return nil
 }
 

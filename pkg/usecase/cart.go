@@ -73,7 +73,6 @@ func (i *cartUseCase) CheckOut(id int) (models.CheckOut, error) {
 	if id <= 0 {
 		return models.CheckOut{}, errors.New("invalid id")
 	}
-	fmt.Println("cart id .........", id)
 	address, err := i.repo.GetAddresses(id)
 	if err != nil {
 		return models.CheckOut{}, err
