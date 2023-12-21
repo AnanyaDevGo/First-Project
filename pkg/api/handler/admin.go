@@ -25,6 +25,16 @@ func NewAdminHandler(usecase services.AdminUseCase) *AdminHandler {
 		adminUseCase: usecase,
 	}
 }
+
+// @Summary Admin Login
+// @Description Authenticate an admin user and get access and refresh tokens.
+// @Accept json
+// @Produce json
+// @Tags admin
+// @Param body body models.AdminLogin true "Admin login details in JSON format"
+// @Success 200 {object} response.Response "Admin authenticated successfully"
+// @Failure 400 {object} response.Response  "Cannot authenticate user"
+// @Router /admin/login [post]
 func (ad *AdminHandler) LoginHandler(c *gin.Context) {
 	var adminDetails models.AdminLogin
 	fmt.Println("it is here")

@@ -29,6 +29,15 @@ func NewUserHandler(usecase services.UserUseCase) *UserHandler {
 		userUseCase: usecase,
 	}
 }
+// @Summary User Sign-Up
+// @Description Create a new user account.
+// @Accept json
+// @Produce json
+// @Tags user
+// @Param body body models.UserDetails true "User details in JSON format"
+// @Success 201 {object} response.Response "User successfully signed up"
+// @Failure 400 {object} response.Response "Constraints not satisfied or user could not sign up"
+// @Router /user/signup [post]
 func (u *UserHandler) UserSignUp(c *gin.Context) {
 	var user models.UserDetails
 

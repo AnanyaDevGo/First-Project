@@ -1,0 +1,100 @@
+definitions:
+  models.AdminLogin:
+    properties:
+      email:
+        type: string
+      password:
+        maxLength: 20
+        minLength: 8
+        type: string
+    required:
+    - email
+    type: object
+  models.UserDetails:
+    properties:
+      confirmpassword:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      error: {}
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+info:
+  contact:
+    name: API Support
+  description: TechDeck is an E-commerce platform to purchase and sell Electronic
+    itmes
+  title: Go + Gin E-Commerce API
+  version: 1.0.0
+paths:
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate an admin user and get access and refresh tokens.
+      parameters:
+      - description: Admin login details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.AdminLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Admin authenticated successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Cannot authenticate user
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Admin Login
+      tags:
+      - admin
+  /user/signup:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account.
+      parameters:
+      - description: User details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserDetails'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User successfully signed up
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Constraints not satisfied or user could not sign up
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: User Sign-Up
+      tags:
+      - user
+securityDefinitions:
+  BearerTokenAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
