@@ -165,7 +165,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Go + Gin E-Commerce API",
-	Description:      "CrocsClub is an E-commerce platform to purchase and sell Electronic itmes",
+	Description:      "CrocsClub is an E-commerce platform to purchase and sell Crocs",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
