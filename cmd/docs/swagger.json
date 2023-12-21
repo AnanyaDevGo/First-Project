@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "TechDeck is an E-commerce platform to purchase and sell Electronic itmes",
+        "description": "CrocsClub is an E-commerce platform to purchase and sell Crocs",
         "title": "Go + Gin E-Commerce API",
         "contact": {
             "name": "API Support"
