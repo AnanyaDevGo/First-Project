@@ -107,13 +107,13 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 			return err
 		}
 	}
-	var order models.OrderDetails
-	order.AddressID = addressID
-	order.ID = cart.ID
-	order.PaymentMethod = paymentID
-	order.FinalPrice = order.FinalPrice
-	order.OrderStatus = order.OrderStatus
-	order.UserName = order.UserName
+	// var order models.OrderDetails
+	// order.AddressID = addressID
+	// order.ID = cart.ID
+	// order.PaymentMethod = paymentID
+	// order.FinalPrice = order.FinalPrice
+	// order.OrderStatus = order.OrderStatus
+	// order.UserName = order.UserName
 
 	return nil
 }
