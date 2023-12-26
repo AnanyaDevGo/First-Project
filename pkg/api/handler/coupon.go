@@ -18,6 +18,17 @@ func NewCouponHandler(coupon interfaces.CouponUseCase) *CouponHandler {
 		couponUseCase: coupon,
 	}
 }
+
+// @Summary Add Coupon
+// @Description Add a new coupon.
+// @Accept json
+// @Produce json
+// @Tags coupon
+// @Security ApiKeyAuth
+// @Param body body domain.Coupon true "Coupon details in JSON format"
+// @Success 200 {object} response.Response "Successfully added coupon"
+// @Failure 400 {object} response.Response "Field provided in the wrong format or Cannot add coupon"
+// @Router /coupon/add [post]
 func (cu *CouponHandler) AddCoupon(c *gin.Context) {
 	var coupon domain.Coupon
 	if err := c.BindJSON(&coupon); err != nil {
@@ -35,6 +46,15 @@ func (cu *CouponHandler) AddCoupon(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Get Coupons
+// @Description Retrieve all coupons.
+// @Accept json
+// @Produce json
+// @Tags coupon
+// @Security ApiKeyAuth
+// @Success 200 {object} response.Response "Successfully got all coupons"
+// @Failure 400 {object} response.Response "Error in getting coupons"
+// @Router /coupon/get [get]
 func (cu *CouponHandler) GetCoupon(c *gin.Context) {
 	couponRes, err := cu.couponUseCase.GetCoupon()
 	if err != nil {
@@ -47,6 +67,16 @@ func (cu *CouponHandler) GetCoupon(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Edit Coupon
+// @Description Edit an existing coupon.
+// @Accept json
+// @Produce json
+// @Tags coupon
+// @Security ApiKeyAuth
+// @Param body body domain.Coupon true "Coupon details in JSON format"
+// @Success 200 {object} response.Response "Successfully edited coupon"
+// @Failure 400 {object} response.Response "Field provided in the wrong format or Cannot edit coupon"
+// @Router /coupon/edit [put]
 func (cu *CouponHandler) EditCoupon(c *gin.Context) {
 	var edit domain.Coupon
 	if err := c.BindJSON(&edit); err != nil {
