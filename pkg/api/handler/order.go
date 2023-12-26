@@ -22,6 +22,17 @@ func NewOrderHandler(useCase services.OrderUseCase) *OrderHandler {
 	}
 }
 
+// @Summary Order Items From Cart
+// @Description Place an order for items in the user's cart.
+// @Accept json
+// @Produce json
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param id path int true "User ID"
+// @Param order body models.Order true "Order details including address, payment method, and coupon ID"
+// @Success 200 {object} response.Response "Order placed successfully"
+// @Failure 400 {object} response.Response "Invalid input or error placing the order"
+// @Router /orders/order-items-from-cart [post]
 func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 
 	id, ok := c.Get("id")
@@ -56,6 +67,16 @@ func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Get Orders
+// @Description Retrieve orders based on the provided order ID.
+// @Accept json
+// @Produce json
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param order_id query int false "Order ID"
+// @Success 200 {object} response.Response "Orders retrieved successfully"
+// @Failure 400 {object} response.Response "Invalid input or error retrieving orders"
+// @Router /orders [get]
 func (i *OrderHandler) GetOrders(c *gin.Context) {
 
 	idString := c.Query("order_id")
@@ -78,6 +99,16 @@ func (i *OrderHandler) GetOrders(c *gin.Context) {
 
 }
 
+// @Summary Cancel Order
+// @Description Cancel an order based on the provided order ID.
+// @Accept json
+// @Produce json
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param order_id query int true "Order ID"
+// @Success 200 {object} response.Response "Order successfully canceled"
+// @Failure 400 {object} response.Response "Invalid input or error canceling the order"
+// @Router /orders/cancel [post]
 func (i OrderHandler) CancelOrder(c *gin.Context) {
 	idString := c.Query("order_id")
 	orderID, err := strconv.Atoi(idString)
@@ -99,6 +130,17 @@ func (i OrderHandler) CancelOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Get All Orders
+// @Description Retrieve all orders for the authenticated user.
+// @Accept json
+// @Produce json
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param page query int false "Page number for pagination (default is 1)"
+// @Param count query int false "Number of items per page (default is 10)"
+// @Success 200 {object} response.Response "Successfully retrieved all orders"
+// @Failure 400 {object} response.Response "Invalid input or error retrieving orders"
+// @Router /orders/all [get]
 func (i *OrderHandler) GetAllOrders(c *gin.Context) {
 
 	pageStr := c.DefaultQuery("page", "1")
@@ -131,6 +173,16 @@ func (i *OrderHandler) GetAllOrders(c *gin.Context) {
 
 }
 
+// @Summary Get Admin Orders
+// @Description Retrieve all orders for admin view.
+// @Accept json
+// @Produce json
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param page query int false "Page number for pagination"
+// @Success 200 {object} response.Response "Successfully retrieved all admin orders"
+// @Failure 400 {object} response.Response "Invalid input or error retrieving orders"
+// @Router /admin/orders [get]
 func (i *OrderHandler) GetAdminOrders(c *gin.Context) {
 
 	pageStr := c.Query("page")
@@ -154,6 +206,16 @@ func (i *OrderHandler) GetAdminOrders(c *gin.Context) {
 
 }
 
+// @Summary Approve Order
+// @Description Approve an order by updating its status.
+// @Accept json
+// @Produce json
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param order_id query string true "Order ID to be approved"
+// @Success 200 {object} response.Response "Successfully approved the order"
+// @Failure 400 {object} response.Response "Invalid input or error approving the order"
+// @Router /admin/orders/approve [post]
 func (i *OrderHandler) ApproveOrder(c *gin.Context) {
 	orderID := c.Query("order_id")
 
@@ -168,6 +230,16 @@ func (i *OrderHandler) ApproveOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Return Order
+// @Description Initiate the return process for an order by updating its status.
+// @Accept json
+// @Produce json
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param order_id query string true "Order ID to be returned"
+// @Success 200 {object} response.Response "Successfully initiated the return process"
+// @Failure 500 {object} response.Response "Error initiating the return process"
+// @Router /admin/orders/return [post]
 func (o *OrderHandler) ReturnOrder(c *gin.Context) {
 
 	orderID := c.Query("order_id")
@@ -185,6 +257,17 @@ func (o *OrderHandler) ReturnOrder(c *gin.Context) {
 
 }
 
+// @Summary Print Invoice
+// @Description Generate and download the invoice for a specific order.
+// @Accept json
+// @Produce application/pdf
+// @Tags orders
+// @Security ApiKeyAuth
+// @Param order_id query string true "Order ID for which the invoice should be generated"
+// @Success 200 {file} pdf "Invoice PDF"
+// @Failure 400 {object} response.Response "Error in processing the request"
+// @Failure 500 {object} response.Response "Error generating or downloading the invoice"
+// @Router /admin/orders/print-invoice [get]
 func (O *OrderHandler) PrintInvoice(c *gin.Context) {
 	orderId := c.Query("order_id")
 	orderIdInt, err := strconv.Atoi(orderId)
