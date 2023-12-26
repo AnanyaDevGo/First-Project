@@ -21,6 +21,21 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 	}
 }
 
+// @Summary Add Inventory
+// @Description Add a new inventory item.
+// @Accept multipart/form-data
+// @Produce json
+// @Tags inventory
+// @Param category_id formData int true "ID of the category for the inventory"
+// @Param product_name formData string true "Name of the product"
+// @Param size formData string true "Size of the product"
+// @Param stock formData int true "Stock quantity of the product"
+// @Param price formData float64 true "Price of the product"
+// @Param image formData file true "Image file of the product"
+// @Success 200 {object} response.Response "Successfully added Product"
+// @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
+// @Failure 500 {object} response.Response "Failed to add the product"
+// @Router /inventory/add [post]
 func (i *InventoryHandler) AddInventory(c *gin.Context) {
 	var inventory models.AddInventories
 
@@ -48,6 +63,17 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary List Products
+// @Description Get a paginated list of products.
+// @Accept json
+// @Produce json
+// @Tags inventory
+// @Param page query int false "Page number for pagination (default: 1)"
+// @Param per_page query int false "Number of products per page (default: 5)"
+// @Success 200 {object} response.Response "Product list retrieved successfully"
+// @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
+// @Failure 500 {object} response.Response "Failed to retrieve the product list"
+// @Router /inventory/list [get]
 func (i *InventoryHandler) ListProducts(c *gin.Context) {
 
 	pageNo := c.DefaultQuery("page", "1")
@@ -78,6 +104,18 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Edit Inventory
+// @Description Edit details of an existing inventory item.
+// @Accept json
+// @Produce json
+// @Tags inventory
+// @Param inventory_id query int true "ID of the inventory item to edit"
+// @Param body body domain.Inventories true "Updated inventory details in JSON format"
+// @Success 200 {object} response.Response "Inventory item successfully edited"
+// @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
+// @Failure 404 {object} response.Response "Inventory item not found"
+// @Failure 500 {object} response.Response "Failed to edit the inventory item"
+// @Router /inventory/edit [put]
 func (u *InventoryHandler) EditInventory(c *gin.Context) {
 	var inventory domain.Inventories
 
@@ -107,6 +145,17 @@ func (u *InventoryHandler) EditInventory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Delete Inventory
+// @Description Delete an existing inventory item.
+// @Accept json
+// @Produce json
+// @Tags inventory
+// @Param id query string true "ID of the inventory item to delete"
+// @Success 200 {object} response.Response "Inventory item successfully deleted"
+// @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
+// @Failure 404 {object} response.Response "Inventory item not found"
+// @Failure 500 {object} response.Response "Failed to delete the inventory item"
+// @Router /inventory/delete [delete]
 func (u *InventoryHandler) DeleteInventory(c *gin.Context) {
 
 	inventoryID := c.Query("id")
@@ -121,6 +170,17 @@ func (u *InventoryHandler) DeleteInventory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Update Inventory
+// @Description Update the stock of an existing inventory item.
+// @Accept json
+// @Produce json
+// @Tags inventory
+// @Param body body models.InventoryUpdate true "Inventory update details in JSON format"
+// @Success 200 {object} response.Response "Inventory stock successfully updated"
+// @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
+// @Failure 404 {object} response.Response "Inventory item not found"
+// @Failure 500 {object} response.Response "Failed to update the inventory stock"
+// @Router /inventory/update [put]
 func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 
 	var p models.InventoryUpdate
@@ -141,6 +201,16 @@ func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Show Individual Products
+// @Description Retrieve details of an individual product based on its ID.
+// @Accept json
+// @Produce json
+// @Tags inventory
+// @Param id query string true "Product ID to retrieve details"
+// @Success 200 {object} response.Response "Product details retrieved successfully"
+// @Failure 400 {object} response.Response "Invalid request format or path variables in the wrong format"
+// @Failure 404 {object} response.Response "Product not found"
+// @Router /inventory/show [get]
 func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 
 	id := c.Query("id")
@@ -156,6 +226,16 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Search Products
+// @Description Retrieve product details based on a prefix search for the product name.
+// @Accept json
+// @Produce json
+// @Tags inventory
+// @Param body body models.SearchItems true "Prefix for product name search"
+// @Success 200 {object} response.Response "Product details retrieved successfully"
+// @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
+// @Failure 500 {object} response.Response "Could not retrieve products by prefix search"
+// @Router /inventory/search [post]
 func (i *InventoryHandler) SearchProducts(c *gin.Context) {
 
 	var prefix models.SearchItems
@@ -177,6 +257,16 @@ func (i *InventoryHandler) SearchProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Filter Products by Category
+// @Description Retrieve a list of products based on the specified category ID.
+// @Accept json
+// @Produce json
+// @Tags inventory
+// @Param category_id query int true "Category ID for filtering products"
+// @Success 200 {object} response.Response "Products list retrieved successfully"
+// @Failure 400 {object} response.Response "Invalid category ID or products cannot be displayed"
+// @Failure 500 {object} response.Response "Error in retrieving products"
+// @Router /inventory/filter [get]
 func (i *InventoryHandler) FilterCategory(c *gin.Context) {
 
 	CategoryId := c.Query("category_id")
