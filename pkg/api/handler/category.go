@@ -20,6 +20,16 @@ func NewCategoryHandler(usecase services.CategoryUseCase) *CategoryHandler {
 	}
 }
 
+// @Summary Add Category
+// @Description Add a new category.
+// @Accept json
+// @Produce json
+// @Tags category
+// @Security ApiKeyAuth
+// @Param category body domain.Category true "Category details to be added in JSON format"
+// @Success 200 {object} response.Response "Successfully added Category"
+// @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not add the Category"
+// @Router /category/add [post]
 func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 
 	var category domain.Category
@@ -39,6 +49,17 @@ func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully added Category", CategoryResponse, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
+// @Summary Update Category
+// @Description Update the name of an existing category.
+// @Accept json
+// @Produce json
+// @Tags category
+// @Security ApiKeyAuth
+// @Param body body models.SetNewName true "Category name details in JSON format"
+// @Success 200 {object} response.Response "Successfully renamed the category"
+// @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not update the Category"
+// @Router /category/update [put]
 func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 
 	var p models.SetNewName
@@ -60,6 +81,17 @@ func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
+// @Summary Delete Category
+// @Description Delete an existing category.
+// @Accept json
+// @Produce json
+// @Tags category
+// @Security ApiKeyAuth
+// @Param id query string true "ID of the category to be deleted"
+// @Success 200 {object} response.Response "Successfully deleted the Category"
+// @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not delete the Category"
+// @Router /category/delete [delete]
 func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 
 	categoryID := c.Query("id")
@@ -75,6 +107,15 @@ func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 
 }
 
+// @Summary Get Categories
+// @Description Retrieve all categories.
+// @Accept json
+// @Produce json
+// @Tags category
+// @Security ApiKeyAuth
+// @Success 200 {object} response.Response "Successfully got all categories"
+// @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not retrieve categories"
+// @Router /category/get [get]
 func (Cat *CategoryHandler) GetCategory(c *gin.Context) {
 
 	categories, err := Cat.CategoryUseCase.GetCategory()

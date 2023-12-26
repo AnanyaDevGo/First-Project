@@ -56,6 +56,7 @@ func (ad *AdminHandler) LoginHandler(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Admin authenticated successfully", admin, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
 // @Summary Admin Dashboard
 // @Description Display the admin dashboard.
 // @Accept json
@@ -76,6 +77,7 @@ func (ad *AdminHandler) Dashboard(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "admin dashboard displayed", dashboard, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
 // @Summary Filtered Sales Report
 // @Description Retrieve sales report based on the specified time period.
 // @Accept json
@@ -97,6 +99,7 @@ func (ad *AdminHandler) FilteredSalesReport(c *gin.Context) {
 	success := response.ClientResponse(http.StatusOK, "sales report retrieved successfully", salesReport, nil)
 	c.JSON(http.StatusOK, success)
 }
+
 // @Summary Block User
 // @Description Block a user by their ID.
 // @Accept json
@@ -120,6 +123,7 @@ func (ad *AdminHandler) BlockUser(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
 // @Summary Unblock User
 // @Description Unblock a user by their ID.
 // @Accept json
@@ -143,6 +147,7 @@ func (ad *AdminHandler) UnBlockUser(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully unblocked the user", nil, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
 // @Summary Get Users
 // @Description Retrieve a paginated list of users.
 // @Accept json
@@ -173,6 +178,7 @@ func (ad *AdminHandler) GetUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
 // @Summary New Payment Method
 // @Description Add a new payment method.
 // @Accept json
@@ -202,6 +208,7 @@ func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
 // @Summary List Payment Methods
 // @Description Retrieve a list of all available payment methods.
 // @Accept json
@@ -223,6 +230,7 @@ func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
 // @Summary Delete Payment Method
 // @Description Delete a payment method by its ID.
 // @Accept json
@@ -252,6 +260,7 @@ func (a *AdminHandler) DeletePaymentMethod(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 
 }
+
 // @Summary Validate Refresh Token and Create New Access Token
 // @Description Validate the provided refresh token and generate a new access token.
 // @Accept json
@@ -291,6 +300,7 @@ func (a *AdminHandler) ValidateRefreshTokenAndCreateNewAccess(c *gin.Context) {
 
 	c.JSON(200, newAccessToken)
 }
+
 // @Summary Sales Report by Date
 // @Description Retrieve sales report data within a specified date range.
 // @Accept json
