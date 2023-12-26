@@ -29,6 +29,7 @@ func NewUserHandler(usecase services.UserUseCase) *UserHandler {
 		userUseCase: usecase,
 	}
 }
+
 // @Summary User Sign-Up
 // @Description Create a new user account.
 // @Accept json
@@ -64,6 +65,16 @@ func (u *UserHandler) UserSignUp(c *gin.Context) {
 	c.JSON(http.StatusCreated, successRes)
 }
 
+// @Summary User Login
+// @Description Log in an existing user with valid credentials.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Param login_body body models.UserLogin true "User login details"
+// @Success 200 {object} response.Response "User successfully logged in"
+// @Failure 400 {object} response.Response "Fields provided are in the wrong format or constraints not satisfied"
+// @Failure 401 {object} response.Response "User could not be logged in with the provided credentials"
+// @Router /users/login [post]
 func (u *UserHandler) LoginHandler(c *gin.Context) {
 
 	var user models.UserLogin
@@ -93,6 +104,16 @@ func (u *UserHandler) LoginHandler(c *gin.Context) {
 
 }
 
+// @Summary Get User's Cart
+// @Description Retrieve the products in the user's cart.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param id header string true "User ID" default(1)
+// @Success 200 {object} response.Response "Successfully retrieved all products in the cart"
+// @Failure 400 {object} response.Response "Could not retrieve cart or invalid user ID"
+// @Router /users/cart [get]
 func (u *UserHandler) GetCart(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
@@ -109,6 +130,17 @@ func (u *UserHandler) GetCart(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Remove Product from Cart
+// @Description Remove a specific product from the user's cart.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param cart_id query int true "Cart ID" default(1)
+// @Param inventory_id query int true "Inventory ID" default(1)
+// @Success 200 {object} response.Response "Successfully removed product from the cart"
+// @Failure 400 {object} response.Response "Invalid cart or inventory ID or could not remove from cart"
+// @Router /users/cart/remove [delete]
 func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 	cartIDStr := c.Query("cart_id")
 	if cartIDStr == "" {
@@ -148,6 +180,17 @@ func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Add Address
+// @Description Add a new address for the user.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param id path int true "User ID"
+// @Param address body models.AddAddress true "Address details"
+// @Success 200 {object} response.Response "Successfully added address"
+// @Failure 400 {object} response.Response "Invalid input or could not add address"
+// @Router /users/{id}/address [post]
 func (u *UserHandler) AddAddress(c *gin.Context) {
 	id, _ := c.Get("id")
 	var address models.AddAddress
@@ -166,6 +209,18 @@ func (u *UserHandler) AddAddress(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Update Quantity
+// @Description Update the quantity of a specific product in the user's cart.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param id query int true "User ID"
+// @Param inventory query int true "Inventory ID"
+// @Param quantity query int true "Quantity to update"
+// @Success 200 {object} response.Response "Successfully added quantity"
+// @Failure 400 {object} response.Response "Invalid input or could not update quantity"
+// @Router /users/update-quantity [put]
 func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
@@ -200,6 +255,16 @@ func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Get User Addresses
+// @Description Get all addresses associated with the user.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param id path int true "User ID"
+// @Success 200 {object} response.Response "Successfully got all records"
+// @Failure 400 {object} response.Response "Invalid input or could not retrieve records"
+// @Router /users/{id}/addresses [get]
 func (u *UserHandler) GetAddress(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
@@ -214,6 +279,16 @@ func (u *UserHandler) GetAddress(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// @Summary Get User Details
+// @Description Get details of the authenticated user.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param id path int true "User ID"
+// @Success 200 {object} response.Response "Successfully retrieved details"
+// @Failure 400 {object} response.Response "Invalid input or could not retrieve details"
+// @Router /users/details [get]
 func (u *UserHandler) GetUserDetails(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
@@ -227,6 +302,18 @@ func (u *UserHandler) GetUserDetails(c *gin.Context) {
 	successRes := response.ClientResponse(http.StatusOK, "Successfully retrived details", details, nil)
 	c.JSON(http.StatusOK, successRes)
 }
+
+// @Summary Edit User Details
+// @Description Edit details of the authenticated user.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param id path int true "User ID"
+// @Param edit body models.Edit true "User details to be edited"
+// @Success 201 {object} response.Response "Details edited successfully"
+// @Failure 400 {object} response.Response "Invalid input or error updating values"
+// @Router /users/edit [put]
 func (u *UserHandler) Edit(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
@@ -257,6 +344,17 @@ func (u *UserHandler) Edit(c *gin.Context) {
 	c.JSON(http.StatusCreated, successRes)
 }
 
+// @Summary Change Password
+// @Description Change the password of the authenticated user.
+// @Accept json
+// @Produce json
+// @Tags users
+// @Security ApiKeyAuth
+// @Param id path int true "User ID"
+// @Param changePassword body models.ChangePassword true "Old and new password details"
+// @Success 200 {object} response.Response "Password changed successfully"
+// @Failure 400 {object} response.Response "Invalid input or error changing the password"
+// @Router /users/change-password [put]
 func (u *UserHandler) ChangePassword(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
