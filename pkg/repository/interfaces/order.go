@@ -25,4 +25,5 @@ type OrderRepository interface {
 	GetOrderDetailsByOrderId(orderID int) (models.CombinedOrderDetails, error)
 	GetItemsByOrderId(orderId int) ([]models.ItemDetails, error)
 	GetDetailedOrderThroughId(orderId int) (models.ItemOrderDetails, error)
+	DebitWallet(userID int, Amount float64) error
 }

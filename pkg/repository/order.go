@@ -329,3 +329,10 @@ WHERE
 	fmt.Println("body in repo", body.OrderId)
 	return body, nil
 }
+func (i *orderRepository) DebitWallet(userID int, Amount float64) error{
+	err := i.DB.Exec("UPDATE TABLE wallets SET amount=amount-? where user_id=?", Amount,userID).Error
+	if err != nil {
+		return errors.New("updation on wallet failed")
+	}
+	return nil
+}

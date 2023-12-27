@@ -368,6 +368,11 @@ const docTemplate = `{
         },
         "/admin/inventories": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Get a paginated list of products.",
                 "consumes": [
                     "application/json"
@@ -415,6 +420,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Edit details of an existing inventory item.",
                 "consumes": [
                     "application/json"
@@ -472,6 +482,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Add a new inventory item.",
                 "consumes": [
                     "multipart/form-data"
@@ -549,6 +564,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Delete an existing inventory item.",
                 "consumes": [
                     "application/json"
@@ -599,6 +619,11 @@ const docTemplate = `{
         },
         "/admin/inventories/stock": {
             "put": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Update the stock of an existing inventory item.",
                 "consumes": [
                     "application/json"
@@ -651,6 +676,11 @@ const docTemplate = `{
         },
         "/admin/offer/category-offer": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Add a new category offer.",
                 "consumes": [
                     "application/json"
@@ -697,6 +727,11 @@ const docTemplate = `{
         },
         "/admin/offer/expire-category-offer": {
             "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Expire a category offer by providing its ID.",
                 "consumes": [
                     "application/json"
@@ -741,6 +776,11 @@ const docTemplate = `{
         },
         "/admin/offer/expire-product-offer": {
             "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Expire a product offer by providing its ID.",
                 "consumes": [
                     "application/json"
@@ -785,6 +825,11 @@ const docTemplate = `{
         },
         "/admin/offer/get-category-offer": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve all category offers.",
                 "consumes": [
                     "application/json"
@@ -820,6 +865,11 @@ const docTemplate = `{
         },
         "/admin/offer/get-product-offer": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve all product offers.",
                 "consumes": [
                     "application/json"
@@ -855,6 +905,11 @@ const docTemplate = `{
         },
         "/admin/offer/product-offer": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Add a new product offer.",
                 "consumes": [
                     "application/json"
@@ -1801,6 +1856,11 @@ const docTemplate = `{
         },
         "/user/product/filter": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve a list of products based on the specified category ID.",
                 "consumes": [
                     "application/json"
@@ -1845,6 +1905,11 @@ const docTemplate = `{
         },
         "/user/product/search": {
             "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve product details based on a prefix search for the product name.",
                 "consumes": [
                     "application/json"
@@ -1949,6 +2014,11 @@ const docTemplate = `{
         },
         "/user/profile/address": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve user addresses by ID",
                 "consumes": [
                     "application/json"
@@ -1988,6 +2058,11 @@ const docTemplate = `{
         },
         "/user/profile/details": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve user details by ID",
                 "consumes": [
                     "application/json"
@@ -2034,13 +2109,6 @@ const docTemplate = `{
                 ],
                 "summary": "Edit User Details",
                 "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "User details to be edited",
                         "name": "edit",
@@ -2203,6 +2271,11 @@ const docTemplate = `{
         },
         "/user/profile/security/change-password": {
             "put": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Change user password by ID",
                 "consumes": [
                     "application/json"
@@ -2215,14 +2288,6 @@ const docTemplate = `{
                 ],
                 "summary": "Change user password",
                 "parameters": [
-                    {
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "description": "Change password payload",
                         "name": "changePasswordBody",

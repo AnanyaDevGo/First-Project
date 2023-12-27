@@ -15,9 +15,14 @@ func NewWalletUseCase(repo interfaces.WalletRepository) services.WalletUseCase {
 		walletRepository: repo,
 	}
 }
-func(w *walletUseCase) GetWallet(userID int) (models.WalletAmount, error){
+func (w *walletUseCase) GetWallet(userID int) (models.WalletAmount, error) {
 	return w.walletRepository.GetWallet(userID)
 }
-func(w *walletUseCase) WalletHistory(userID int) ([]models.WalletHistory, error){
-	return w.walletRepository.WalletHistory(userID)
+func (w *walletUseCase) WalletHistory(userID int) ([]models.WalletHistory, error) {
+	walletId, err := w.walletRepository.GetWalletId(userID)
+	if err != nil {
+		return []models.WalletHistory{}, err
+	}
+
+	return w.walletRepository.WalletHistory(walletId)
 }

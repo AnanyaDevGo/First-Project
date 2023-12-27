@@ -44,9 +44,7 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 	if err != nil {
 		return models.OrderDetailsRep{}, err
 	}
-	fmt.Println("qwerty....", exist)
 	if !exist {
-		fmt.Println("qwerty..error..", exist)
 		return models.OrderDetailsRep{}, errors.New("cart is empty")
 	}
 	var total float64
@@ -70,7 +68,6 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 	if couponId != 0 {
 
 		couponIdExist, err := i.couponRepo.CheckCouponById(couponId)
-		fmt.Println("coupon id exist bool", couponIdExist)
 		if err != nil {
 			return models.OrderDetailsRep{}, err
 		}
@@ -95,6 +92,7 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 		if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
 			return models.OrderDetailsRep{}, err
 		}
+
 	}
 
 	// last step
@@ -166,6 +164,16 @@ func (i *orderUseCase) CancelOrder(orderID int) error {
 	}
 
 	err = i.orderRepository.CancelOrder(orderID, int(cart.UserID), int(cart.FinalPrice), cart.PaymentStatus)
+	if err != nil {
+		return err
+	}
+
+	walletID, err := i.wallet.GetWalletId(int(cart.UserID))
+	if err != nil {
+		return err
+	}
+
+	err = i.wallet.WalletCredited(walletID, orderID, cart.FinalPrice)
 	if err != nil {
 		return err
 	}
@@ -269,7 +277,17 @@ func (o *orderUseCase) ReturnOrder(orderID string) error {
 
 	if shipmentStatus == "DELIVERED" {
 
-		return o.orderRepository.ReturnOrder(ReturnOrderResponse)
+		b := o.orderRepository.ReturnOrder(ReturnOrderResponse)
+		walletID, err := o.wallet.GetWalletId(int(cart.UserID))
+
+		if err != nil {
+			return err
+		}
+		err = o.wallet.WalletCredited(walletID, orderIDint, cart.FinalPrice)
+		if err != nil {
+			return err
+		}
+		return b
 	}
 
 	return errors.New("can't return order")

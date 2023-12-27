@@ -483,6 +483,8 @@ paths:
           description: Failed to delete the inventory item
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Delete Inventory
       tags:
       - Admin Product Management
@@ -514,6 +516,8 @@ paths:
           description: Failed to retrieve the product list
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: List Products
       tags:
       - Admin Product Management
@@ -567,6 +571,8 @@ paths:
           description: Failed to add the product
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Add Inventory
       tags:
       - Admin Product Management
@@ -605,6 +611,8 @@ paths:
           description: Failed to edit the inventory item
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Edit Inventory
       tags:
       - Admin Product Management
@@ -639,6 +647,8 @@ paths:
           description: Failed to update the inventory stock
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Update Inventory
       tags:
       - Admin Product Management
@@ -669,6 +679,8 @@ paths:
           description: Failed to add offer
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Add Category Offer
       tags:
       - Admin Offer Management
@@ -698,6 +710,8 @@ paths:
           description: Failed to expire category offer
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Expire Category Offer
       tags:
       - Admin Offer Management
@@ -727,6 +741,8 @@ paths:
           description: Failed to expire product offer
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Expire Product Offer
       tags:
       - Admin Offer Management
@@ -750,6 +766,8 @@ paths:
           description: Failed to retrieve offers
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Get Category Offer
       tags:
       - Admin Offer Management
@@ -773,6 +791,8 @@ paths:
           description: Failed to retrieve offers
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Get Product Offer
       tags:
       - Admin Offer Management
@@ -803,6 +823,8 @@ paths:
           description: Failed to add offer
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Add Product Offer
       tags:
       - Admin Offer Management
@@ -1403,6 +1425,8 @@ paths:
           description: Error in retrieving products
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Filter Products by Category
       tags:
       - User Product Management
@@ -1434,6 +1458,8 @@ paths:
           description: Could not retrieve products by prefix search
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Search Products
       tags:
       - User Product Management
@@ -1497,6 +1523,8 @@ paths:
           description: Failed to retrieve user addresses
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Get user addresses
       tags:
       - User Profile Management
@@ -1516,6 +1544,8 @@ paths:
           description: Failed to retrieve user details
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Get user details
       tags:
       - User Profile Management
@@ -1525,11 +1555,6 @@ paths:
       - application/json
       description: Edit details of the authenticated user.
       parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: User details to be edited
         in: body
         name: edit
@@ -1642,12 +1667,6 @@ paths:
       - application/json
       description: Change user password by ID
       parameters:
-      - description: User ID
-        format: int64
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: Change password payload
         in: body
         name: changePasswordBody
@@ -1665,6 +1684,8 @@ paths:
           description: Failed to change user password
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Change user password
       tags:
       - User Profile Management
