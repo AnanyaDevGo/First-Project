@@ -24,6 +24,7 @@ func NewWalletHandler(usecase interfaces.WalletUseCase) *WalletHandler {
 // @Accept json
 // @Produce json
 // @Tags User Wallet Management
+// @security BearerTokenAuth
 // @Param id header int true "User ID"
 // @Success 200 {object} response.Response "Wallet details retrieved successfully"
 // @Failure 400 {object} response.Response "user_id not found or invalid user_id type"
@@ -61,6 +62,7 @@ func (w *WalletHandler) GetWallet(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Tags User Wallet Management
+// @security BearerTokenAuth
 // @Param id header int true "User ID"
 // @Success 200 {object} response.Response "Wallet transaction history retrieved successfully"
 // @Failure 400 {object} response.Response "user_id not found or invalid user_id type"

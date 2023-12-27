@@ -673,7 +673,7 @@ paths:
       tags:
       - Admin Offer Management
   /admin/offer/expire-category-offer:
-    put:
+    delete:
       consumes:
       - application/json
       description: Expire a category offer by providing its ID.
@@ -702,7 +702,7 @@ paths:
       tags:
       - Admin Offer Management
   /admin/offer/expire-product-offer:
-    put:
+    delete:
       consumes:
       - application/json
       description: Expire a product offer by providing its ID.
@@ -1103,121 +1103,6 @@ paths:
       summary: Get Orders
       tags:
       - User Order Management
-  /otp/send:
-    post:
-      consumes:
-      - application/json
-      description: Send OTP to the specified phone number for verification.
-      parameters:
-      - description: Phone number details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/models.OTPData'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OTP sent successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Fields provided in wrong format or Could not send OTP
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Send OTP
-      tags:
-      - User
-  /otp/verify:
-    post:
-      consumes:
-      - application/json
-      description: Verify the provided OTP code for user authentication.
-      parameters:
-      - description: Verification code details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/models.VerifyData'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully verified OTP
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Fields provided in wrong format or Could not verify OTP
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Verify OTP
-      tags:
-      - User
-  /user/address:
-    post:
-      consumes:
-      - application/json
-      description: Add a new address to the user's profile by providing address details
-      parameters:
-      - description: User ID
-        in: header
-        name: id
-        required: true
-        type: integer
-      - description: Address details to be added
-        in: body
-        name: address
-        required: true
-        schema:
-          $ref: '#/definitions/models.AddAddress'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Address successfully added
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request or missing parameters
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden, user not authenticated
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Add new address
-      tags:
-      - User Profile Management
-  /user/address/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve user addresses by ID
-      parameters:
-      - description: User ID
-        format: int64
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: User addresses retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Failed to retrieve user addresses
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get user addresses
-      tags:
-      - User Profile Management
   /user/cart:
     get:
       consumes:
@@ -1316,38 +1201,6 @@ paths:
       summary: Remove product from cart
       tags:
       - User Cart Management
-  /user/change-password/{id}:
-    post:
-      consumes:
-      - application/json
-      description: Change user password by ID
-      parameters:
-      - description: User ID
-        format: int64
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Change password payload
-        in: body
-        name: changePasswordBody
-        required: true
-        schema:
-          $ref: '#/definitions/models.ChangePassword'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Password changed successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Failed to change user password
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Change user password
-      tags:
-      - User Profile Management
   /user/check-out:
     get:
       consumes:
@@ -1498,6 +1351,32 @@ paths:
       summary: Log in a user
       tags:
       - User
+  /user/otplogin:
+    post:
+      consumes:
+      - application/json
+      description: Send OTP to the specified phone number for verification.
+      parameters:
+      - description: Phone number details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.OTPData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OTP sent successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Fields provided in wrong format or Could not send OTP
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Send OTP
+      tags:
+      - User
   /user/product/filter:
     get:
       consumes:
@@ -1558,6 +1437,121 @@ paths:
       summary: Search Products
       tags:
       - User Product Management
+  /user/profile/addaddress:
+    post:
+      consumes:
+      - application/json
+      description: Add a new address to the user's profile by providing address details
+      parameters:
+      - description: User ID
+        in: header
+        name: id
+        required: true
+        type: integer
+      - description: Address details to be added
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddAddress'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Address successfully added
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or missing parameters
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden, user not authenticated
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Add new address
+      tags:
+      - User Profile Management
+  /user/profile/address:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user addresses by ID
+      parameters:
+      - description: User ID
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User addresses retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Failed to retrieve user addresses
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get user addresses
+      tags:
+      - User Profile Management
+  /user/profile/details:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user details by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details retrieved successfully
+          schema:
+            $ref: '#/definitions/models.UserDetailsResponse'
+        "400":
+          description: Failed to retrieve user details
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get user details
+      tags:
+      - User Profile Management
+  /user/profile/edit/:
+    patch:
+      consumes:
+      - application/json
+      description: Edit details of the authenticated user.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User details to be edited
+        in: body
+        name: edit
+        required: true
+        schema:
+          $ref: '#/definitions/models.Edit'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Details edited successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input or error updating values
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Edit User Details
+      tags:
+      - User Profile Management
   /user/profile/order:
     delete:
       consumes:
@@ -1642,23 +1636,36 @@ paths:
       summary: Return Order
       tags:
       - User Order Management
-  /user/profile{id}:
-    get:
+  /user/profile/security/change-password:
+    put:
       consumes:
       - application/json
-      description: Retrieve user details by ID
+      description: Change user password by ID
+      parameters:
+      - description: User ID
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Change password payload
+        in: body
+        name: changePasswordBody
+        required: true
+        schema:
+          $ref: '#/definitions/models.ChangePassword'
       produces:
       - application/json
       responses:
         "200":
-          description: User details retrieved successfully
-          schema:
-            $ref: '#/definitions/models.UserDetailsResponse'
-        "400":
-          description: Failed to retrieve user details
+          description: Password changed successfully
           schema:
             $ref: '#/definitions/response.Response'
-      summary: Get user details
+        "400":
+          description: Failed to change user password
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Change user password
       tags:
       - User Profile Management
   /user/signup:
@@ -1691,6 +1698,32 @@ paths:
       summary: Register a new user
       tags:
       - User
+  /user/verifyotp:
+    post:
+      consumes:
+      - application/json
+      description: Verify the provided OTP code for user authentication.
+      parameters:
+      - description: Verification code details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerifyData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully verified OTP
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Fields provided in wrong format or Could not verify OTP
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Verify OTP
+      tags:
+      - User
   /user/wallet:
     get:
       consumes:
@@ -1717,6 +1750,8 @@ paths:
           description: Failed to retrieve details
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Get Wallet
       tags:
       - User Wallet Management
@@ -1746,42 +1781,11 @@ paths:
           description: Failed to retrieve transaction history
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
       summary: Wallet History
       tags:
       - User Wallet Management
-  /users/edit:
-    put:
-      consumes:
-      - application/json
-      description: Edit details of the authenticated user.
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: User details to be edited
-        in: body
-        name: edit
-        required: true
-        schema:
-          $ref: '#/definitions/models.Edit'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Details edited successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input or error updating values
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Edit User Details
-      tags:
-      - User Profile Management
 securityDefinitions:
   BearerTokenAuth:
     in: header

@@ -274,6 +274,7 @@ func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 // @Tags User Profile Management
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Param id path int true "User ID" Format(int64)
 // @Success 200 {object} response.Response "User addresses retrieved successfully"
 // @Failure 400 {object} response.Response "Failed to retrieve user addresses"
@@ -298,6 +299,7 @@ func (u *UserHandler) GetAddress(c *gin.Context) {
 // @Tags User Profile Management
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Success 200 {object} models.UserDetailsResponse "User details retrieved successfully"
 // @Failure 400 {object} response.Response "Failed to retrieve user details"
 // @Router /user/profile/details [get]
@@ -321,7 +323,6 @@ func (u *UserHandler) GetUserDetails(c *gin.Context) {
 // @Produce json
 // @Tags User Profile Management
 // @security BearerTokenAuth
-// @Param id path int true "User ID"
 // @Param edit body models.Edit true "User details to be edited"
 // @Success 201 {object} response.Response "Details edited successfully"
 // @Failure 400 {object} response.Response "Invalid input or error updating values"
@@ -362,11 +363,11 @@ func (u *UserHandler) Edit(c *gin.Context) {
 // @Tags User Profile Management
 // @Accept json
 // @Produce json
-// @Param id path int true "User ID" Format(int64)
+// @security BearerTokenAuth
 // @Param changePasswordBody body models.ChangePassword true "Change password payload"
 // @Success 200 {object} response.Response "Password changed successfully"
 // @Failure 400 {object} response.Response "Failed to change user password"
-// @Router /user/profile/security/change-password [post]
+// @Router /user/profile/security/change-password [put]
 func (u *UserHandler) ChangePassword(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)

@@ -3,11 +3,12 @@ package interfaces
 import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/utils/models"
+
 	"github.com/jung-kurt/gofpdf"
 )
 
 type OrderUseCase interface {
-	OrderItemsFromCart(userid, addressid, paymentid, couponId int) error
+	OrderItemsFromCart(userid, addressid, paymentid, couponId int) (models.OrderDetailsRep, error)
 	GetOrders(orderId int) (domain.OrderResponse, error)
 	GetAllOrders(userId, page, pageSize int) ([]models.OrderDetails, error)
 	CancelOrder(orderId int) error

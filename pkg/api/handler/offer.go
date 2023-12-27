@@ -25,6 +25,7 @@ func NewOfferHandler(usecase services.OfferUsecase) *OfferHandler {
 // @Description Add a new product offer.
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Tags Admin Offer Management
 // @Param productOffer body models.ProductOfferResp true "Product offer details in JSON format"
 // @Success 201 {object} response.Response "Successfully added offer"
@@ -62,6 +63,7 @@ func (of *OfferHandler) AddProductOffer(c *gin.Context) {
 // @Description Add a new category offer.
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Tags Admin Offer Management
 // @Param categoryOffer body models.CategorytOfferResp true "Category offer details in JSON format"
 // @Success 201 {object} response.Response "Successfully added offer"
@@ -99,6 +101,7 @@ func (of *OfferHandler) AddCategoryOffer(c *gin.Context) {
 // @Description Retrieve all product offers.
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Tags Admin Offer Management
 // @Success 200 {object} response.Response "Successfully got all offers"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
@@ -122,6 +125,7 @@ func (of *OfferHandler) GetProductOffer(c *gin.Context) {
 // @Description Retrieve all category offers.
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Tags Admin Offer Management
 // @Success 200 {object} response.Response "Successfully got all offers"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
@@ -145,6 +149,7 @@ func (of *OfferHandler) GetCategoryOffer(c *gin.Context) {
 // @Description Expire a product offer by providing its ID.
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Tags Admin Offer Management
 // @Param id query int true "ID of the product offer to expire"
 // @Success 200 {object} response.Response "Successfully made product offer invalid"
@@ -173,6 +178,7 @@ func (of *OfferHandler) ExpireProductOffer(c *gin.Context) {
 // @Description Expire a category offer by providing its ID.
 // @Accept json
 // @Produce json
+// @security BearerTokenAuth
 // @Tags Admin Offer Management
 // @Param id query int true "ID of the category offer to expire"
 // @Success 200 {object} response.Response "Successfully made category offer invalid"

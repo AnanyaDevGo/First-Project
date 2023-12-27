@@ -33,20 +33,21 @@ func NewOrderUseCase(repo interfaces.OrderRepository, wallet interfaces.WalletRe
 	}
 }
 
-func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId int) error {
+func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId int) (models.OrderDetailsRep, error) {
 	cart, err := i.userUseCase.GetCart(userID)
+	var Finalprice float64
 	if err != nil {
-		return err
+		return models.OrderDetailsRep{}, err
 	}
 	exist, err := i.cartRepo.CheckCart(userID)
 
 	if err != nil {
-		return err
+		return models.OrderDetailsRep{}, err
 	}
 	fmt.Println("qwerty....", exist)
 	if !exist {
 		fmt.Println("qwerty..error..", exist)
-		return errors.New("cart is empty")
+		return models.OrderDetailsRep{}, errors.New("cart is empty")
 	}
 	var total float64
 	for _, item := range cart.Data {
@@ -60,10 +61,10 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 	if couponId == 0 {
 		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, total)
 		if err != nil {
-			return err
+			return models.OrderDetailsRep{}, err
 		}
 		if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
-			return err
+			return models.OrderDetailsRep{}, err
 		}
 	}
 	if couponId != 0 {
@@ -71,51 +72,51 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 		couponIdExist, err := i.couponRepo.CheckCouponById(couponId)
 		fmt.Println("coupon id exist bool", couponIdExist)
 		if err != nil {
-			return err
+			return models.OrderDetailsRep{}, err
 		}
 		if !couponIdExist {
-			return errors.New("coupon does not exist")
+			return models.OrderDetailsRep{}, errors.New("coupon does not exist")
 		}
 		if couponId < 0 {
-			return errors.New("negative values are not accepted")
+			return models.OrderDetailsRep{}, errors.New("negative values are not accepted")
 		}
 		coupondetails, err := i.couponRepo.GetCouponById(couponId)
 		if err != nil {
-			return errors.New("error in getting coupon")
+			return models.OrderDetailsRep{}, errors.New("error in getting coupon")
 		}
-		// var finalprice float64
+
 		finalprice := total - ((total * float64(coupondetails.DiscountPercentage)) / 100)
+		Finalprice = finalprice
 
 		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, finalprice)
 		if err != nil {
-			return err
+			return models.OrderDetailsRep{}, err
 		}
 		if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
-			return err
+			return models.OrderDetailsRep{}, err
 		}
 	}
 
 	// last step
 	for _, v := range cart.Data {
 		if err := i.orderRepository.ReduceInventoryQuantity(v.ProductName, v.Quantity); err != nil {
-			return err
+			return models.OrderDetailsRep{}, err
 		}
 	}
 
 	for _, v := range cart.Data {
 		if err := i.userUseCase.RemoveFromCart(cart.ID, v.ID); err != nil {
-			return err
+			return models.OrderDetailsRep{}, err
 		}
 	}
-	// var order models.OrderDetails
-	// order.AddressID = addressID
-	// order.ID = cart.ID
-	// order.PaymentMethod = paymentID
-	// order.FinalPrice = order.FinalPrice
-	// order.OrderStatus = order.OrderStatus
-	// order.UserName = order.UserName
+	var Order models.OrderDetailsRep
 
-	return nil
+	Order.Total = int(total)
+	Order.ID = cart.ID
+	Order.PaymentMethod = paymentID
+	Order.FinalPrice = Finalprice
+
+	return Order, nil
 }
 
 func (i *orderUseCase) GetOrders(orderId int) (domain.OrderResponse, error) {

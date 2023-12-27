@@ -696,7 +696,7 @@ const docTemplate = `{
             }
         },
         "/admin/offer/expire-category-offer": {
-            "put": {
+            "delete": {
                 "description": "Expire a category offer by providing its ID.",
                 "consumes": [
                     "application/json"
@@ -740,7 +740,7 @@ const docTemplate = `{
             }
         },
         "/admin/offer/expire-product-offer": {
-            "put": {
+            "delete": {
                 "description": "Expire a product offer by providing its ID.",
                 "consumes": [
                     "application/json"
@@ -1373,183 +1373,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/otp/send": {
-            "post": {
-                "description": "Send OTP to the specified phone number for verification.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Send OTP",
-                "parameters": [
-                    {
-                        "description": "Phone number details in JSON format",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.OTPData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OTP sent successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Fields provided in wrong format or Could not send OTP",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/otp/verify": {
-            "post": {
-                "description": "Verify the provided OTP code for user authentication.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Verify OTP",
-                "parameters": [
-                    {
-                        "description": "Verification code details in JSON format",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.VerifyData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully verified OTP",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Fields provided in wrong format or Could not verify OTP",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address": {
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Add a new address to the user's profile by providing address details",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Profile Management"
-                ],
-                "summary": "Add new address",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "Address details to be added",
-                        "name": "address",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.AddAddress"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Address successfully added",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request or missing parameters",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden, user not authenticated",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/address/{id}": {
-            "get": {
-                "description": "Retrieve user addresses by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Profile Management"
-                ],
-                "summary": "Get user addresses",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User addresses retrieved successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Failed to retrieve user addresses",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/user/cart": {
             "get": {
                 "security": [
@@ -1694,54 +1517,6 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "Product or cart not found",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/change-password/{id}": {
-            "post": {
-                "description": "Change user password by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Profile Management"
-                ],
-                "summary": "Change user password",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Change password payload",
-                        "name": "changePasswordBody",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.ChangePassword"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Password changed successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Failed to change user password",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1984,6 +1759,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/otplogin": {
+            "post": {
+                "description": "Send OTP to the specified phone number for verification.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Send OTP",
+                "parameters": [
+                    {
+                        "description": "Phone number details in JSON format",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.OTPData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OTP sent successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Fields provided in wrong format or Could not send OTP",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user/product/filter": {
             "get": {
                 "description": "Retrieve a list of products based on the specified category ID.",
@@ -2067,6 +1882,184 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Could not retrieve products by prefix search",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/addaddress": {
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Add a new address to the user's profile by providing address details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Profile Management"
+                ],
+                "summary": "Add new address",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Address details to be added",
+                        "name": "address",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AddAddress"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Address successfully added",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or missing parameters",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, user not authenticated",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/address": {
+            "get": {
+                "description": "Retrieve user addresses by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Profile Management"
+                ],
+                "summary": "Get user addresses",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User addresses retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to retrieve user addresses",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/details": {
+            "get": {
+                "description": "Retrieve user details by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Profile Management"
+                ],
+                "summary": "Get user details",
+                "responses": {
+                    "200": {
+                        "description": "User details retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/models.UserDetailsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to retrieve user details",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/edit/": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Edit details of the authenticated user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Profile Management"
+                ],
+                "summary": "Edit User Details",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User details to be edited",
+                        "name": "edit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Edit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Details edited successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input or error updating values",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -2208,9 +2201,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/profile{id}": {
-            "get": {
-                "description": "Retrieve user details by ID",
+        "/user/profile/security/change-password": {
+            "put": {
+                "description": "Change user password by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -2220,16 +2213,35 @@ const docTemplate = `{
                 "tags": [
                     "User Profile Management"
                 ],
-                "summary": "Get user details",
+                "summary": "Change user password",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Change password payload",
+                        "name": "changePasswordBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ChangePassword"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "User details retrieved successfully",
+                        "description": "Password changed successfully",
                         "schema": {
-                            "$ref": "#/definitions/models.UserDetailsResponse"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
-                        "description": "Failed to retrieve user details",
+                        "description": "Failed to change user password",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -2283,8 +2295,53 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/verifyotp": {
+            "post": {
+                "description": "Verify the provided OTP code for user authentication.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Verify OTP",
+                "parameters": [
+                    {
+                        "description": "Verification code details in JSON format",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.VerifyData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully verified OTP",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Fields provided in wrong format or Could not verify OTP",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user/wallet": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve wallet details for the authenticated user.",
                 "consumes": [
                     "application/json"
@@ -2329,6 +2386,11 @@ const docTemplate = `{
         },
         "/user/wallet/history": {
             "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
                 "description": "Retrieve the transaction history for the authenticated user's wallet.",
                 "consumes": [
                     "application/json"
@@ -2364,58 +2426,6 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Failed to retrieve transaction history",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/edit": {
-            "put": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Edit details of the authenticated user.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Profile Management"
-                ],
-                "summary": "Edit User Details",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "User details to be edited",
-                        "name": "edit",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Edit"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Details edited successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input or error updating values",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }

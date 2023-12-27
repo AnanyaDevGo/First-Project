@@ -62,3 +62,13 @@ type ReturnOrderResponse struct {
 	OrderStatus string `json:"order_status"`
 	CartAmount  int    `jsom:"cart_amount"`
 }
+
+type OrderDetailsRep struct {
+	ID int `json:"order_id"`
+	// UserName      string  `json:"name"`
+	// AddressID     int     `json:"address_id"`
+	PaymentMethod int     `json:"payment_method_id"`
+	Total         int     `json:"total_amount"`
+	FinalPrice    float64 `json:"final_price"`
+	// OrderStatus   string  `json:"order_status" gorm:"column:order_status"`
+}
