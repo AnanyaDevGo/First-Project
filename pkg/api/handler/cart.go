@@ -25,8 +25,8 @@ func NewCartHandler(usecase services.CartUseCase) *CartHandler {
 // @Description Add a product to the user's shopping cart.
 // @Accept json
 // @Produce json
-// @Tags cart
-// @Security ApiKeyAuth
+// @Tags User Cart Management
+// @security BearerTokenAuth
 // @Param id header int true "User ID obtained from authentication"
 // @Param cart body models.Cart true "Product details to be added to the cart in JSON format"
 // @Success 200 {object} response.Response "Successfully added to cart"
@@ -72,8 +72,8 @@ func (ch *CartHandler) AddToCart(c *gin.Context) {
 // @Description Process the checkout for the user and retrieve the checkout details.
 // @Accept json
 // @Produce json
-// @Tags cart
-// @Security ApiKeyAuth
+// @Tags User Cart Management
+// @security BearerTokenAuth
 // @Param id header int true "User ID obtained from authentication"
 // @Success 200 {object} response.Response "Successfully retrieved checkout details"
 // @Failure 400 {object} response.Response "Could not open checkout"

@@ -29,8 +29,9 @@ func NewServerHTTP(userHandler *handler.UserHandler,
 
 	engine.Use(gin.Logger())
 
-	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	engine.LoadHTMLGlob("template/*")
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	engine.GET("/validate-token", adminHandler.ValidateRefreshTokenAndCreateNewAccess)
 
 	routes.UserRoutes(engine.Group("/user"), userHandler, otpHandler, inventoryHandler, cartHandler, orderHandler, paymentHandler, walletHandler)

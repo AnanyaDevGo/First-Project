@@ -30,7 +30,7 @@ func NewAdminHandler(usecase services.AdminUseCase) *AdminHandler {
 // @Description Authenticate an admin user and get access and refresh tokens.
 // @Accept json
 // @Produce json
-// @Tags admin
+// @Tags Admin
 // @Param body body models.AdminLogin true "Admin login details in JSON format"
 // @Success 200 {object} response.Response "Admin authenticated successfully"
 // @Failure 400 {object} response.Response  "Cannot authenticate user"
@@ -57,13 +57,14 @@ func (ad *AdminHandler) LoginHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
-// @Summary Admin Dashboard
-// @Description Display the admin dashboard.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Success 200 {object} response.Response "Admin dashboard displayed"
-// @Failure 500 {object} response.Response "Dashboard could not be displayed"
+// Dashboard retrieves the admin dashboard information.
+//
+// @Summary Retrieve admin dashboard information
+// @Description Retrieve information for the admin dashboard
+// @Tags Admin Dashboard
+// @security BearerTokenAuth
+// @Success 200 {object} response.Response "Admin dashboard information retrieved successfully"
+// @Failure 500 {object} response.Response "Internal server error"
 // @Router /admin/dashboard [get]
 func (ad *AdminHandler) Dashboard(c *gin.Context) {
 
@@ -78,14 +79,16 @@ func (ad *AdminHandler) Dashboard(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
-// @Summary Filtered Sales Report
-// @Description Retrieve sales report based on the specified time period.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Param period query string true "Time period for filtering sales report"
+// FilteredSalesReport retrieves a filtered sales report based on the specified time period.
+//
+// @Summary Retrieve filtered sales report
+// @Description Retrieve a sales report filtered by the specified time period
+// @Tags Admin Dashboard
+// @security BearerTokenAuth
+// @Param period query string true "Time period for filtering the sales report"
 // @Success 200 {object} response.Response "Sales report retrieved successfully"
-// @Failure 500 {object} response.Response "Sales report could not be retrieved"
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
 // @Router /admin/sales-report [get]
 func (ad *AdminHandler) FilteredSalesReport(c *gin.Context) {
 
@@ -100,15 +103,17 @@ func (ad *AdminHandler) FilteredSalesReport(c *gin.Context) {
 	c.JSON(http.StatusOK, success)
 }
 
-// @Summary Block User
-// @Description Block a user by their ID.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Param id query string true "User ID to be blocked"
+// BlockUser blocks a user by ID.
+//
+// @Summary Block a user
+// @Description Block a user by its ID
+// @Tags Admin User Management
+// @security BearerTokenAuth
+// @Param id query string true "User ID to block"
 // @Success 200 {object} response.Response "Successfully blocked the user"
-// @Failure 400 {object} response.Response "User could not be blocked"
-// @Router /admin/block-user [post]
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /admin/block-user [put]
 func (ad *AdminHandler) BlockUser(c *gin.Context) {
 
 	id := c.Query("id")
@@ -124,15 +129,17 @@ func (ad *AdminHandler) BlockUser(c *gin.Context) {
 
 }
 
-// @Summary Unblock User
-// @Description Unblock a user by their ID.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Param id query string true "User ID to be unblocked"
+// UnBlockUser unblocks a user by ID.
+//
+// @Summary Unblock a user
+// @Description Unblock a user by its ID
+// @Tags Admin User Management
+// @security BearerTokenAuth
+// @Param id query string true "User ID to unblock"
 // @Success 200 {object} response.Response "Successfully unblocked the user"
-// @Failure 400 {object} response.Response "User could not be unblocked"
-// @Router /admin/unblock-user [post]
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /admin/unblock-user [put]
 func (ad *AdminHandler) UnBlockUser(c *gin.Context) {
 
 	id := c.Query("id")
@@ -148,15 +155,17 @@ func (ad *AdminHandler) UnBlockUser(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
-// @Summary Get Users
-// @Description Retrieve a paginated list of users.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Param page query int true "Page number for pagination"
-// @Success 200 {object} response.Response "Successfully retrieved the users"
-// @Failure 400 {object} response.Response "Page number not in the right format or could not retrieve records"
-// @Router /admin/get-users [get]
+// GetUsers retrieves a list of users with optional pagination.
+//
+// @Summary Retrieve a list of users
+// @Description Retrieve a list of users with optional pagination.
+// @Tags Admin User Management
+// @security BearerTokenAuth
+// @Param page query integer false "Page number for pagination (default: 1)"
+// @Success 200 {object} response.Response "Successfully retrieved the list of users"
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /admin/users [get]
 func (ad *AdminHandler) GetUsers(c *gin.Context) {
 
 	pageStr := c.Query("page")
@@ -179,15 +188,19 @@ func (ad *AdminHandler) GetUsers(c *gin.Context) {
 
 }
 
-// @Summary New Payment Method
-// @Description Add a new payment method.
+// NewPaymentMethod adds a new payment method.
+//
+// @Summary Add a new payment method
+// @Description Add a new payment method using the provided details
+// @Tags Admin Payment Management
+// @security BearerTokenAuth
 // @Accept json
 // @Produce json
-// @Tags admin
-// @Param body body models.NewPaymentMethod true "Payment method details in JSON format"
-// @Success 200 {object} response.Response "Successfully added Payment Method"
-// @Failure 400 {object} response.Response "Fields provided are in the wrong format or could not add the payment method"
-// @Router /admin/new-payment-method [post]
+// @Param method body models.NewPaymentMethod true "New payment method details"
+// @Success 200 {object} response.Response "Successfully added the payment method"
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /admin/payment-methods [post]
 func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
 
 	var method models.NewPaymentMethod
@@ -209,14 +222,15 @@ func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
 
 }
 
-// @Summary List Payment Methods
-// @Description Retrieve a list of all available payment methods.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Success 200 {object} response.Response "Successfully got all payment methods"
-// @Failure 500 {object} response.Response "Fields provided are in the wrong format or could not retrieve payment methods"
-// @Router /admin/list-payment-methods [get]
+// ListPaymentMethods gets a list of payment methods.
+// @Summary Get a list of payment methods
+// @Description Get a list of all payment methods
+// @Tags Admin Payment Management
+// @security BearerTokenAuth
+// @Success 200 {object} response.Response "Successfully retrieved the list of payment methods"
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /admin/payment-methods [get]
 func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
 
 	categories, err := a.adminUseCase.ListPaymentMethods()
@@ -231,15 +245,16 @@ func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
 
 }
 
-// @Summary Delete Payment Method
-// @Description Delete a payment method by its ID.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Param id query int true "Payment method ID to be deleted"
+// DeletePaymentMethod deletes a payment method by ID.
+// @Summary Delete a payment method
+// @Description Delete a payment method by its ID
+// @Tags Admin Payment Management
+// @security BearerTokenAuth
+// @Param id query integer true "Payment method ID to delete"
 // @Success 200 {object} response.Response "Successfully deleted the payment method"
-// @Failure 400 {object} response.Response "Fields provided are in the wrong format or error in deleting data"
-// @Router /admin/delete-payment-method [delete]
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /admin/payment-methods [delete]
 func (a *AdminHandler) DeletePaymentMethod(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Query("id"))
@@ -261,17 +276,6 @@ func (a *AdminHandler) DeletePaymentMethod(c *gin.Context) {
 
 }
 
-// @Summary Validate Refresh Token and Create New Access Token
-// @Description Validate the provided refresh token and generate a new access token.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Security ApiKeyAuth
-// @Param RefreshToken header string true "Refresh Token for validation" default("refresh_token_value")
-// @Success 200 {string} string "New access token generated successfully"
-// @Failure 401 {object} response.Response "Refresh token is invalid: user has to login again"
-// @Failure 500 {object} response.Response "Error in creating new access token"
-// @Router /admin/validate-refresh-token [post]
 func (a *AdminHandler) ValidateRefreshTokenAndCreateNewAccess(c *gin.Context) {
 
 	refreshToken := c.Request.Header.Get("RefreshToken")
@@ -301,17 +305,18 @@ func (a *AdminHandler) ValidateRefreshTokenAndCreateNewAccess(c *gin.Context) {
 	c.JSON(200, newAccessToken)
 }
 
-// @Summary Sales Report by Date
-// @Description Retrieve sales report data within a specified date range.
-// @Accept json
-// @Produce json
-// @Tags admin
-// @Param start query string true "Start date in the format DD-MM-YYYY" default("01-01-2023")
-// @Param end query string true "End date in the format DD-MM-YYYY" default("31-12-2023")
-// @Success 200 {object} response.Response "Sales report retrieved successfully"
-// @Failure 400 {object} response.Response "Start or end date is empty, start date conversion failed, end date conversion failed, or invalid date range"
-// @Failure 500 {object} response.Response "Sales report could not be retrieved"
-// @Router /admin/sales-report-by-date [get]
+// SalesReportByDate generates a sales report based on the specified start and end dates.
+//
+// @Summary Generate a sales report by date range
+// @Description Generate a sales report based on the specified start and end dates.
+// @Tags Admin Dashboard
+// @security BearerTokenAuth
+// @Param start query string true "Start date (format: DD-MM-YYYY)"
+// @Param end query string true "End date (format: DD-MM-YYYY)"
+// @Success 200 {object} response.Response "Successfully retrieved the sales report"
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 500 {object} response.Response "Internal server error"
+// @Router /admin/sales-report [get]
 func (ad *AdminHandler) SalesReportByDate(c *gin.Context) {
 	startDateStr := c.Query("start")
 	endDateStr := c.Query("end")

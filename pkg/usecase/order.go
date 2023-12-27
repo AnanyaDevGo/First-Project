@@ -136,9 +136,9 @@ func (i *orderUseCase) CancelOrder(orderID int) error {
 		return err
 	}
 
-	// if orderStatus != "PENDING" {
-	// 	return errors.New("order cannot be canceled, kindly return the product if accidentally booked")
-	// }
+	if orderStatus != "PENDING" {
+		return errors.New("order cannot be canceled, kindly return the product if accidentally booked")
+	}
 
 	if orderStatus == "CANCELED" {
 		return errors.New("order cannot be canceled")
@@ -157,13 +157,10 @@ func (i *orderUseCase) CancelOrder(orderID int) error {
 			return err
 		}
 		if !ok {
-			fmt.Println("gdgfdfgfdg", cart.UserID)
 			err := i.wallet.CreateWallet(int(cart.UserID))
-			fmt.Println("heere,,,,,,,,,,,,,")
 			if err != nil {
 				return err
 			}
-			fmt.Println("errrroooorrr", err)
 		}
 	}
 

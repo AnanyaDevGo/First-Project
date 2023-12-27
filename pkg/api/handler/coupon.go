@@ -23,8 +23,8 @@ func NewCouponHandler(coupon interfaces.CouponUseCase) *CouponHandler {
 // @Description Add a new coupon.
 // @Accept json
 // @Produce json
-// @Tags coupon
-// @Security ApiKeyAuth
+// @Tags Admin Coupon Management
+// @security BearerTokenAuth
 // @Param body body domain.Coupon true "Coupon details in JSON format"
 // @Success 200 {object} response.Response "Successfully added coupon"
 // @Failure 400 {object} response.Response "Field provided in the wrong format or Cannot add coupon"
@@ -50,8 +50,8 @@ func (cu *CouponHandler) AddCoupon(c *gin.Context) {
 // @Description Retrieve all coupons.
 // @Accept json
 // @Produce json
-// @Tags coupon
-// @Security ApiKeyAuth
+// @Tags Admin Coupon Management
+// @security BearerTokenAuth
 // @Success 200 {object} response.Response "Successfully got all coupons"
 // @Failure 400 {object} response.Response "Error in getting coupons"
 // @Router /coupon/get [get]
@@ -71,8 +71,8 @@ func (cu *CouponHandler) GetCoupon(c *gin.Context) {
 // @Description Edit an existing coupon.
 // @Accept json
 // @Produce json
-// @Tags coupon
-// @Security ApiKeyAuth
+// @Tags Admin Coupon Management
+// @security BearerTokenAuth
 // @Param body body domain.Coupon true "Coupon details in JSON format"
 // @Success 200 {object} response.Response "Successfully edited coupon"
 // @Failure 400 {object} response.Response "Field provided in the wrong format or Cannot edit coupon"

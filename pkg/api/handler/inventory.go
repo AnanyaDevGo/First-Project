@@ -25,7 +25,7 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 // @Description Add a new inventory item.
 // @Accept multipart/form-data
 // @Produce json
-// @Tags inventory
+// @Tags Admin Product Management
 // @Param category_id formData int true "ID of the category for the inventory"
 // @Param product_name formData string true "Name of the product"
 // @Param size formData string true "Size of the product"
@@ -67,7 +67,7 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 // @Description Get a paginated list of products.
 // @Accept json
 // @Produce json
-// @Tags inventory
+// @Tags Admin Product Management
 // @Param page query int false "Page number for pagination (default: 1)"
 // @Param per_page query int false "Number of products per page (default: 5)"
 // @Success 200 {object} response.Response "Product list retrieved successfully"
@@ -108,7 +108,7 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 // @Description Edit details of an existing inventory item.
 // @Accept json
 // @Produce json
-// @Tags inventory
+// @Tags Admin Product Management
 // @Param inventory_id query int true "ID of the inventory item to edit"
 // @Param body body domain.Inventories true "Updated inventory details in JSON format"
 // @Success 200 {object} response.Response "Inventory item successfully edited"
@@ -149,7 +149,7 @@ func (u *InventoryHandler) EditInventory(c *gin.Context) {
 // @Description Delete an existing inventory item.
 // @Accept json
 // @Produce json
-// @Tags inventory
+// @Tags Admin Product Management
 // @Param id query string true "ID of the inventory item to delete"
 // @Success 200 {object} response.Response "Inventory item successfully deleted"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
@@ -174,7 +174,7 @@ func (u *InventoryHandler) DeleteInventory(c *gin.Context) {
 // @Description Update the stock of an existing inventory item.
 // @Accept json
 // @Produce json
-// @Tags inventory
+// @Tags Admin Product Management
 // @Param body body models.InventoryUpdate true "Inventory update details in JSON format"
 // @Success 200 {object} response.Response "Inventory stock successfully updated"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
@@ -205,7 +205,7 @@ func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 // @Description Retrieve details of an individual product based on its ID.
 // @Accept json
 // @Produce json
-// @Tags inventory
+// @Tags Admin Product Management
 // @Param id query string true "Product ID to retrieve details"
 // @Success 200 {object} response.Response "Product details retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid request format or path variables in the wrong format"
@@ -230,7 +230,7 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 // @Description Retrieve product details based on a prefix search for the product name.
 // @Accept json
 // @Produce json
-// @Tags inventory
+// @Tags User Product Management
 // @Param body body models.SearchItems true "Prefix for product name search"
 // @Success 200 {object} response.Response "Product details retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
@@ -261,7 +261,7 @@ func (i *InventoryHandler) SearchProducts(c *gin.Context) {
 // @Description Retrieve a list of products based on the specified category ID.
 // @Accept json
 // @Produce json
-// @Tags inventory
+// @Tags User Product Management
 // @Param category_id query int true "Category ID for filtering products"
 // @Success 200 {object} response.Response "Products list retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid category ID or products cannot be displayed"
