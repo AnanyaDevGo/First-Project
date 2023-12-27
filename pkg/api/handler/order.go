@@ -28,11 +28,10 @@ func NewOrderHandler(useCase services.OrderUseCase) *OrderHandler {
 // @Produce json
 // @Tags User Order Management
 // @security BearerTokenAuth
-// @Param id path int true "User ID"
 // @Param order body models.Order true "Order details including address, payment method, and coupon ID"
 // @Success 200 {object} response.Response "Order placed successfully"
 // @Failure 400 {object} response.Response "Invalid input or error placing the order"
-// @Router /orders/order-items-from-cart [post]
+// @Router /check-out/order [post]
 func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 
 	id, ok := c.Get("id")
@@ -76,7 +75,7 @@ func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 // @Param order_id query int false "Order ID"
 // @Success 200 {object} response.Response "Orders retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input or error retrieving orders"
-// @Router /orders [get]
+// @Router /order/get [get]
 func (i *OrderHandler) GetOrders(c *gin.Context) {
 
 	idString := c.Query("order_id")
@@ -108,7 +107,7 @@ func (i *OrderHandler) GetOrders(c *gin.Context) {
 // @Param order_id query int true "Order ID"
 // @Success 200 {object} response.Response "Order successfully canceled"
 // @Failure 400 {object} response.Response "Invalid input or error canceling the order"
-// @Router /orders/cancel [post]
+// @Router /order/cancel [post]
 func (i OrderHandler) CancelOrder(c *gin.Context) {
 	idString := c.Query("order_id")
 	orderID, err := strconv.Atoi(idString)

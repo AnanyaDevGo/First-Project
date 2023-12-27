@@ -118,6 +118,11 @@ definitions:
       stock:
         type: integer
     type: object
+  models.NewPaymentMethod:
+    properties:
+      payment_method:
+        type: string
+    type: object
   models.OTPData:
     properties:
       phone:
@@ -225,33 +230,6 @@ info:
   title: Go + Gin E-Commerce API Watch Hive
   version: 1.0.0
 paths:
-  /admin/block-user:
-    put:
-      description: Block a user by its ID
-      parameters:
-      - description: User ID to block
-        in: query
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: Successfully blocked the user
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request or incorrect format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Block a user
-      tags:
-      - Admin User Management
   /admin/dashboard:
     get:
       description: Retrieve information for the admin dashboard
@@ -433,6 +411,57 @@ paths:
       summary: Delete a payment method
       tags:
       - Admin Payment Management
+    get:
+      description: Get a list of all payment methods
+      responses:
+        "200":
+          description: Successfully retrieved the list of payment methods
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or incorrect format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Get a list of payment methods
+      tags:
+      - Admin Payment Management
+    post:
+      consumes:
+      - application/json
+      description: Add a new payment method using the provided details
+      parameters:
+      - description: New payment method details
+        in: body
+        name: method
+        required: true
+        schema:
+          $ref: '#/definitions/models.NewPaymentMethod'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added the payment method
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or incorrect format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Add a new payment method
+      tags:
+      - Admin Payment Management
   /admin/sales-report:
     get:
       description: Generate a sales report based on the specified start and end dates.
@@ -465,33 +494,6 @@ paths:
       summary: Generate a sales report by date range
       tags:
       - Admin Dashboard
-  /admin/unblock-user:
-    put:
-      description: Unblock a user by its ID
-      parameters:
-      - description: User ID to unblock
-        in: query
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: Successfully unblocked the user
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request or incorrect format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Unblock a user
-      tags:
-      - Admin User Management
   /admin/users:
     get:
       description: Retrieve a list of users with optional pagination.
@@ -516,6 +518,60 @@ paths:
       security:
       - BearerTokenAuth: []
       summary: Retrieve a list of users
+      tags:
+      - Admin User Management
+  /admin/users/block:
+    put:
+      description: Block a user by its ID
+      parameters:
+      - description: User ID to block
+        in: query
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Successfully blocked the user
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or incorrect format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Block a user
+      tags:
+      - Admin User Management
+  /admin/users/unblock:
+    put:
+      description: Unblock a user by its ID
+      parameters:
+      - description: User ID to unblock
+        in: query
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Successfully unblocked the user
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or incorrect format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Unblock a user
       tags:
       - Admin User Management
   /cart/add:
@@ -687,6 +743,34 @@ paths:
       summary: Update Category
       tags:
       - Admin Category Management
+  /check-out/order:
+    post:
+      consumes:
+      - application/json
+      description: Place an order for items in the user's cart.
+      parameters:
+      - description: Order details including address, payment method, and coupon ID
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/models.Order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order placed successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input or error placing the order
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Order Items From Cart
+      tags:
+      - User Order Management
   /coupon/add:
     post:
       consumes:
@@ -1208,7 +1292,34 @@ paths:
       summary: Expire Product Offer
       tags:
       - Admin Offer Management
-  /orders:
+  /order/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Cancel an order based on the provided order ID.
+      parameters:
+      - description: Order ID
+        in: query
+        name: order_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order successfully canceled
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input or error canceling the order
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Cancel Order
+      tags:
+      - User Order Management
+  /order/get:
     get:
       consumes:
       - application/json
@@ -1262,66 +1373,6 @@ paths:
       security:
       - BearerTokenAuth: []
       summary: Get All Orders
-      tags:
-      - User Order Management
-  /orders/cancel:
-    post:
-      consumes:
-      - application/json
-      description: Cancel an order based on the provided order ID.
-      parameters:
-      - description: Order ID
-        in: query
-        name: order_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Order successfully canceled
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input or error canceling the order
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Cancel Order
-      tags:
-      - User Order Management
-  /orders/order-items-from-cart:
-    post:
-      consumes:
-      - application/json
-      description: Place an order for items in the user's cart.
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Order details including address, payment method, and coupon ID
-        in: body
-        name: order
-        required: true
-        schema:
-          $ref: '#/definitions/models.Order'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Order placed successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input or error placing the order
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Order Items From Cart
       tags:
       - User Order Management
   /otp/send:

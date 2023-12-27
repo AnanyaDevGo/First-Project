@@ -113,7 +113,7 @@ func (ad *AdminHandler) FilteredSalesReport(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully blocked the user"
 // @Failure 400 {object} response.Response "Invalid request or incorrect format"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /admin/block-user [put]
+// @Router /admin/users/block [put]
 func (ad *AdminHandler) BlockUser(c *gin.Context) {
 
 	id := c.Query("id")
@@ -139,7 +139,7 @@ func (ad *AdminHandler) BlockUser(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully unblocked the user"
 // @Failure 400 {object} response.Response "Invalid request or incorrect format"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /admin/unblock-user [put]
+// @Router /admin/users/unblock [put]
 func (ad *AdminHandler) UnBlockUser(c *gin.Context) {
 
 	id := c.Query("id")
