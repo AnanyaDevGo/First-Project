@@ -28,7 +28,7 @@ func NewCouponHandler(coupon interfaces.CouponUseCase) *CouponHandler {
 // @Param body body domain.Coupon true "Coupon details in JSON format"
 // @Success 200 {object} response.Response "Successfully added coupon"
 // @Failure 400 {object} response.Response "Field provided in the wrong format or Cannot add coupon"
-// @Router /coupon/add [post]
+// @Router /admin/coupon [post]
 func (cu *CouponHandler) AddCoupon(c *gin.Context) {
 	var coupon domain.Coupon
 	if err := c.BindJSON(&coupon); err != nil {
@@ -54,7 +54,7 @@ func (cu *CouponHandler) AddCoupon(c *gin.Context) {
 // @security BearerTokenAuth
 // @Success 200 {object} response.Response "Successfully got all coupons"
 // @Failure 400 {object} response.Response "Error in getting coupons"
-// @Router /coupon/get [get]
+// @Router /admin/coupon [get]
 func (cu *CouponHandler) GetCoupon(c *gin.Context) {
 	couponRes, err := cu.couponUseCase.GetCoupon()
 	if err != nil {
@@ -76,7 +76,7 @@ func (cu *CouponHandler) GetCoupon(c *gin.Context) {
 // @Param body body domain.Coupon true "Coupon details in JSON format"
 // @Success 200 {object} response.Response "Successfully edited coupon"
 // @Failure 400 {object} response.Response "Field provided in the wrong format or Cannot edit coupon"
-// @Router /coupon/edit [put]
+// @Router /admin/coupon [patch]
 func (cu *CouponHandler) EditCoupon(c *gin.Context) {
 	var edit domain.Coupon
 	if err := c.BindJSON(&edit); err != nil {

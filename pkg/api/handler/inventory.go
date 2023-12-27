@@ -35,7 +35,7 @@ func NewInventoryHandler(usecase services.InventoryUseCase) *InventoryHandler {
 // @Success 200 {object} response.Response "Successfully added Product"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 500 {object} response.Response "Failed to add the product"
-// @Router /inventory/add [post]
+// @Router /admin/inventories [post]
 func (i *InventoryHandler) AddInventory(c *gin.Context) {
 	var inventory models.AddInventories
 
@@ -73,7 +73,7 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 // @Success 200 {object} response.Response "Product list retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 500 {object} response.Response "Failed to retrieve the product list"
-// @Router /inventory/list [get]
+// @Router /admin/inventories [get]
 func (i *InventoryHandler) ListProducts(c *gin.Context) {
 
 	pageNo := c.DefaultQuery("page", "1")
@@ -115,7 +115,7 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 404 {object} response.Response "Inventory item not found"
 // @Failure 500 {object} response.Response "Failed to edit the inventory item"
-// @Router /inventory/edit [put]
+// @Router /admin/inventories [put]
 func (u *InventoryHandler) EditInventory(c *gin.Context) {
 	var inventory domain.Inventories
 
@@ -155,7 +155,7 @@ func (u *InventoryHandler) EditInventory(c *gin.Context) {
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 404 {object} response.Response "Inventory item not found"
 // @Failure 500 {object} response.Response "Failed to delete the inventory item"
-// @Router /inventory/delete [delete]
+// @Router /admin/inventories [delete]
 func (u *InventoryHandler) DeleteInventory(c *gin.Context) {
 
 	inventoryID := c.Query("id")
@@ -180,7 +180,7 @@ func (u *InventoryHandler) DeleteInventory(c *gin.Context) {
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 404 {object} response.Response "Inventory item not found"
 // @Failure 500 {object} response.Response "Failed to update the inventory stock"
-// @Router /inventory/update [put]
+// @Router /admin/inventories/stock [put]
 func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 
 	var p models.InventoryUpdate
@@ -201,16 +201,6 @@ func (i *InventoryHandler) UpdateInventory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
-// @Summary Show Individual Products
-// @Description Retrieve details of an individual product based on its ID.
-// @Accept json
-// @Produce json
-// @Tags Admin Product Management
-// @Param id query string true "Product ID to retrieve details"
-// @Success 200 {object} response.Response "Product details retrieved successfully"
-// @Failure 400 {object} response.Response "Invalid request format or path variables in the wrong format"
-// @Failure 404 {object} response.Response "Product not found"
-// @Router /inventory/show [get]
 func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 
 	id := c.Query("id")
@@ -235,7 +225,7 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 // @Success 200 {object} response.Response "Product details retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 500 {object} response.Response "Could not retrieve products by prefix search"
-// @Router /inventory/search [post]
+// @Router /user/product/search [post]
 func (i *InventoryHandler) SearchProducts(c *gin.Context) {
 
 	var prefix models.SearchItems
@@ -266,7 +256,7 @@ func (i *InventoryHandler) SearchProducts(c *gin.Context) {
 // @Success 200 {object} response.Response "Products list retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid category ID or products cannot be displayed"
 // @Failure 500 {object} response.Response "Error in retrieving products"
-// @Router /inventory/filter [get]
+// @Router /user/product/filter [get]
 func (i *InventoryHandler) FilterCategory(c *gin.Context) {
 
 	CategoryId := c.Query("category_id")

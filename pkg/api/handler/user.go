@@ -233,7 +233,7 @@ func (u *UserHandler) AddAddress(c *gin.Context) {
 // @Success 200 {object} response.Response "Quantity updated successfully"
 // @Failure 400 {object} response.Response "Invalid request or missing parameters"
 // @Failure 403 {object} response.Response "Forbidden, user not authenticated"
-// @Router /user/update-quantity [put]
+// @Router /user/cart [put]
 func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {

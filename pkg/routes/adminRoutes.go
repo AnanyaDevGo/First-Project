@@ -42,7 +42,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		order := engine.Group("/order")
 		{
 			order.GET("/get", orderHandler.GetAdminOrders)
-			order.GET("/status", orderHandler.ApproveOrder)
+			order.POST("/status", orderHandler.ApproveOrder)
 
 		}
 		payment := engine.Group("/payment-method")

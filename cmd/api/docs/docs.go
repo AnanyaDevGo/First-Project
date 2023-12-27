@@ -57,6 +57,287 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/category": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Retrieve all categories.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Category Management"
+                ],
+                "summary": "Get Categories",
+                "responses": {
+                    "200": {
+                        "description": "Successfully got all categories",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Fields provided are in the wrong format or Could not retrieve categories",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Update the name of an existing category.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Category Management"
+                ],
+                "summary": "Update Category",
+                "parameters": [
+                    {
+                        "description": "Category name details in JSON format",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SetNewName"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully renamed the category",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Fields provided are in the wrong format or Could not update the Category",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Add a new category.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Category Management"
+                ],
+                "summary": "Add Category",
+                "parameters": [
+                    {
+                        "description": "Category details to be added in JSON format",
+                        "name": "category",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Category"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added Category",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Fields provided are in the wrong format or Could not add the Category",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Delete an existing category.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Category Management"
+                ],
+                "summary": "Delete Category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the category to be deleted",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the Category",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Fields provided are in the wrong format or Could not delete the Category",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/coupon": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Retrieve all coupons.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Coupon Management"
+                ],
+                "summary": "Get Coupons",
+                "responses": {
+                    "200": {
+                        "description": "Successfully got all coupons",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Error in getting coupons",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Add a new coupon.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Coupon Management"
+                ],
+                "summary": "Add Coupon",
+                "parameters": [
+                    {
+                        "description": "Coupon details in JSON format",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Coupon"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added coupon",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Field provided in the wrong format or Cannot add coupon",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Edit an existing coupon.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Coupon Management"
+                ],
+                "summary": "Edit Coupon",
+                "parameters": [
+                    {
+                        "description": "Coupon details in JSON format",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Coupon"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully edited coupon",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Field provided in the wrong format or Cannot edit coupon",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/dashboard": {
             "get": {
                 "security": [
@@ -85,7 +366,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/orders": {
+        "/admin/order/get": {
             "get": {
                 "security": [
                     {
@@ -127,7 +408,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/orders/approve": {
+        "/admin/order/status": {
             "post": {
                 "security": [
                     {
@@ -163,98 +444,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Invalid input or error approving the order",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/orders/print-invoice": {
-            "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Generate and download the invoice for a specific order.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/pdf"
-                ],
-                "tags": [
-                    "User Order Management"
-                ],
-                "summary": "Print Invoice",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID for which the invoice should be generated",
-                        "name": "order_id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Invoice PDF",
-                        "schema": {
-                            "type": "file"
-                        }
-                    },
-                    "400": {
-                        "description": "Error in processing the request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Error generating or downloading the invoice",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/orders/return": {
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Initiate the return process for an order by updating its status.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Order Management"
-                ],
-                "summary": "Return Order",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Order ID to be returned",
-                        "name": "order_id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully initiated the return process",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Error initiating the return process",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -602,437 +791,6 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/add": {
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Add a product to the user's shopping cart.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Cart Management"
-                ],
-                "summary": "Add to Cart",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID obtained from authentication",
-                        "name": "id",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "Product details to be added to the cart in JSON format",
-                        "name": "cart",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Cart"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully added to cart",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "User ID not found in the context, User ID not in the right format, Failed to parse request JSON, or Could not add to the cart",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/checkout": {
-            "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Process the checkout for the user and retrieve the checkout details.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Cart Management"
-                ],
-                "summary": "Checkout",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID obtained from authentication",
-                        "name": "id",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved checkout details",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Could not open checkout",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/category/add": {
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Add a new category.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Category Management"
-                ],
-                "summary": "Add Category",
-                "parameters": [
-                    {
-                        "description": "Category details to be added in JSON format",
-                        "name": "category",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.Category"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully added Category",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Fields provided are in the wrong format or Could not add the Category",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/category/delete": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Delete an existing category.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Category Management"
-                ],
-                "summary": "Delete Category",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID of the category to be deleted",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully deleted the Category",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Fields provided are in the wrong format or Could not delete the Category",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/category/get": {
-            "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Retrieve all categories.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Category Management"
-                ],
-                "summary": "Get Categories",
-                "responses": {
-                    "200": {
-                        "description": "Successfully got all categories",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Fields provided are in the wrong format or Could not retrieve categories",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/category/update": {
-            "put": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Update the name of an existing category.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Category Management"
-                ],
-                "summary": "Update Category",
-                "parameters": [
-                    {
-                        "description": "Category name details in JSON format",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.SetNewName"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully renamed the category",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Fields provided are in the wrong format or Could not update the Category",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/check-out/order": {
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Place an order for items in the user's cart.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Order Management"
-                ],
-                "summary": "Order Items From Cart",
-                "parameters": [
-                    {
-                        "description": "Order details including address, payment method, and coupon ID",
-                        "name": "order",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Order"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Order placed successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input or error placing the order",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/coupon/add": {
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Add a new coupon.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Coupon Management"
-                ],
-                "summary": "Add Coupon",
-                "parameters": [
-                    {
-                        "description": "Coupon details in JSON format",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.Coupon"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully added coupon",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Field provided in the wrong format or Cannot add coupon",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/coupon/edit": {
-            "put": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Edit an existing coupon.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Coupon Management"
-                ],
-                "summary": "Edit Coupon",
-                "parameters": [
-                    {
-                        "description": "Coupon details in JSON format",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.Coupon"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully edited coupon",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Field provided in the wrong format or Cannot edit coupon",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/coupon/get": {
-            "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Retrieve all coupons.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Coupon Management"
-                ],
-                "summary": "Get Coupons",
-                "responses": {
-                    "200": {
-                        "description": "Successfully got all coupons",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Error in getting coupons",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1711,49 +1469,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/order/cancel": {
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Cancel an order based on the provided order ID.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Order Management"
-                ],
-                "summary": "Cancel Order",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Order successfully canceled",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input or error canceling the order",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/order/get": {
             "get": {
                 "security": [
@@ -1783,54 +1498,6 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Orders retrieved successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input or error retrieving orders",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/orders/all": {
-            "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Retrieve all orders for the authenticated user.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Order Management"
-                ],
-                "summary": "Get All Orders",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page number for pagination (default is 1)",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items per page (default is 10)",
-                        "name": "count",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully retrieved all orders",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -2053,6 +1720,67 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Update the quantity of a product in the user's cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Cart Management"
+                ],
+                "summary": "Update product quantity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Inventory ID of the product",
+                        "name": "inventory",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "New quantity of the product",
+                        "name": "quantity",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Quantity updated successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or missing parameters",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden, user not authenticated",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
             }
         },
         "/user/cart/remove": {
@@ -2159,6 +1887,195 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/check-out": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Process the checkout for the user and retrieve the checkout details.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Cart Management"
+                ],
+                "summary": "Checkout",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID obtained from authentication",
+                        "name": "id",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved checkout details",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Could not open checkout",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/check-out/order": {
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Place an order for items in the user's cart.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Order Management"
+                ],
+                "summary": "Order Items From Cart",
+                "parameters": [
+                    {
+                        "description": "Order details including address, payment method, and coupon ID",
+                        "name": "order",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order placed successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input or error placing the order",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/check-out/print": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Generate and download the invoice for a specific order.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/pdf"
+                ],
+                "tags": [
+                    "User Order Management"
+                ],
+                "summary": "Print Invoice",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID for which the invoice should be generated",
+                        "name": "order_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice PDF",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Error in processing the request",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Error generating or downloading the invoice",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/home/addcart": {
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Add a product to the user's shopping cart.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Cart Management"
+                ],
+                "summary": "Add to Cart",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID obtained from authentication",
+                        "name": "id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Product details to be added to the cart in JSON format",
+                        "name": "cart",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Cart"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added to cart",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "User ID not found in the context, User ID not in the right format, Failed to parse request JSON, or Could not add to the cart",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/user/login": {
             "post": {
                 "description": "Logs in a user with provided credentials",
@@ -2200,6 +2117,140 @@ const docTemplate = `{
                         "description": "Unauthorized: Invalid credentials",
                         "schema": {
                             "$ref": "#/definitions/models.UserDetails"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/order": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Cancel an order based on the provided order ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Order Management"
+                ],
+                "summary": "Cancel Order",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "order_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order successfully canceled",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input or error canceling the order",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/order/all": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Retrieve all orders for the authenticated user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Order Management"
+                ],
+                "summary": "Get All Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number for pagination (default is 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page (default is 10)",
+                        "name": "count",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved all orders",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input or error retrieving orders",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/order/return": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Initiate the return process for an order by updating its status.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Order Management"
+                ],
+                "summary": "Return Order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID to be returned",
+                        "name": "order_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully initiated the return process",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Error initiating the return process",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -2275,69 +2326,6 @@ const docTemplate = `{
                         "description": "Internal server error",
                         "schema": {
                             "$ref": "#/definitions/models.TokenUsers"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/update-quantity": {
-            "put": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Update the quantity of a product in the user's cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Cart Management"
-                ],
-                "summary": "Update product quantity",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Inventory ID of the product",
-                        "name": "inventory",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "New quantity of the product",
-                        "name": "quantity",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Quantity updated successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request or missing parameters",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden, user not authenticated",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }

@@ -29,7 +29,7 @@ func NewCategoryHandler(usecase services.CategoryUseCase) *CategoryHandler {
 // @Param category body domain.Category true "Category details to be added in JSON format"
 // @Success 200 {object} response.Response "Successfully added Category"
 // @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not add the Category"
-// @Router /category/add [post]
+// @Router /admin/category [post]
 func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 
 	var category domain.Category
@@ -59,7 +59,7 @@ func (Cat *CategoryHandler) AddCategory(c *gin.Context) {
 // @Param body body models.SetNewName true "Category name details in JSON format"
 // @Success 200 {object} response.Response "Successfully renamed the category"
 // @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not update the Category"
-// @Router /category/update [put]
+// @Router /admin/category [put]
 func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 
 	var p models.SetNewName
@@ -91,7 +91,7 @@ func (Cat *CategoryHandler) UpdateCategory(c *gin.Context) {
 // @Param id query string true "ID of the category to be deleted"
 // @Success 200 {object} response.Response "Successfully deleted the Category"
 // @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not delete the Category"
-// @Router /category/delete [delete]
+// @Router /admin/category [delete]
 func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 
 	categoryID := c.Query("id")
@@ -115,7 +115,7 @@ func (Cat *CategoryHandler) DeleteCategory(c *gin.Context) {
 // @security BearerTokenAuth
 // @Success 200 {object} response.Response "Successfully got all categories"
 // @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not retrieve categories"
-// @Router /category/get [get]
+// @Router /admin/category [get]
 func (Cat *CategoryHandler) GetCategory(c *gin.Context) {
 
 	categories, err := Cat.CategoryUseCase.GetCategory()

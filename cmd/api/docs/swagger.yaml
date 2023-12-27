@@ -256,6 +256,186 @@ paths:
       summary: Admin Login
       tags:
       - Admin
+  /admin/category:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing category.
+      parameters:
+      - description: ID of the category to be deleted
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted the Category
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Fields provided are in the wrong format or Could not delete
+            the Category
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Delete Category
+      tags:
+      - Admin Category Management
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all categories.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully got all categories
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Fields provided are in the wrong format or Could not retrieve
+            categories
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Get Categories
+      tags:
+      - Admin Category Management
+    post:
+      consumes:
+      - application/json
+      description: Add a new category.
+      parameters:
+      - description: Category details to be added in JSON format
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added Category
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Fields provided are in the wrong format or Could not add the
+            Category
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Add Category
+      tags:
+      - Admin Category Management
+    put:
+      consumes:
+      - application/json
+      description: Update the name of an existing category.
+      parameters:
+      - description: Category name details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.SetNewName'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully renamed the category
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Fields provided are in the wrong format or Could not update
+            the Category
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Update Category
+      tags:
+      - Admin Category Management
+  /admin/coupon:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all coupons.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully got all coupons
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Error in getting coupons
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Get Coupons
+      tags:
+      - Admin Coupon Management
+    patch:
+      consumes:
+      - application/json
+      description: Edit an existing coupon.
+      parameters:
+      - description: Coupon details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Coupon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully edited coupon
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Field provided in the wrong format or Cannot edit coupon
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Edit Coupon
+      tags:
+      - Admin Coupon Management
+    post:
+      consumes:
+      - application/json
+      description: Add a new coupon.
+      parameters:
+      - description: Coupon details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Coupon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added coupon
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Field provided in the wrong format or Cannot add coupon
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Add Coupon
+      tags:
+      - Admin Coupon Management
   /admin/dashboard:
     get:
       description: Retrieve information for the admin dashboard
@@ -273,7 +453,7 @@ paths:
       summary: Retrieve admin dashboard information
       tags:
       - Admin Dashboard
-  /admin/orders:
+  /admin/order/get:
     get:
       consumes:
       - application/json
@@ -299,7 +479,7 @@ paths:
       summary: Get Admin Orders
       tags:
       - Admin Order Management
-  /admin/orders/approve:
+  /admin/order/status:
     post:
       consumes:
       - application/json
@@ -326,64 +506,6 @@ paths:
       summary: Approve Order
       tags:
       - Admin Order Management
-  /admin/orders/print-invoice:
-    get:
-      consumes:
-      - application/json
-      description: Generate and download the invoice for a specific order.
-      parameters:
-      - description: Order ID for which the invoice should be generated
-        in: query
-        name: order_id
-        required: true
-        type: string
-      produces:
-      - application/pdf
-      responses:
-        "200":
-          description: Invoice PDF
-          schema:
-            type: file
-        "400":
-          description: Error in processing the request
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Error generating or downloading the invoice
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Print Invoice
-      tags:
-      - User Order Management
-  /admin/orders/return:
-    post:
-      consumes:
-      - application/json
-      description: Initiate the return process for an order by updating its status.
-      parameters:
-      - description: Order ID to be returned
-        in: query
-        name: order_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully initiated the return process
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Error initiating the return process
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Return Order
-      tags:
-      - User Order Management
   /admin/payment-method:
     delete:
       description: Delete a payment method by its ID
@@ -602,280 +724,6 @@ paths:
       summary: Unblock a user
       tags:
       - Admin User Management
-  /cart/add:
-    post:
-      consumes:
-      - application/json
-      description: Add a product to the user's shopping cart.
-      parameters:
-      - description: User ID obtained from authentication
-        in: header
-        name: id
-        required: true
-        type: integer
-      - description: Product details to be added to the cart in JSON format
-        in: body
-        name: cart
-        required: true
-        schema:
-          $ref: '#/definitions/models.Cart'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully added to cart
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: User ID not found in the context, User ID not in the right
-            format, Failed to parse request JSON, or Could not add to the cart
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Add to Cart
-      tags:
-      - User Cart Management
-  /cart/checkout:
-    get:
-      consumes:
-      - application/json
-      description: Process the checkout for the user and retrieve the checkout details.
-      parameters:
-      - description: User ID obtained from authentication
-        in: header
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully retrieved checkout details
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Could not open checkout
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Checkout
-      tags:
-      - User Cart Management
-  /category/add:
-    post:
-      consumes:
-      - application/json
-      description: Add a new category.
-      parameters:
-      - description: Category details to be added in JSON format
-        in: body
-        name: category
-        required: true
-        schema:
-          $ref: '#/definitions/domain.Category'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully added Category
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Fields provided are in the wrong format or Could not add the
-            Category
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Add Category
-      tags:
-      - Admin Category Management
-  /category/delete:
-    delete:
-      consumes:
-      - application/json
-      description: Delete an existing category.
-      parameters:
-      - description: ID of the category to be deleted
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully deleted the Category
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Fields provided are in the wrong format or Could not delete
-            the Category
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Delete Category
-      tags:
-      - Admin Category Management
-  /category/get:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all categories.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully got all categories
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Fields provided are in the wrong format or Could not retrieve
-            categories
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Get Categories
-      tags:
-      - Admin Category Management
-  /category/update:
-    put:
-      consumes:
-      - application/json
-      description: Update the name of an existing category.
-      parameters:
-      - description: Category name details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/models.SetNewName'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully renamed the category
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Fields provided are in the wrong format or Could not update
-            the Category
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Update Category
-      tags:
-      - Admin Category Management
-  /check-out/order:
-    post:
-      consumes:
-      - application/json
-      description: Place an order for items in the user's cart.
-      parameters:
-      - description: Order details including address, payment method, and coupon ID
-        in: body
-        name: order
-        required: true
-        schema:
-          $ref: '#/definitions/models.Order'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Order placed successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input or error placing the order
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Order Items From Cart
-      tags:
-      - User Order Management
-  /coupon/add:
-    post:
-      consumes:
-      - application/json
-      description: Add a new coupon.
-      parameters:
-      - description: Coupon details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/domain.Coupon'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully added coupon
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Field provided in the wrong format or Cannot add coupon
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Add Coupon
-      tags:
-      - Admin Coupon Management
-  /coupon/edit:
-    put:
-      consumes:
-      - application/json
-      description: Edit an existing coupon.
-      parameters:
-      - description: Coupon details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/domain.Coupon'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully edited coupon
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Field provided in the wrong format or Cannot edit coupon
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Edit Coupon
-      tags:
-      - Admin Coupon Management
-  /coupon/get:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all coupons.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully got all coupons
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Error in getting coupons
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Get Coupons
-      tags:
-      - Admin Coupon Management
   /inventory/add:
     post:
       consumes:
@@ -1320,33 +1168,6 @@ paths:
       summary: Expire Product Offer
       tags:
       - Admin Offer Management
-  /order/cancel:
-    post:
-      consumes:
-      - application/json
-      description: Cancel an order based on the provided order ID.
-      parameters:
-      - description: Order ID
-        in: query
-        name: order_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Order successfully canceled
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input or error canceling the order
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Cancel Order
-      tags:
-      - User Order Management
   /order/get:
     get:
       consumes:
@@ -1371,36 +1192,6 @@ paths:
       security:
       - BearerTokenAuth: []
       summary: Get Orders
-      tags:
-      - User Order Management
-  /orders/all:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all orders for the authenticated user.
-      parameters:
-      - description: Page number for pagination (default is 1)
-        in: query
-        name: page
-        type: integer
-      - description: Number of items per page (default is 10)
-        in: query
-        name: count
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully retrieved all orders
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input or error retrieving orders
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Get All Orders
       tags:
       - User Order Management
   /otp/send:
@@ -1539,6 +1330,46 @@ paths:
       summary: Retrieve user's shopping cart
       tags:
       - User Cart Management
+    put:
+      consumes:
+      - application/json
+      description: Update the quantity of a product in the user's cart
+      parameters:
+      - description: User ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: Inventory ID of the product
+        in: query
+        name: inventory
+        required: true
+        type: integer
+      - description: New quantity of the product
+        in: query
+        name: quantity
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Quantity updated successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or missing parameters
+          schema:
+            $ref: '#/definitions/response.Response'
+        "403":
+          description: Forbidden, user not authenticated
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Update product quantity
+      tags:
+      - User Cart Management
   /user/cart/remove:
     delete:
       consumes:
@@ -1608,6 +1439,126 @@ paths:
       summary: Change user password
       tags:
       - User Profile Management
+  /user/check-out:
+    get:
+      consumes:
+      - application/json
+      description: Process the checkout for the user and retrieve the checkout details.
+      parameters:
+      - description: User ID obtained from authentication
+        in: header
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved checkout details
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Could not open checkout
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Checkout
+      tags:
+      - User Cart Management
+  /user/check-out/order:
+    post:
+      consumes:
+      - application/json
+      description: Place an order for items in the user's cart.
+      parameters:
+      - description: Order details including address, payment method, and coupon ID
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/models.Order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order placed successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input or error placing the order
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Order Items From Cart
+      tags:
+      - User Order Management
+  /user/check-out/print:
+    get:
+      consumes:
+      - application/json
+      description: Generate and download the invoice for a specific order.
+      parameters:
+      - description: Order ID for which the invoice should be generated
+        in: query
+        name: order_id
+        required: true
+        type: string
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: Invoice PDF
+          schema:
+            type: file
+        "400":
+          description: Error in processing the request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Error generating or downloading the invoice
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Print Invoice
+      tags:
+      - User Order Management
+  /user/home/addcart:
+    post:
+      consumes:
+      - application/json
+      description: Add a product to the user's shopping cart.
+      parameters:
+      - description: User ID obtained from authentication
+        in: header
+        name: id
+        required: true
+        type: integer
+      - description: Product details to be added to the cart in JSON format
+        in: body
+        name: cart
+        required: true
+        schema:
+          $ref: '#/definitions/models.Cart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added to cart
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: User ID not found in the context, User ID not in the right
+            format, Failed to parse request JSON, or Could not add to the cart
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Add to Cart
+      tags:
+      - User Cart Management
   /user/login:
     post:
       consumes:
@@ -1638,6 +1589,90 @@ paths:
       summary: Log in a user
       tags:
       - User
+  /user/profile/order:
+    delete:
+      consumes:
+      - application/json
+      description: Cancel an order based on the provided order ID.
+      parameters:
+      - description: Order ID
+        in: query
+        name: order_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order successfully canceled
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input or error canceling the order
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Cancel Order
+      tags:
+      - User Order Management
+  /user/profile/order/all:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all orders for the authenticated user.
+      parameters:
+      - description: Page number for pagination (default is 1)
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page (default is 10)
+        in: query
+        name: count
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved all orders
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input or error retrieving orders
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Get All Orders
+      tags:
+      - User Order Management
+  /user/profile/order/return:
+    patch:
+      consumes:
+      - application/json
+      description: Initiate the return process for an order by updating its status.
+      parameters:
+      - description: Order ID to be returned
+        in: query
+        name: order_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully initiated the return process
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Error initiating the return process
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Return Order
+      tags:
+      - User Order Management
   /user/profile{id}:
     get:
       consumes:
@@ -1687,47 +1722,6 @@ paths:
       summary: Register a new user
       tags:
       - User
-  /user/update-quantity:
-    put:
-      consumes:
-      - application/json
-      description: Update the quantity of a product in the user's cart
-      parameters:
-      - description: User ID
-        in: query
-        name: id
-        required: true
-        type: integer
-      - description: Inventory ID of the product
-        in: query
-        name: inventory
-        required: true
-        type: integer
-      - description: New quantity of the product
-        in: query
-        name: quantity
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Quantity updated successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request or missing parameters
-          schema:
-            $ref: '#/definitions/response.Response'
-        "403":
-          description: Forbidden, user not authenticated
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Update product quantity
-      tags:
-      - User Cart Management
   /users/edit:
     put:
       consumes:

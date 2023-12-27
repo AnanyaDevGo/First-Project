@@ -31,7 +31,7 @@ func NewCartHandler(usecase services.CartUseCase) *CartHandler {
 // @Param cart body models.Cart true "Product details to be added to the cart in JSON format"
 // @Success 200 {object} response.Response "Successfully added to cart"
 // @Failure 400 {object} response.Response "User ID not found in the context, User ID not in the right format, Failed to parse request JSON, or Could not add to the cart"
-// @Router /cart/add [post]
+// @Router /user/home/addcart [post]
 func (ch *CartHandler) AddToCart(c *gin.Context) {
 	// Get user ID from the context
 	idString, exists := c.Get("id")
@@ -77,7 +77,7 @@ func (ch *CartHandler) AddToCart(c *gin.Context) {
 // @Param id header int true "User ID obtained from authentication"
 // @Success 200 {object} response.Response "Successfully retrieved checkout details"
 // @Failure 400 {object} response.Response "Could not open checkout"
-// @Router /cart/checkout [get]
+// @Router /user/check-out [get]
 func (i *CartHandler) CheckOut(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
