@@ -34,7 +34,7 @@ func NewAdminHandler(usecase services.AdminUseCase) *AdminHandler {
 // @Param body body models.AdminLogin true "Admin login details in JSON format"
 // @Success 200 {object} response.Response "Admin authenticated successfully"
 // @Failure 400 {object} response.Response  "Cannot authenticate user"
-// @Router /admin/login [post]
+// @Router /admin/adminlogin [post]
 func (ad *AdminHandler) LoginHandler(c *gin.Context) {
 	var adminDetails models.AdminLogin
 	fmt.Println("it is here")
@@ -89,7 +89,7 @@ func (ad *AdminHandler) Dashboard(c *gin.Context) {
 // @Success 200 {object} response.Response "Sales report retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid request or incorrect format"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /admin/sales-report [get]
+// @Router /admin/salesreport [get]
 func (ad *AdminHandler) FilteredSalesReport(c *gin.Context) {
 
 	timePeriod := c.Query("period")
@@ -200,7 +200,7 @@ func (ad *AdminHandler) GetUsers(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully added the payment method"
 // @Failure 400 {object} response.Response "Invalid request or incorrect format"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /admin/payment-methods [post]
+// @Router /admin/payment-method/pay [post]
 func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
 
 	var method models.NewPaymentMethod
@@ -230,7 +230,7 @@ func (i *AdminHandler) NewPaymentMethod(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully retrieved the list of payment methods"
 // @Failure 400 {object} response.Response "Invalid request or incorrect format"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /admin/payment-methods [get]
+// @Router /admin/payment-method [get]
 func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
 
 	categories, err := a.adminUseCase.ListPaymentMethods()
@@ -254,7 +254,7 @@ func (a *AdminHandler) ListPaymentMethods(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully deleted the payment method"
 // @Failure 400 {object} response.Response "Invalid request or incorrect format"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /admin/payment-methods [delete]
+// @Router /admin/payment-method [delete]
 func (a *AdminHandler) DeletePaymentMethod(c *gin.Context) {
 
 	id, err := strconv.Atoi(c.Query("id"))
@@ -316,7 +316,7 @@ func (a *AdminHandler) ValidateRefreshTokenAndCreateNewAccess(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully retrieved the sales report"
 // @Failure 400 {object} response.Response "Invalid request or incorrect format"
 // @Failure 500 {object} response.Response "Internal server error"
-// @Router /admin/sales-report [get]
+// @Router /admin/sales-report-date [get]
 func (ad *AdminHandler) SalesReportByDate(c *gin.Context) {
 	startDateStr := c.Query("start")
 	endDateStr := c.Query("end")
