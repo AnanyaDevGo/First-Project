@@ -453,6 +453,195 @@ paths:
       summary: Retrieve admin dashboard information
       tags:
       - Admin Dashboard
+  /admin/inventories:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing inventory item.
+      parameters:
+      - description: ID of the inventory item to delete
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Inventory item successfully deleted
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Inventory item not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to delete the inventory item
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Delete Inventory
+      tags:
+      - Admin Product Management
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of products.
+      parameters:
+      - description: 'Page number for pagination (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Number of products per page (default: 5)'
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product list retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to retrieve the product list
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: List Products
+      tags:
+      - Admin Product Management
+    post:
+      consumes:
+      - multipart/form-data
+      description: Add a new inventory item.
+      parameters:
+      - description: ID of the category for the inventory
+        in: formData
+        name: category_id
+        required: true
+        type: integer
+      - description: Name of the product
+        in: formData
+        name: product_name
+        required: true
+        type: string
+      - description: Size of the product
+        in: formData
+        name: size
+        required: true
+        type: string
+      - description: Stock quantity of the product
+        in: formData
+        name: stock
+        required: true
+        type: integer
+      - description: Price of the product
+        in: formData
+        name: price
+        required: true
+        type: number
+      - description: Image file of the product
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully added Product
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to add the product
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add Inventory
+      tags:
+      - Admin Product Management
+    put:
+      consumes:
+      - application/json
+      description: Edit details of an existing inventory item.
+      parameters:
+      - description: ID of the inventory item to edit
+        in: query
+        name: inventory_id
+        required: true
+        type: integer
+      - description: Updated inventory details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Inventories'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Inventory item successfully edited
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Inventory item not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to edit the inventory item
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Edit Inventory
+      tags:
+      - Admin Product Management
+  /admin/inventories/stock:
+    put:
+      consumes:
+      - application/json
+      description: Update the stock of an existing inventory item.
+      parameters:
+      - description: Inventory update details in JSON format
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.InventoryUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Inventory stock successfully updated
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Inventory item not found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to update the inventory stock
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Update Inventory
+      tags:
+      - Admin Product Management
   /admin/order/get:
     get:
       consumes:
@@ -724,287 +913,6 @@ paths:
       summary: Unblock a user
       tags:
       - Admin User Management
-  /inventory/add:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Add a new inventory item.
-      parameters:
-      - description: ID of the category for the inventory
-        in: formData
-        name: category_id
-        required: true
-        type: integer
-      - description: Name of the product
-        in: formData
-        name: product_name
-        required: true
-        type: string
-      - description: Size of the product
-        in: formData
-        name: size
-        required: true
-        type: string
-      - description: Stock quantity of the product
-        in: formData
-        name: stock
-        required: true
-        type: integer
-      - description: Price of the product
-        in: formData
-        name: price
-        required: true
-        type: number
-      - description: Image file of the product
-        in: formData
-        name: image
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully added Product
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to add the product
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Add Inventory
-      tags:
-      - Admin Product Management
-  /inventory/delete:
-    delete:
-      consumes:
-      - application/json
-      description: Delete an existing inventory item.
-      parameters:
-      - description: ID of the inventory item to delete
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Inventory item successfully deleted
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Inventory item not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to delete the inventory item
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Delete Inventory
-      tags:
-      - Admin Product Management
-  /inventory/edit:
-    put:
-      consumes:
-      - application/json
-      description: Edit details of an existing inventory item.
-      parameters:
-      - description: ID of the inventory item to edit
-        in: query
-        name: inventory_id
-        required: true
-        type: integer
-      - description: Updated inventory details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/domain.Inventories'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Inventory item successfully edited
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Inventory item not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to edit the inventory item
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Edit Inventory
-      tags:
-      - Admin Product Management
-  /inventory/filter:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve a list of products based on the specified category ID.
-      parameters:
-      - description: Category ID for filtering products
-        in: query
-        name: category_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Products list retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid category ID or products cannot be displayed
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Error in retrieving products
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Filter Products by Category
-      tags:
-      - User Product Management
-  /inventory/list:
-    get:
-      consumes:
-      - application/json
-      description: Get a paginated list of products.
-      parameters:
-      - description: 'Page number for pagination (default: 1)'
-        in: query
-        name: page
-        type: integer
-      - description: 'Number of products per page (default: 5)'
-        in: query
-        name: per_page
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Product list retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to retrieve the product list
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: List Products
-      tags:
-      - Admin Product Management
-  /inventory/search:
-    post:
-      consumes:
-      - application/json
-      description: Retrieve product details based on a prefix search for the product
-        name.
-      parameters:
-      - description: Prefix for product name search
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/models.SearchItems'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Product details retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Could not retrieve products by prefix search
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Search Products
-      tags:
-      - User Product Management
-  /inventory/show:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve details of an individual product based on its ID.
-      parameters:
-      - description: Product ID to retrieve details
-        in: query
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Product details retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or path variables in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Product not found
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Show Individual Products
-      tags:
-      - Admin Product Management
-  /inventory/update:
-    put:
-      consumes:
-      - application/json
-      description: Update the stock of an existing inventory item.
-      parameters:
-      - description: Inventory update details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/models.InventoryUpdate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Inventory stock successfully updated
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Inventory item not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to update the inventory stock
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Update Inventory
-      tags:
-      - Admin Product Management
   /offers:
     post:
       consumes:
@@ -1589,6 +1497,66 @@ paths:
       summary: Log in a user
       tags:
       - User
+  /user/product/filter:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of products based on the specified category ID.
+      parameters:
+      - description: Category ID for filtering products
+        in: query
+        name: category_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Products list retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid category ID or products cannot be displayed
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Error in retrieving products
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Filter Products by Category
+      tags:
+      - User Product Management
+  /user/product/search:
+    post:
+      consumes:
+      - application/json
+      description: Retrieve product details based on a prefix search for the product
+        name.
+      parameters:
+      - description: Prefix for product name search
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.SearchItems'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product details retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Could not retrieve products by prefix search
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Search Products
+      tags:
+      - User Product Management
   /user/profile/order:
     delete:
       consumes:

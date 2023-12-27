@@ -28,7 +28,7 @@ func NewWalletHandler(usecase interfaces.WalletUseCase) *WalletHandler {
 // @Success 200 {object} response.Response "Wallet details retrieved successfully"
 // @Failure 400 {object} response.Response "user_id not found or invalid user_id type"
 // @Failure 500 {object} response.Response "Failed to retrieve details"
-// @Router /wallet [get]
+// @Router /user/wallet [get]
 func (w *WalletHandler) GetWallet(c *gin.Context) {
 	userIDRaw, exists := c.Get("id")
 	fmt.Println("userid", userIDRaw)
@@ -65,7 +65,7 @@ func (w *WalletHandler) GetWallet(c *gin.Context) {
 // @Success 200 {object} response.Response "Wallet transaction history retrieved successfully"
 // @Failure 400 {object} response.Response "user_id not found or invalid user_id type"
 // @Failure 500 {object} response.Response "Failed to retrieve transaction history"
-// @Router /wallet/history [get]
+// @Router /user/wallet/history [get]
 func (w *WalletHandler) WalletHistory(c *gin.Context) {
 	userIDRaw, exists := c.Get("id")
 	if !exists {
