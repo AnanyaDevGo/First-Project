@@ -32,10 +32,11 @@ type MakeOrder struct {
 	PaymentMethodID int `json:"payment_id"`
 }
 type Order struct {
-	UserID          int `json:"user_id"`
-	AddressID       int `json:"address_id"`
-	PaymentMethodID int `json:"payment_id"`
-	CouponID        int `json:"coupon_id"`
+	UserID          int  `json:"user_id"`
+	AddressID       int  `json:"address_id"`
+	PaymentMethodID int  `json:"payment_id"`
+	CouponID        int  `json:"coupon_id"`
+	UseWallet       bool `json:"use_wallet" gorm:"default:false"`
 }
 type SearchItems struct {
 	ProductName string `json:"product_name"`

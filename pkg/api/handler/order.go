@@ -52,12 +52,13 @@ func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 	var order models.Order
 	order.UserID = userId
 	order.CouponID = 0
+
 	if err := c.BindJSON(&order); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "fields provided are in wrong format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	orderRsp, err := i.orderUseCase.OrderItemsFromCart(order.UserID, order.AddressID, order.PaymentMethodID, order.CouponID)
+	orderRsp, err := i.orderUseCase.OrderItemsFromCart(order.UserID, order.AddressID, order.PaymentMethodID, order.CouponID, order.UseWallet)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not make the order", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)

@@ -33,7 +33,7 @@ func NewOrderUseCase(repo interfaces.OrderRepository, wallet interfaces.WalletRe
 	}
 }
 
-func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId int) (models.OrderDetailsRep, error) {
+func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId int, useWallet bool) (models.OrderDetailsRep, error) {
 	cart, err := i.userUseCase.GetCart(userID)
 	var Finalprice float64
 	if err != nil {
@@ -54,13 +54,44 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 		}
 	}
 
+	walletAmount, err := i.wallet.GetWallet(userID)
+	if err != nil {
+		return models.OrderDetailsRep{}, err
+	}
+	walletID, err := i.wallet.GetWalletId(userID)
+	if err != nil {
+		return models.OrderDetailsRep{}, err
+	}
+
 	// if coupon applied
 	// var orderID int
 	if couponId == 0 {
-		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, total)
+		var Totalamt float64
+
+		if total < walletAmount.Amount {
+			Totalamt = 0.0
+			err = i.orderRepository.DebitWallet(userID, total)
+			if err != nil {
+				return models.OrderDetailsRep{}, err
+			}
+
+		} else {
+			Totalamt = total - walletAmount.Amount
+			err = i.orderRepository.DebitWallet(userID, walletAmount.Amount)
+			if err != nil {
+				return models.OrderDetailsRep{}, err
+			}
+		}
+
+		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, Totalamt)
 		if err != nil {
 			return models.OrderDetailsRep{}, err
 		}
+		err = i.wallet.WalletDebited(walletID, orderID, total)
+		if err != nil {
+			return models.OrderDetailsRep{}, err
+		}
+
 		if err := i.orderRepository.AddOrderProducts(orderID, cart.Data); err != nil {
 			return models.OrderDetailsRep{}, err
 		}
@@ -83,9 +114,28 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 		}
 
 		finalprice := total - ((total * float64(coupondetails.DiscountPercentage)) / 100)
+		var Totalamt float64
+		if finalprice < walletAmount.Amount {
+			Totalamt = 0.0
+			err = i.orderRepository.DebitWallet(userID, finalprice)
+			if err != nil {
+				return models.OrderDetailsRep{}, err
+			}
+
+		} else {
+			Totalamt = finalprice - walletAmount.Amount
+			err = i.orderRepository.DebitWallet(userID, walletAmount.Amount)
+			if err != nil {
+				return models.OrderDetailsRep{}, err
+			}
+		}
 		Finalprice = finalprice
 
-		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, finalprice)
+		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, Totalamt)
+		if err != nil {
+			return models.OrderDetailsRep{}, err
+		}
+		err = i.wallet.WalletDebited(walletID, orderID, finalprice)
 		if err != nil {
 			return models.OrderDetailsRep{}, err
 		}
