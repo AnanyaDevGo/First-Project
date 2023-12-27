@@ -230,24 +230,7 @@ info:
   title: Go + Gin E-Commerce API Watch Hive
   version: 1.0.0
 paths:
-  /admin/dashboard:
-    get:
-      description: Retrieve information for the admin dashboard
-      responses:
-        "200":
-          description: Admin dashboard information retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Retrieve admin dashboard information
-      tags:
-      - Admin Dashboard
-  /admin/login:
+  /admin/adminlogin:
     post:
       consumes:
       - application/json
@@ -273,6 +256,23 @@ paths:
       summary: Admin Login
       tags:
       - Admin
+  /admin/dashboard:
+    get:
+      description: Retrieve information for the admin dashboard
+      responses:
+        "200":
+          description: Admin dashboard information retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Retrieve admin dashboard information
+      tags:
+      - Admin Dashboard
   /admin/orders:
     get:
       consumes:
@@ -384,7 +384,7 @@ paths:
       summary: Return Order
       tags:
       - User Order Management
-  /admin/payment-methods:
+  /admin/payment-method:
     delete:
       description: Delete a payment method by its ID
       parameters:
@@ -431,6 +431,7 @@ paths:
       summary: Get a list of payment methods
       tags:
       - Admin Payment Management
+  /admin/payment-method/pay:
     post:
       consumes:
       - application/json
@@ -462,7 +463,7 @@ paths:
       summary: Add a new payment method
       tags:
       - Admin Payment Management
-  /admin/sales-report:
+  /admin/sales-report-date:
     get:
       description: Generate a sales report based on the specified start and end dates.
       parameters:
@@ -492,6 +493,33 @@ paths:
       security:
       - BearerTokenAuth: []
       summary: Generate a sales report by date range
+      tags:
+      - Admin Dashboard
+  /admin/salesreport:
+    get:
+      description: Retrieve a sales report filtered by the specified time period
+      parameters:
+      - description: Time period for filtering the sales report
+        in: query
+        name: period
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Sales report retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or incorrect format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Retrieve filtered sales report
       tags:
       - Admin Dashboard
   /admin/users:

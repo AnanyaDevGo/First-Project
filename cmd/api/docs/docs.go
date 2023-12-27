@@ -17,35 +17,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admin/dashboard": {
-            "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Retrieve information for the admin dashboard",
-                "tags": [
-                    "Admin Dashboard"
-                ],
-                "summary": "Retrieve admin dashboard information",
-                "responses": {
-                    "200": {
-                        "description": "Admin dashboard information retrieved successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/login": {
+        "/admin/adminlogin": {
             "post": {
                 "description": "Authenticate an admin user and get access and refresh tokens.",
                 "consumes": [
@@ -78,6 +50,34 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Cannot authenticate user",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/dashboard": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Retrieve information for the admin dashboard",
+                "tags": [
+                    "Admin Dashboard"
+                ],
+                "summary": "Retrieve admin dashboard information",
+                "responses": {
+                    "200": {
+                        "description": "Admin dashboard information retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -262,7 +262,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/payment-methods": {
+        "/admin/payment-method": {
             "get": {
                 "security": [
                     {
@@ -277,55 +277,6 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved the list of payment methods",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request or incorrect format",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Add a new payment method using the provided details",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Payment Management"
-                ],
-                "summary": "Add a new payment method",
-                "parameters": [
-                    {
-                        "description": "New payment method details",
-                        "name": "method",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.NewPaymentMethod"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successfully added the payment method",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -386,7 +337,58 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/sales-report": {
+        "/admin/payment-method/pay": {
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Add a new payment method using the provided details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Payment Management"
+                ],
+                "summary": "Add a new payment method",
+                "parameters": [
+                    {
+                        "description": "New payment method details",
+                        "name": "method",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.NewPaymentMethod"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully added the payment method",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or incorrect format",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/sales-report-date": {
             "get": {
                 "security": [
                     {
@@ -417,6 +419,49 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved the sales report",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or incorrect format",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/salesreport": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Retrieve a sales report filtered by the specified time period",
+                "tags": [
+                    "Admin Dashboard"
+                ],
+                "summary": "Retrieve filtered sales report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Time period for filtering the sales report",
+                        "name": "period",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sales report retrieved successfully",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }

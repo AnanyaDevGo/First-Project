@@ -107,7 +107,7 @@ func (i *OrderHandler) GetOrders(c *gin.Context) {
 // @Param order_id query int true "Order ID"
 // @Success 200 {object} response.Response "Order successfully canceled"
 // @Failure 400 {object} response.Response "Invalid input or error canceling the order"
-// @Router /order/cancel [post]
+// @Router /user/profile/order [post]
 func (i OrderHandler) CancelOrder(c *gin.Context) {
 	idString := c.Query("order_id")
 	orderID, err := strconv.Atoi(idString)
@@ -139,7 +139,7 @@ func (i OrderHandler) CancelOrder(c *gin.Context) {
 // @Param count query int false "Number of items per page (default is 10)"
 // @Success 200 {object} response.Response "Successfully retrieved all orders"
 // @Failure 400 {object} response.Response "Invalid input or error retrieving orders"
-// @Router /orders/all [get]
+// @Router /user/profile/order/all [get]
 func (i *OrderHandler) GetAllOrders(c *gin.Context) {
 
 	pageStr := c.DefaultQuery("page", "1")
@@ -181,7 +181,7 @@ func (i *OrderHandler) GetAllOrders(c *gin.Context) {
 // @Param page query int false "Page number for pagination"
 // @Success 200 {object} response.Response "Successfully retrieved all admin orders"
 // @Failure 400 {object} response.Response "Invalid input or error retrieving orders"
-// @Router /admin/orders [get]
+// @Router /admin/order/get [get]
 func (i *OrderHandler) GetAdminOrders(c *gin.Context) {
 
 	pageStr := c.Query("page")
@@ -214,7 +214,7 @@ func (i *OrderHandler) GetAdminOrders(c *gin.Context) {
 // @Param order_id query string true "Order ID to be approved"
 // @Success 200 {object} response.Response "Successfully approved the order"
 // @Failure 400 {object} response.Response "Invalid input or error approving the order"
-// @Router /admin/orders/approve [post]
+// @Router /admin/order/status [post]
 func (i *OrderHandler) ApproveOrder(c *gin.Context) {
 	orderID := c.Query("order_id")
 
@@ -238,7 +238,7 @@ func (i *OrderHandler) ApproveOrder(c *gin.Context) {
 // @Param order_id query string true "Order ID to be returned"
 // @Success 200 {object} response.Response "Successfully initiated the return process"
 // @Failure 500 {object} response.Response "Error initiating the return process"
-// @Router /admin/orders/return [post]
+// @Router /user/profile/order/return [post]
 func (o *OrderHandler) ReturnOrder(c *gin.Context) {
 
 	orderID := c.Query("order_id")
@@ -266,7 +266,7 @@ func (o *OrderHandler) ReturnOrder(c *gin.Context) {
 // @Success 200 {file} pdf "Invoice PDF"
 // @Failure 400 {object} response.Response "Error in processing the request"
 // @Failure 500 {object} response.Response "Error generating or downloading the invoice"
-// @Router /admin/orders/print-invoice [get]
+// @Router /user/check-out/print [get]
 func (O *OrderHandler) PrintInvoice(c *gin.Context) {
 	orderId := c.Query("order_id")
 	orderIdInt, err := strconv.Atoi(orderId)
