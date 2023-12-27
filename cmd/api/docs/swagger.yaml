@@ -642,6 +642,170 @@ paths:
       summary: Update Inventory
       tags:
       - Admin Product Management
+  /admin/offer/category-offer:
+    post:
+      consumes:
+      - application/json
+      description: Add a new category offer.
+      parameters:
+      - description: Category offer details in JSON format
+        in: body
+        name: categoryOffer
+        required: true
+        schema:
+          $ref: '#/definitions/models.CategorytOfferResp'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully added offer
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or constraints not satisfied
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to add offer
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add Category Offer
+      tags:
+      - Admin Offer Management
+  /admin/offer/expire-category-offer:
+    put:
+      consumes:
+      - application/json
+      description: Expire a category offer by providing its ID.
+      parameters:
+      - description: ID of the category offer to expire
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully made category offer invalid
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to expire category offer
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Expire Category Offer
+      tags:
+      - Admin Offer Management
+  /admin/offer/expire-product-offer:
+    put:
+      consumes:
+      - application/json
+      description: Expire a product offer by providing its ID.
+      parameters:
+      - description: ID of the product offer to expire
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully made product offer invalid
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to expire product offer
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Expire Product Offer
+      tags:
+      - Admin Offer Management
+  /admin/offer/get-category-offer:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all category offers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully got all offers
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to retrieve offers
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Category Offer
+      tags:
+      - Admin Offer Management
+  /admin/offer/get-product-offer:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all product offers.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully got all offers
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or fields provided in the wrong format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to retrieve offers
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Product Offer
+      tags:
+      - Admin Offer Management
+  /admin/offer/product-offer:
+    post:
+      consumes:
+      - application/json
+      description: Add a new product offer.
+      parameters:
+      - description: Product offer details in JSON format
+        in: body
+        name: productOffer
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductOfferResp'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully added offer
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request format or constraints not satisfied
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to add offer
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add Product Offer
+      tags:
+      - Admin Offer Management
   /admin/order/get:
     get:
       consumes:
@@ -913,169 +1077,6 @@ paths:
       summary: Unblock a user
       tags:
       - Admin User Management
-  /offers:
-    post:
-      consumes:
-      - application/json
-      description: Add a new product offer.
-      parameters:
-      - description: Product offer details in JSON format
-        in: body
-        name: productOffer
-        required: true
-        schema:
-          $ref: '#/definitions/models.ProductOfferResp'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Successfully added offer
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or constraints not satisfied
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to add offer
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Add Product Offer
-      tags:
-      - Admin Offer Management
-  /offers/category:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all category offers.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully got all offers
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to retrieve offers
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get Category Offer
-      tags:
-      - Admin Offer Management
-    post:
-      consumes:
-      - application/json
-      description: Add a new category offer.
-      parameters:
-      - description: Category offer details in JSON format
-        in: body
-        name: categoryOffer
-        required: true
-        schema:
-          $ref: '#/definitions/models.CategorytOfferResp'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Successfully added offer
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or constraints not satisfied
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to add offer
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Add Category Offer
-      tags:
-      - Admin Offer Management
-  /offers/category/expire:
-    put:
-      consumes:
-      - application/json
-      description: Expire a category offer by providing its ID.
-      parameters:
-      - description: ID of the category offer to expire
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully made category offer invalid
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to expire category offer
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Expire Category Offer
-      tags:
-      - Admin Offer Management
-  /offers/product:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve all product offers.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully got all offers
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to retrieve offers
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get Product Offer
-      tags:
-      - Admin Offer Management
-  /offers/product/expire:
-    put:
-      consumes:
-      - application/json
-      description: Expire a product offer by providing its ID.
-      parameters:
-      - description: ID of the product offer to expire
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully made product offer invalid
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to expire product offer
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Expire Product Offer
-      tags:
-      - Admin Offer Management
   /order/get:
     get:
       consumes:
@@ -1690,6 +1691,64 @@ paths:
       summary: Register a new user
       tags:
       - User
+  /user/wallet:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve wallet details for the authenticated user.
+      parameters:
+      - description: User ID
+        in: header
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Wallet details retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: user_id not found or invalid user_id type
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to retrieve details
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get Wallet
+      tags:
+      - User Wallet Management
+  /user/wallet/history:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve the transaction history for the authenticated user's wallet.
+      parameters:
+      - description: User ID
+        in: header
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Wallet transaction history retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: user_id not found or invalid user_id type
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Failed to retrieve transaction history
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Wallet History
+      tags:
+      - User Wallet Management
   /users/edit:
     put:
       consumes:
@@ -1723,64 +1782,6 @@ paths:
       summary: Edit User Details
       tags:
       - User Profile Management
-  /wallet:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve wallet details for the authenticated user.
-      parameters:
-      - description: User ID
-        in: header
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Wallet details retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: user_id not found or invalid user_id type
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to retrieve details
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Get Wallet
-      tags:
-      - User Wallet Management
-  /wallet/history:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve the transaction history for the authenticated user's wallet.
-      parameters:
-      - description: User ID
-        in: header
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Wallet transaction history retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: user_id not found or invalid user_id type
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to retrieve transaction history
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: Wallet History
-      tags:
-      - User Wallet Management
 securityDefinitions:
   BearerTokenAuth:
     in: header

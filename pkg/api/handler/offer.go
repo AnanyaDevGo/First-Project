@@ -150,7 +150,7 @@ func (of *OfferHandler) GetCategoryOffer(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully made product offer invalid"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 500 {object} response.Response "Failed to expire product offer"
-// @Router /admin/offer/expire-product-offer [put]
+// @Router /admin/offer/expire-product-offer [delete]
 func (of *OfferHandler) ExpireProductOffer(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
@@ -178,7 +178,7 @@ func (of *OfferHandler) ExpireProductOffer(c *gin.Context) {
 // @Success 200 {object} response.Response "Successfully made category offer invalid"
 // @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
 // @Failure 500 {object} response.Response "Failed to expire category offer"
-// @Router /admin/offer/expire-category-offer [put]
+// @Router /admin/offer/expire-category-offer [delete]
 func (of *OfferHandler) ExpireCategoryOffer(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {

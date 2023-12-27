@@ -200,7 +200,7 @@ func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 // @Success 200 {object} response.Response "Address successfully added"
 // @Failure 400 {object} response.Response "Invalid request or missing parameters"
 // @Failure 403 {object} response.Response "Forbidden, user not authenticated"
-// @Router /user/address [post]
+// @Router /user/profile/addaddress [post]
 func (u *UserHandler) AddAddress(c *gin.Context) {
 	id, _ := c.Get("id")
 	var address models.AddAddress
@@ -277,7 +277,7 @@ func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 // @Param id path int true "User ID" Format(int64)
 // @Success 200 {object} response.Response "User addresses retrieved successfully"
 // @Failure 400 {object} response.Response "Failed to retrieve user addresses"
-// @Router /user/address/{id} [get]
+// @Router /user/profile/address [get]
 func (u *UserHandler) GetAddress(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
@@ -300,7 +300,7 @@ func (u *UserHandler) GetAddress(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} models.UserDetailsResponse "User details retrieved successfully"
 // @Failure 400 {object} response.Response "Failed to retrieve user details"
-// @Router /user/profile{id} [get]
+// @Router /user/profile/details [get]
 func (u *UserHandler) GetUserDetails(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
@@ -325,7 +325,7 @@ func (u *UserHandler) GetUserDetails(c *gin.Context) {
 // @Param edit body models.Edit true "User details to be edited"
 // @Success 201 {object} response.Response "Details edited successfully"
 // @Failure 400 {object} response.Response "Invalid input or error updating values"
-// @Router /users/edit [put]
+// @Router /user/profile/edit/ [patch]
 func (u *UserHandler) Edit(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
@@ -366,7 +366,7 @@ func (u *UserHandler) Edit(c *gin.Context) {
 // @Param changePasswordBody body models.ChangePassword true "Change password payload"
 // @Success 200 {object} response.Response "Password changed successfully"
 // @Failure 400 {object} response.Response "Failed to change user password"
-// @Router /user/change-password/{id} [post]
+// @Router /user/profile/security/change-password [post]
 func (u *UserHandler) ChangePassword(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
