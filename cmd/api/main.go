@@ -11,9 +11,9 @@ import (
 	_ "github.com/swaggo/gin-swagger"
 )
 
-// @title Go + Gin E-Commerce API Watch Hive
+// @title Go + Gin E-Commerce API Crocs Club
 // @version 1.0.0
-// @description Watch Hive is an E-commerce platform to purchase Watch
+// @description Crocs Club is an E-commerce platform to purchase Crocs
 // @contact.name API Support
 // @securityDefinitions.apikey BearerTokenAuth
 // @in header

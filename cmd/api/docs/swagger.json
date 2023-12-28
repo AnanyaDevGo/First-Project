@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Watch Hive is an E-commerce platform to purchase Watch",
-        "title": "Go + Gin E-Commerce API Watch Hive",
+        "description": "Crocs Club is an E-commerce platform to purchase Crocs",
+        "title": "Go + Gin E-Commerce API Crocs Club",
         "contact": {
             "name": "API Support"
         },

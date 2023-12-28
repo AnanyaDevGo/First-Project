@@ -228,8 +228,8 @@ definitions:
 info:
   contact:
     name: API Support
-  description: Watch Hive is an E-commerce platform to purchase Watch
-  title: Go + Gin E-Commerce API Watch Hive
+  description: Crocs Club is an E-commerce platform to purchase Crocs
+  title: Go + Gin E-Commerce API Crocs Club
   version: 1.0.0
 paths:
   /admin/adminlogin:
