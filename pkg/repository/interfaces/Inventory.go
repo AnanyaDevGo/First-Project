@@ -18,4 +18,5 @@ type InventoryRepository interface {
 	FetchProductDetails(productId uint) (models.Inventories, error)
 	GetInventory(prefix string) ([]models.ProductsResponse, error)
 	FilterByCategory(CategoryIdInt int) ([]models.ProductsResponse, error)
+	ImageUploader(inventoryID int,url string) error
 }

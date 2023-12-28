@@ -15,3 +15,9 @@ type Inventories struct {
 	Price       float64  `json:"price"`
 	Image       string   `json:"product_image"`
 }
+
+type Image struct {
+	ID          int    `json:"id"`
+	URL         string `json:"url"`
+	InventoryID int    `json:"inventory_id"`
+}

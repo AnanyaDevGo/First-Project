@@ -23,11 +23,10 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
 	var count int64
 	i.DB.Model(&models.Inventories{}).Where("product_name = ? AND category_id = ?", inventory.ProductName, inventory.CategoryID).Count(&count)
 	if count > 0 {
-		fmt.Println("kjhgfdsxz..............")
+
 		return models.ProductsResponse{}, errors.New("product already exists in the database")
 	}
 
-	fmt.Println("yyyyyyyyyyyyyyyyyyyyyyyyy")
 	if inventory.Stock < 0 || inventory.Price < 0 {
 		return models.ProductsResponse{}, errors.New("stock and price cannot be negative")
 	}
@@ -59,6 +58,13 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
 		return models.ProductsResponse{}, err
 	}
 	return productsResponse, nil
+}
+func (prod *inventoryRepository) ImageUploader(inventoryID int, url string) error {
+	err := prod.DB.Exec("insert into images (inventory_id,url) values (?,?)", inventoryID, url).Error
+	if err != nil {
+		return errors.New("error on updating data base")
+	}
+	return nil
 }
 
 func (prod *inventoryRepository) ListProducts(pageList, offset int) ([]models.ProductsResponse, error) {

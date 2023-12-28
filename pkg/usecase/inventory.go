@@ -40,15 +40,14 @@ func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *m
 		return models.ProductsResponse{}, errors.New("already added")
 	}
 	productname, err := i.helper.ValidateAlphabets(inventory.ProductName)
-	if err != nil{
+	if err != nil {
 		return models.ProductsResponse{}, err
 	}
 
 	if !productname {
 		return models.ProductsResponse{}, errors.New("invalid format for name")
 	}
-	
-	
+
 	url, err := i.helper.AddImageToAwsS3(file)
 	if err != nil {
 		return models.ProductsResponse{}, err
@@ -58,6 +57,20 @@ func (i *inventoryUseCase) AddInventory(inventory models.AddInventories, file *m
 		return models.ProductsResponse{}, err
 	}
 	return productResponse, err
+}
+
+func (i *inventoryUseCase) MultipleImageUploader(inventoryID int, files []*multipart.FileHeader) error {
+	for _, file := range files {
+		url, err := i.helper.AddImageToAwsS3(file)
+		if err != nil {
+			return err
+		}
+		err = i.repository.ImageUploader(inventoryID, url)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (i *inventoryUseCase) ListProducts(pageNo, pageList int) ([]models.ProductsResponse, error) {
@@ -112,7 +125,6 @@ func (i inventoryUseCase) UpdateInventory(pid int, stock int) (models.ProductsRe
 
 func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.ProductsResponse, error) {
 
-
 	product, err := i.repository.ShowIndividualProducts(id)
 	if err != nil {
 		return models.ProductsResponse{}, err
@@ -129,7 +141,6 @@ func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.ProductsRes
 	// }
 
 	// product.DiscountedPrice = product.Price - discount
-
 
 	return product, nil
 }

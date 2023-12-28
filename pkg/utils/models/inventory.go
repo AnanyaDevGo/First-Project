@@ -1,5 +1,7 @@
 package models
 
+import "mime/multipart"
+
 type InventoryResponse struct {
 	ProductID int
 	Stock     int
@@ -50,4 +52,12 @@ type InventoryDetails struct {
 type Cart struct {
 	InventoryID int `json:"products_id"`
 	Quantity    int `json:"quantity"`
+}
+
+type ImageUp struct {
+	InventoryID int `json:"inventory_id"`
+	Url         []Url
+}
+type Url struct {
+	Url *multipart.FileHeader `json:"url"`
 }

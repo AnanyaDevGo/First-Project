@@ -64,6 +64,40 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+func (i *InventoryHandler) MultipleImageUploader(c *gin.Context) {
+	inventoryID := c.PostForm("inventory_id")
+	inventoryIDint, err := strconv.Atoi(inventoryID)
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadRequest, "conversion failed", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+
+	form, err := c.MultipartForm()
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadRequest, "retrieving form data error", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+
+	files := form.File["image"]
+	if len(files) == 0 {
+		errRes := response.ClientResponse(http.StatusBadRequest, "no images provided", nil, "")
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+
+	err = i.InventoryUseCase.MultipleImageUploader(inventoryIDint, files)
+	if err != nil {
+		errRes := response.ClientResponse(http.StatusBadRequest, "uploading failed", nil, err.Error())
+		c.JSON(http.StatusBadRequest, errRes)
+		return
+	}
+	successRes := response.ClientResponse(http.StatusOK, "Successfully uploaded images", nil, nil)
+	c.JSON(http.StatusOK, successRes)
+
+}
+
 // @Summary List Products
 // @Description Get a paginated list of products.
 // @Accept json

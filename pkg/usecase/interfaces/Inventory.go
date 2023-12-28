@@ -15,4 +15,5 @@ type InventoryUseCase interface {
 	ShowIndividualProducts(id string) (models.ProductsResponse, error)
 	SearchProductsOnPrefix(prefix string) ([]models.ProductsResponse, error)
 	FilterByCategory(CategoryIdInt int) ([]models.ProductsResponse, error)
+	MultipleImageUploader( inventoryID int,files []*multipart.FileHeader) error
 }
