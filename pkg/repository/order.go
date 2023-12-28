@@ -30,7 +30,6 @@ func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 	if err := i.DB.Raw(query, orderID).First(&order).Error; err != nil {
 		return domain.OrderResponse{}, err
 	}
-	fmt.Println("rrrrrr.....", order.FinalPrice)
 
 	return order, nil
 }
@@ -45,7 +44,7 @@ func (i *orderRepository) OrderItems(userid, addressid, paymentid int, total flo
     RETURNING id
     `
 	i.DB.Raw(query, userid, addressid, paymentid, total).Scan(&id)
-	fmt.Println("id...........", id)
+
 	return id, nil
 
 }
@@ -120,15 +119,30 @@ func (i *orderRepository) GetAllOrders(userID, page, pageSize int) ([]models.Ord
 
 	query :=
 		`
-	SELECT id as order_id, address_id, payment_method_id, 
-	final_price, order_status, payment_status FROM 
-	orders WHERE user_id = ? OFFSET ? LIMIT ?
+		SELECT
+		id ,
+		address_id,
+		payment_method_id,
+		final_price,
+		order_status,
+		payment_status
+	FROM
+		orders
+	WHERE
+		user_id = ?  
+	ORDER BY
+		id DESC
+	OFFSET
+		?  
+	LIMIT
+		?
 	
 	`
 	err := i.DB.Raw(query, userID, offset, pageSize).Scan(&order).Error
 	if err != nil {
 		return nil, err
 	}
+
 	return order, nil
 }
 
