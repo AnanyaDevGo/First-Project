@@ -27,7 +27,6 @@ func NewCartHandler(usecase services.CartUseCase) *CartHandler {
 // @Produce json
 // @Tags User Cart Management
 // @security BearerTokenAuth
-// @Param id header int true "User ID obtained from authentication"
 // @Param cart body models.Cart true "Product details to be added to the cart in JSON format"
 // @Success 200 {object} response.Response "Successfully added to cart"
 // @Failure 400 {object} response.Response "User ID not found in the context, User ID not in the right format, Failed to parse request JSON, or Could not add to the cart"

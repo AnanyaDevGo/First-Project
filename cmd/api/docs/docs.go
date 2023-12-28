@@ -1224,7 +1224,7 @@ const docTemplate = `{
                 ],
                 "description": "Get sales details for a specific date and download the report in PDF or Excel format",
                 "tags": [
-                    "Admin Sales"
+                    "Admin DashBoard"
                 ],
                 "summary": "Get sales details by date",
                 "parameters": [
@@ -1442,48 +1442,6 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal server error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/order/get": {
-            "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Retrieve orders based on the provided order ID.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User Order Management"
-                ],
-                "summary": "Get Orders",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Order ID",
-                        "name": "order_id",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Orders retrieved successfully",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input or error retrieving orders",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1798,13 +1756,6 @@ const docTemplate = `{
                 ],
                 "summary": "Add to Cart",
                 "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID obtained from authentication",
-                        "name": "id",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "Product details to be added to the cart in JSON format",
                         "name": "cart",
@@ -2276,6 +2227,48 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Successfully retrieved all orders",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input or error retrieving orders",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile/order/get": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Retrieve orders based on the provided order ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Order Management"
+                ],
+                "summary": "Get Orders",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Order ID",
+                        "name": "order_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Orders retrieved successfully",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }

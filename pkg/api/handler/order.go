@@ -77,7 +77,7 @@ func (i *OrderHandler) OrderItemsFromCart(c *gin.Context) {
 // @Param order_id query int false "Order ID"
 // @Success 200 {object} response.Response "Orders retrieved successfully"
 // @Failure 400 {object} response.Response "Invalid input or error retrieving orders"
-// @Router /order/get [get]
+// @Router /user/profile/order/get [get]
 func (i *OrderHandler) GetOrders(c *gin.Context) {
 
 	idString := c.Query("order_id")

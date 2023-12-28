@@ -1035,7 +1035,7 @@ paths:
       - BearerTokenAuth: []
       summary: Get sales details by date
       tags:
-      - Admin Sales
+      - Admin DashBoard
   /admin/salesreport:
     get:
       description: Retrieve a sales report filtered by the specified time period
@@ -1143,32 +1143,6 @@ paths:
       summary: Unblock a user
       tags:
       - Admin User Management
-  /order/get:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve orders based on the provided order ID.
-      parameters:
-      - description: Order ID
-        in: query
-        name: order_id
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Orders retrieved successfully
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid input or error retrieving orders
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Get Orders
-      tags:
-      - User Order Management
   /user/cart:
     get:
       consumes:
@@ -1359,11 +1333,6 @@ paths:
       - application/json
       description: Add a product to the user's shopping cart.
       parameters:
-      - description: User ID obtained from authentication
-        in: header
-        name: id
-        required: true
-        type: integer
       - description: Product details to be added to the cart in JSON format
         in: body
         name: cart
@@ -1676,6 +1645,32 @@ paths:
       security:
       - BearerTokenAuth: []
       summary: Get All Orders
+      tags:
+      - User Order Management
+  /user/profile/order/get:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve orders based on the provided order ID.
+      parameters:
+      - description: Order ID
+        in: query
+        name: order_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Orders retrieved successfully
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid input or error retrieving orders
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Get Orders
       tags:
       - User Order Management
   /user/profile/order/return:
