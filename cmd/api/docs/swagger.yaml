@@ -138,6 +138,8 @@ definitions:
         type: integer
       payment_id:
         type: integer
+      use_wallet:
+        type: boolean
       user_id:
         type: integer
     type: object
@@ -992,6 +994,48 @@ paths:
       summary: Generate a sales report by date range
       tags:
       - Admin Dashboard
+  /admin/salesbydate:
+    get:
+      description: Get sales details for a specific date and download the report in
+        PDF or Excel format
+      parameters:
+      - description: Year for sales data
+        in: query
+        name: year
+        required: true
+        type: integer
+      - description: Month for sales data
+        in: query
+        name: month
+        required: true
+        type: integer
+      - description: Day for sales data
+        in: query
+        name: day
+        required: true
+        type: integer
+      - description: Download format (pdf or excel)
+        in: query
+        name: download
+        type: string
+      responses:
+        "200":
+          description: Successfully retrieved sales details
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or incorrect format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Get sales details by date
+      tags:
+      - Admin Sales
   /admin/salesreport:
     get:
       description: Retrieve a sales report filtered by the specified time period

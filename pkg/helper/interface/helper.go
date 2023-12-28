@@ -4,6 +4,8 @@ import (
 	"CrocsClub/pkg/utils/models"
 	"mime/multipart"
 	"time"
+
+	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
 type Helper interface {
@@ -21,4 +23,5 @@ type Helper interface {
 	ValidatePin(pin string) bool
 	ValidateDatatype(data, intOrString string) (bool, error)
 	ValidateAlphabets(data string) (bool, error)
+	ConvertToExel(sales []models.OrderDetailsAdmin) (*excelize.File, error)
 }

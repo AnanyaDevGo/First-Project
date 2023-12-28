@@ -72,3 +72,7 @@ type OrderDetailsRep struct {
 	FinalPrice    float64 `json:"final_price"`
 	// OrderStatus   string  `json:"order_status" gorm:"column:order_status"`
 }
+type OrderDetailsAdmin struct {
+	TotalAmount float64 `gorm:"column:total_amount"`
+	ProductName string  `gorm:"column:product_name"`
+}

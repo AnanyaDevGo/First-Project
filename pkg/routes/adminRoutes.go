@@ -13,6 +13,8 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 	engine.Use(middleware.AdminAuthMiddleware)
 	{
 		engine.GET("/dashboard", adminHandler.Dashboard)
+
+		engine.GET("/salesbydate", adminHandler.SalesByDate)
 		engine.GET("/salesreport", adminHandler.FilteredSalesReport)
 		engine.GET("/sales-report-date", adminHandler.SalesReportByDate)
 

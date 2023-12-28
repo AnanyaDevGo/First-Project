@@ -13,6 +13,7 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -269,4 +270,28 @@ func (h *helper) ValidateAlphabets(data string) (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+func (h *helper) ConvertToExel(sales []models.OrderDetailsAdmin) (*excelize.File, error) {
+
+	filename := "salesReport/sales_report.xlsx"
+	file := excelize.NewFile()
+
+	file.SetCellValue("Sheet1", "A1", "Item")
+	file.SetCellValue("Sheet1", "B1", "Total Amount Sold")
+
+	for i, sale := range sales {
+		col1 := fmt.Sprintf("A%d", i+1)
+		col2 := fmt.Sprintf("B%d", i+1)
+
+		file.SetCellValue("Sheet1", col1, sale.ProductName)
+		file.SetCellValue("Sheet1", col2, sale.TotalAmount)
+
+	}
+
+	if err := file.SaveAs(filename); err != nil {
+		return nil, err
+	}
+
+	return file, nil
 }

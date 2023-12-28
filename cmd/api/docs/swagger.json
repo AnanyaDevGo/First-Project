@@ -1207,6 +1207,69 @@
                 }
             }
         },
+        "/admin/salesbydate": {
+            "get": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Get sales details for a specific date and download the report in PDF or Excel format",
+                "tags": [
+                    "Admin Sales"
+                ],
+                "summary": "Get sales details by date",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Year for sales data",
+                        "name": "year",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Month for sales data",
+                        "name": "month",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Day for sales data",
+                        "name": "day",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Download format (pdf or excel)",
+                        "name": "download",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved sales details",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or incorrect format",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/salesreport": {
             "get": {
                 "security": [
@@ -2701,6 +2764,9 @@
                 },
                 "payment_id": {
                     "type": "integer"
+                },
+                "use_wallet": {
+                    "type": "boolean"
                 },
                 "user_id": {
                     "type": "integer"

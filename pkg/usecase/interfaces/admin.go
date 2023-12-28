@@ -4,6 +4,8 @@ import (
 	"CrocsClub/pkg/domain"
 	"CrocsClub/pkg/utils/models"
 	"time"
+
+	"github.com/jung-kurt/gofpdf"
 )
 
 type AdminUseCase interface {
@@ -17,4 +19,6 @@ type AdminUseCase interface {
 	DashBoard() (models.CompleteAdminDashboard, error)
 	FilteredSalesReport(timePeriod string) (models.SalesReport, error)
 	ExecuteSalesReportByDate(startDate, endDate time.Time) (models.SalesReport, error)
+	SalesByDate(dayInt int, monthInt int, yearInt int) ([]models.OrderDetailsAdmin, error)
+	PrintSalesReport(sales []models.OrderDetailsAdmin) (*gofpdf.Fpdf, error)
 }
