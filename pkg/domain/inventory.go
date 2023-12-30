@@ -13,11 +13,12 @@ type Inventories struct {
 	Size        string   `json:"size" gorm:"size:W4;default:'W6';Check:size IN ('W4', 'W6', 'M6', 'W10', 'M10');"`
 	Stock       int      `json:"stock"`
 	Price       float64  `json:"price"`
-	Image       string   `json:"product_image"`
+	// Image       string   `json:"product_image"`
 }
 
 type Image struct {
-	ID          int    `json:"id"`
-	URL         string `json:"url"`
-	InventoryID int    `json:"inventory_id"`
+	ID          int         `json:"id"`
+	URL         string      `json:"url"`
+	InventoryID int         `json:"inventory_id"`
+	Inventories Inventories `json:"_" gorm:"foreignKey:InventoryID"`
 }

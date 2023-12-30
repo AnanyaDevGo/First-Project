@@ -64,6 +64,20 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
+// MultipleImageUploader uploads multiple images for a specific inventory item.
+//
+// @Summary Upload multiple images for an inventory item
+// @Description Upload multiple images for a specific inventory item using the provided inventory ID and images.
+// @Tags Inventory
+// @security BearerTokenAuth
+// @Accept multipart/form-data
+// @Produce json
+// @Param inventory_id formData integer true "Inventory ID for which images are uploaded"
+// @Param image formData file true "Images to be uploaded" collection
+// @Success 200 {object} response.Response "Successfully uploaded images"
+// @Failure 400 {object} response.Response "Invalid request or incorrect format"
+// @Failure 502 {object} response.Response "Bad Gateway"
+// @Router /admin/inventories/uploadimages [post]
 func (i *InventoryHandler) MultipleImageUploader(c *gin.Context) {
 	inventoryID := c.PostForm("inventory_id")
 	inventoryIDint, err := strconv.Atoi(inventoryID)
@@ -102,7 +116,6 @@ func (i *InventoryHandler) MultipleImageUploader(c *gin.Context) {
 // @Description Get a paginated list of products.
 // @Accept json
 // @Produce json
-// @security BearerTokenAuth
 // @Tags Admin Product Management
 // @Param page query int false "Page number for pagination (default: 1)"
 // @Param per_page query int false "Number of products per page (default: 5)"
@@ -259,7 +272,6 @@ func (i *InventoryHandler) ShowIndividualProducts(c *gin.Context) {
 // @Description Retrieve product details based on a prefix search for the product name.
 // @Accept json
 // @Produce json
-// @security BearerTokenAuth
 // @Tags User Product Management
 // @Param body body models.SearchItems true "Prefix for product name search"
 // @Success 200 {object} response.Response "Product details retrieved successfully"

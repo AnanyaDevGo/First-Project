@@ -142,7 +142,6 @@ func (u *UserHandler) GetCart(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @security BearerTokenAuth
-// @Param cart_id query integer true "ID of the shopping cart"
 // @Param inventory_id query integer true "ID of the inventory to be removed from the cart"
 // @Success 200 {object} response.Response "Product successfully removed from the shopping cart"
 // @Failure 400 {object} response.Response "Invalid request or missing parameters"
@@ -195,7 +194,6 @@ func (i *UserHandler) RemoveFromCart(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @security BearerTokenAuth
-// @Param id header integer true "User ID"
 // @Param address body models.AddAddress true "Address details to be added"
 // @Success 200 {object} response.Response "Address successfully added"
 // @Failure 400 {object} response.Response "Invalid request or missing parameters"
@@ -227,7 +225,6 @@ func (u *UserHandler) AddAddress(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @security BearerTokenAuth
-// @Param id query integer true "User ID"
 // @Param inventory query integer true "Inventory ID of the product"
 // @Param quantity query integer true "New quantity of the product"
 // @Success 200 {object} response.Response "Quantity updated successfully"
@@ -275,7 +272,6 @@ func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @security BearerTokenAuth
-// @Param id path int true "User ID" Format(int64)
 // @Success 200 {object} response.Response "User addresses retrieved successfully"
 // @Failure 400 {object} response.Response "Failed to retrieve user addresses"
 // @Router /user/profile/address [get]

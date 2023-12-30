@@ -21,7 +21,6 @@ type Inventories struct {
 	IfPresentAtCart bool    `json:"if_present_at_cart"`
 	Price           float64 `json:"price"`
 	Image           string  `json:"product_image"`
-	//DiscountedPrice     float64 `json:"discounted_price"`
 }
 
 type AddInventories struct {
@@ -60,4 +59,7 @@ type ImageUp struct {
 }
 type Url struct {
 	Url *multipart.FileHeader `json:"url"`
+}
+type Image struct {
+	Image []string `json:"image"`
 }

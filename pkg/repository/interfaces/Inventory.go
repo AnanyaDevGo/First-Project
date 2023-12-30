@@ -7,7 +7,7 @@ import (
 
 type InventoryRepository interface {
 	AddInventory(inventory models.AddInventories, url string) (models.ProductsResponse, error)
-	ListProducts(int, int) ([]models.ProductsResponse, error)
+	ListProducts(int, int) ([]models.ProductsResponseDisp, error)
 	EditInventory(domain.Inventories, int) (domain.Inventories, error)
 	DeleteInventory(id string) error
 	CheckInventory(pid int) (bool, error)

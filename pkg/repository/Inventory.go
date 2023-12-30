@@ -42,21 +42,33 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
 		return models.ProductsResponse{}, err
 	}
 
-	queryImage := "Update inventories  set image = ? where id = ?"
+	queryImage := "insert into images (url,inventory_id) values(?,?)"
 	imgErr := i.DB.Exec(queryImage, url, productsResponse.ID).Error
 	if imgErr != nil {
 		return models.ProductsResponse{}, imgErr
 	}
-	var a string
-	err = i.DB.Raw("SELECT image FROM inventories WHERE id = ?", productsResponse.ID).Scan(&a).Error
+	images := []string{}
+
+	rows, err := i.DB.Raw("SELECT  i.url FROM images AS i WHERE i.inventory_id = ?", productsResponse.ID).Rows()
 	if err != nil {
 		return models.ProductsResponse{}, err
 	}
-	a = productsResponse.Image
+	defer rows.Close()
+
+	for rows.Next() {
+		var image string
+		if err := i.DB.ScanRows(rows, &image); err != nil {
+			return models.ProductsResponse{}, err
+		}
+		images = append(images, image)
+	}
+
+	fmt.Println("imagess", images)
 	err = i.DB.Raw("SELECT * FROM inventories WHERE id = ?", productsResponse.ID).Scan(&productsResponse).Error
 	if err != nil {
 		return models.ProductsResponse{}, err
 	}
+	productsResponse.Image = images
 	return productsResponse, nil
 }
 func (prod *inventoryRepository) ImageUploader(inventoryID int, url string) error {
@@ -67,17 +79,44 @@ func (prod *inventoryRepository) ImageUploader(inventoryID int, url string) erro
 	return nil
 }
 
-func (prod *inventoryRepository) ListProducts(pageList, offset int) ([]models.ProductsResponse, error) {
-	var product_list []models.ProductsResponse
+func (prod *inventoryRepository) ListProducts(pageList, offset int) ([]models.ProductsResponseDisp, error) {
+	product_list := []models.ProductsResp{}
 
-	query := "SELECT i.id,i.category_id,c.category,i.product_name,i.size,i.price,i.image AS image FROM inventories i INNER JOIN categories c ON i.category_id = c.id LIMIT $1 OFFSET $2"
+	query := `SELECT
+    i.id AS id,
+    i.category_id,
+    c.category,
+    i.product_name,
+    i.size,
+    i.price,
+	i.stock,
+FROM
+    inventories i
+left JOIN
+    categories c ON i.category_id = c.id
+  LIMIT $1 OFFSET $2`
 	err := prod.DB.Raw(query, pageList, offset).Scan(&product_list).Error
 
 	if err != nil {
-		return []models.ProductsResponse{}, errors.New("error checking Product details")
+		return []models.ProductsResponseDisp{}, errors.New("error checking Product details")
 	}
 
-	return product_list, nil
+	var updatedproductDetails []models.ProductsResponseDisp
+	var url []string
+	for _, p := range product_list {
+
+		err := prod.DB.Raw(`SELECT url FROM Images WHERE product_id=?`, p.ID).Scan(&url).Error
+		if err != nil {
+			return []models.ProductsResponseDisp{}, err
+		}
+		p.Image =url
+	
+		updatedproductDetails = append(updatedproductDetails, p)
+	}
+
+	return updatedproductDetails, nil
+
+	// return product_list, nil
 }
 
 func (db *inventoryRepository) EditInventory(inventory domain.Inventories, id int) (domain.Inventories, error) {
