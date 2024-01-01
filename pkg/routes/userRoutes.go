@@ -17,6 +17,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 
 	engine.GET("/razorpay", paymentHandler.MakePaymentRazorPay)
 	engine.GET("/status_update", paymentHandler.VerifyPayment)
+	engine.GET("/home/list", inventoryHandler.ListProducts)
 
 	engine.Use(middleware.UserAuthMiddleware)
 
@@ -46,7 +47,7 @@ func UserRoutes(engine *gin.RouterGroup, userHandler *handler.UserHandler, otpHa
 	home := engine.Group("/home")
 	{
 		home.POST("/addcart", cartHandler.AddToCart)
-		home.GET("/list", inventoryHandler.ListProducts)
+		
 	}
 	cart := engine.Group("/cart")
 	{

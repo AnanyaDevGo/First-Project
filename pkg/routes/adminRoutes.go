@@ -9,7 +9,7 @@ import (
 
 func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, categoryHandler *handler.CategoryHandler, inventoryHandler *handler.InventoryHandler, orderHandler *handler.OrderHandler, couponHandler *handler.CouponHandler, offerHandler *handler.OfferHandler) {
 	engine.POST("/adminlogin", adminHandler.LoginHandler)
-
+	engine.GET("/inventories", inventoryHandler.ListProducts)
 	engine.Use(middleware.AdminAuthMiddleware)
 	{
 		engine.GET("/dashboard", adminHandler.Dashboard)
@@ -36,7 +36,7 @@ func AdminRoutes(engine *gin.RouterGroup, adminHandler *handler.AdminHandler, ca
 		inventorymanagement := engine.Group("/inventories")
 		{
 			inventorymanagement.POST("", inventoryHandler.AddInventory)
-			inventorymanagement.GET("", inventoryHandler.ListProducts)
+
 			inventorymanagement.PUT("", inventoryHandler.EditInventory)
 			inventorymanagement.DELETE("", inventoryHandler.DeleteInventory)
 			inventorymanagement.PUT("/stock", inventoryHandler.UpdateInventory)
