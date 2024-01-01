@@ -29,8 +29,6 @@ definitions:
         type: integer
       price:
         type: number
-      product_image:
-        type: string
       product_name:
         type: string
       size:
@@ -518,8 +516,6 @@ paths:
           description: Failed to retrieve the product list
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
       summary: List Products
       tags:
       - Admin Product Management
@@ -652,6 +648,43 @@ paths:
       security:
       - BearerTokenAuth: []
       summary: Update Inventory
+      tags:
+      - Admin Product Management
+  /admin/inventories/uploadimages:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload multiple images for a specific inventory item using the
+        provided inventory ID and images.
+      parameters:
+      - description: Inventory ID for which images are uploaded
+        in: formData
+        name: inventory_id
+        required: true
+        type: integer
+      - description: Images to be uploaded
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully uploaded images
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Invalid request or incorrect format
+          schema:
+            $ref: '#/definitions/response.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - BearerTokenAuth: []
+      summary: Upload multiple images for an inventory item
       tags:
       - Admin Product Management
   /admin/offer/category-offer:
@@ -1169,11 +1202,6 @@ paths:
       - application/json
       description: Update the quantity of a product in the user's cart
       parameters:
-      - description: User ID
-        in: query
-        name: id
-        required: true
-        type: integer
       - description: Inventory ID of the product
         in: query
         name: inventory
@@ -1211,11 +1239,6 @@ paths:
       description: Remove a product from the user's shopping cart by specifying cart
         and inventory IDs
       parameters:
-      - description: ID of the shopping cart
-        in: query
-        name: cart_id
-        required: true
-        type: integer
       - description: ID of the inventory to be removed from the cart
         in: query
         name: inventory_id
@@ -1471,8 +1494,6 @@ paths:
           description: Could not retrieve products by prefix search
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
       summary: Search Products
       tags:
       - User Product Management
@@ -1482,11 +1503,6 @@ paths:
       - application/json
       description: Add a new address to the user's profile by providing address details
       parameters:
-      - description: User ID
-        in: header
-        name: id
-        required: true
-        type: integer
       - description: Address details to be added
         in: body
         name: address
@@ -1518,13 +1534,6 @@ paths:
       consumes:
       - application/json
       description: Retrieve user addresses by ID
-      parameters:
-      - description: User ID
-        format: int64
-        in: path
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -1789,12 +1798,6 @@ paths:
       consumes:
       - application/json
       description: Retrieve wallet details for the authenticated user.
-      parameters:
-      - description: User ID
-        in: header
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -1820,12 +1823,6 @@ paths:
       consumes:
       - application/json
       description: Retrieve the transaction history for the authenticated user's wallet.
-      parameters:
-      - description: User ID
-        in: header
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:

@@ -68,7 +68,7 @@ func (i *InventoryHandler) AddInventory(c *gin.Context) {
 //
 // @Summary Upload multiple images for an inventory item
 // @Description Upload multiple images for a specific inventory item using the provided inventory ID and images.
-// @Tags Inventory
+// @Tags Admin Product Management
 // @security BearerTokenAuth
 // @Accept multipart/form-data
 // @Produce json

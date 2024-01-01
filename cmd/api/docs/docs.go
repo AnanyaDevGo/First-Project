@@ -368,11 +368,6 @@ const docTemplate = `{
         },
         "/admin/inventories": {
             "get": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
                 "description": "Get a paginated list of products.",
                 "consumes": [
                     "application/json"
@@ -667,6 +662,62 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Failed to update the inventory stock",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/inventories/uploadimages": {
+            "post": {
+                "security": [
+                    {
+                        "BearerTokenAuth": []
+                    }
+                ],
+                "description": "Upload multiple images for a specific inventory item using the provided inventory ID and images.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Product Management"
+                ],
+                "summary": "Upload multiple images for an inventory item",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Inventory ID for which images are uploaded",
+                        "name": "inventory_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Images to be uploaded",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully uploaded images",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or incorrect format",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -1502,13 +1553,6 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
                         "description": "Inventory ID of the product",
                         "name": "inventory",
                         "in": "query",
@@ -1563,13 +1607,6 @@ const docTemplate = `{
                 ],
                 "summary": "Remove product from cart",
                 "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID of the shopping cart",
-                        "name": "cart_id",
-                        "in": "query",
-                        "required": true
-                    },
                     {
                         "type": "integer",
                         "description": "ID of the inventory to be removed from the cart",
@@ -1919,11 +1956,6 @@ const docTemplate = `{
         },
         "/user/product/search": {
             "post": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
                 "description": "Retrieve product details based on a prefix search for the product name.",
                 "consumes": [
                     "application/json"
@@ -1988,13 +2020,6 @@ const docTemplate = `{
                 "summary": "Add new address",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
                         "description": "Address details to be added",
                         "name": "address",
                         "in": "body",
@@ -2044,16 +2069,6 @@ const docTemplate = `{
                     "User Profile Management"
                 ],
                 "summary": "Get user addresses",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "format": "int64",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "User addresses retrieved successfully",
@@ -2474,15 +2489,6 @@ const docTemplate = `{
                     "User Wallet Management"
                 ],
                 "summary": "Get Wallet",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Wallet details retrieved successfully",
@@ -2523,15 +2529,6 @@ const docTemplate = `{
                     "User Wallet Management"
                 ],
                 "summary": "Wallet History",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Wallet transaction history retrieved successfully",
@@ -2601,9 +2598,6 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
-                },
-                "product_image": {
-                    "type": "string"
                 },
                 "product_name": {
                     "type": "string"
