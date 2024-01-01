@@ -91,13 +91,9 @@ func (ad *userDataBase) GetCartID(id int) (int, error) {
 
 	var cart_id int
 
-	fmt.Println("iddddddddddddd", id)
-
 	if err := ad.DB.Raw("SELECT id FROM carts WHERE user_id = ?", id).Scan(&cart_id).Error; err != nil {
 		return 0, err
 	}
-
-	fmt.Println("ccccccccccccc", cart_id)
 
 	return cart_id, nil
 

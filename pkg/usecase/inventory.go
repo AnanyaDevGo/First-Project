@@ -73,14 +73,40 @@ func (i *inventoryUseCase) MultipleImageUploader(inventoryID int, files []*multi
 	return nil
 }
 
-func (i *inventoryUseCase) ListProducts(pageNo, pageList int) ([]models.ProductsResponse, error) {
+// func (i *inventoryUseCase) ListProducts(pageNo, pageList int) ([]models.ProductsResponse, error) {
 
+// 	offset := (pageNo - 1) * pageList
+// 	productList, err := i.repository.ListProducts(pageList, offset)
+// 	if err != nil {
+// 		return []models.ProductsResponse{}, err
+// 	}
+// 	return productList, nil
+// }
+
+func (i *inventoryUseCase) ListProducts(pageNo, pageList int) ([]models.ProductsResponse, error) {
 	offset := (pageNo - 1) * pageList
 	productList, err := i.repository.ListProducts(pageList, offset)
 	if err != nil {
 		return []models.ProductsResponse{}, err
 	}
-	return productList, nil
+
+	// Assuming productList is of type []models.ProductsResponseDisp
+	var convertedProductList []models.ProductsResponse
+	for _, product := range productList {
+		ConvertedProduct := models.ProductsResponse{
+			ID:          product.ID,
+			CategoryID:  product.CategoryID,
+			ProductName: product.ProductName,
+			Size:        product.Size,
+			Price:       product.Price,
+			Stock:       product.Stock,
+			Image:       product.Image,
+		}
+		ConvertedProduct = models.ProductsResponse(product)
+		convertedProductList = append(convertedProductList, ConvertedProduct)
+	}
+
+	return convertedProductList, nil
 }
 
 func (usecase *inventoryUseCase) EditInventory(inventory domain.Inventories, id int) (domain.Inventories, error) {

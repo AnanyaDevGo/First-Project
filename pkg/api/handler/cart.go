@@ -5,7 +5,6 @@ import (
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -40,7 +39,6 @@ func (ch *CartHandler) AddToCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-	fmt.Println("userid at handler", idString)
 	userID, ok := idString.(int)
 	if !ok {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "User ID not in the right format", nil, "")
@@ -53,9 +51,6 @@ func (ch *CartHandler) AddToCart(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
 	}
-
-	fmt.Println("inventory id ", cart.InventoryID)
-	fmt.Println("quantity", cart.Quantity)
 
 	if err := ch.usecase.AddToCart(userID, cart.InventoryID, cart.Quantity); err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "Could not add to the cart", nil, err.Error())

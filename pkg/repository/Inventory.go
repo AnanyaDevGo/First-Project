@@ -5,7 +5,6 @@ import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"gorm.io/gorm"
@@ -63,7 +62,6 @@ func (i *inventoryRepository) AddInventory(inventory models.AddInventories, url 
 		images = append(images, image)
 	}
 
-	fmt.Println("imagess", images)
 	err = i.DB.Raw("SELECT * FROM inventories WHERE id = ?", productsResponse.ID).Scan(&productsResponse).Error
 	if err != nil {
 		return models.ProductsResponse{}, err
@@ -89,7 +87,7 @@ func (prod *inventoryRepository) ListProducts(pageList, offset int) ([]models.Pr
     i.product_name,
     i.size,
     i.price,
-	i.stock,
+	i.stock
 FROM
     inventories i
 left JOIN
@@ -104,14 +102,23 @@ left JOIN
 	var updatedproductDetails []models.ProductsResponseDisp
 	var url []string
 	for _, p := range product_list {
-
-		err := prod.DB.Raw(`SELECT url FROM Images WHERE product_id=?`, p.ID).Scan(&url).Error
+		err := prod.DB.Raw(`SELECT url FROM Images WHERE inventory_id=?`, p.ID).Scan(&url).Error
 		if err != nil {
 			return []models.ProductsResponseDisp{}, err
 		}
-		p.Image =url
-	
-		updatedproductDetails = append(updatedproductDetails, p)
+
+		// Convert models.ProductsResp to models.ProductsResponseDisp
+		updatedProduct := models.ProductsResponseDisp{
+			ID:          p.ID,
+			CategoryID:  p.CategoryID,
+			ProductName: p.ProductName,
+			Size:        p.Size,
+			Price:       p.Price,
+			Stock:       p.Stock,
+			Image:       url,
+		}
+
+		updatedproductDetails = append(updatedproductDetails, updatedProduct)
 	}
 
 	return updatedproductDetails, nil
@@ -221,12 +228,11 @@ func (i *inventoryRepository) ShowIndividualProducts(id string) (models.Products
 }
 
 func (i *inventoryRepository) CheckStock(pid int) (int, error) {
-	fmt.Println("pppppp", pid)
+
 	var k int
 	if err := i.DB.Raw("SELECT stock FROM inventories WHERE id=$1", pid).Scan(&k).Error; err != nil {
 		return 0, err
 	}
-	fmt.Println("kkkkkkkkk", k)
 
 	return k, nil
 }

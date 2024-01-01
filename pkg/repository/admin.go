@@ -61,7 +61,6 @@ func (ad *adminRepository) UpdateBlockUserByID(user domain.Users) error {
 
 	err := ad.DB.Exec("update users set blocked = ? where id = ?", user.Blocked, user.ID).Error
 	if err != nil {
-		fmt.Println("Error updating user:", err)
 		return err
 	}
 
@@ -70,7 +69,6 @@ func (ad *adminRepository) UpdateBlockUserByID(user domain.Users) error {
 }
 func (ad *adminRepository) GetUsers(page int) ([]models.UserDetailsAtAdmin, error) {
 	// pagination purpose -
-	fmt.Println("heloo")
 	if page == 0 {
 		page = 1
 	}
@@ -297,7 +295,6 @@ func (ad *adminRepository) SalesByYear(yearInt int) ([]models.OrderDetailsAdmin,
 		return []models.OrderDetailsAdmin{}, err
 	}
 
-	fmt.Println("body at repo year", orderDetails)
 
 	return orderDetails, nil
 }
@@ -317,8 +314,6 @@ func (ad *adminRepository) SalesByMonth(yearInt int, monthInt int) ([]models.Ord
 	if err := ad.DB.Raw(query, yearInt, monthInt).Scan(&orderDetails).Error; err != nil {
 		return []models.OrderDetailsAdmin{}, err
 	}
-
-	fmt.Println("body at repo month", orderDetails)
 
 	return orderDetails, nil
 }
@@ -340,7 +335,6 @@ func (ad *adminRepository) SalesByDay(yearInt int, monthInt int, dayInt int) ([]
 		return []models.OrderDetailsAdmin{}, err
 	}
 
-	fmt.Println("body at repo day", orderDetails)
 
 	return orderDetails, nil
 }

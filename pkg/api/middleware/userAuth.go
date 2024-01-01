@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -35,8 +34,6 @@ func UserAuthMiddleware(c *gin.Context) {
 		c.Abort()
 		return
 	}
-
-	fmt.Println("claims", claims)
 
 	role, ok := claims["role"].(string)
 	if !ok || role != "client" {

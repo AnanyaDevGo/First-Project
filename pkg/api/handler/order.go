@@ -5,7 +5,6 @@ import (
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -279,7 +278,6 @@ func (O *OrderHandler) PrintInvoice(c *gin.Context) {
 		return
 	}
 	pdf, err := O.orderUseCase.PrintInvoice(orderIdInt)
-	fmt.Println("error ", err)
 	if err != nil {
 		errRes := response.ClientResponse(http.StatusBadGateway, "error in printing the invoice", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)

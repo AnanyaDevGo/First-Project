@@ -3,7 +3,7 @@ package handler
 import (
 	"CrocsClub/pkg/usecase/interfaces"
 	"CrocsClub/pkg/utils/response"
-	"fmt"
+	
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +31,6 @@ func NewWalletHandler(usecase interfaces.WalletUseCase) *WalletHandler {
 // @Router /user/wallet [get]
 func (w *WalletHandler) GetWallet(c *gin.Context) {
 	userIDRaw, exists := c.Get("id")
-	fmt.Println("userid", userIDRaw)
 	if !exists {
 		errs := response.ClientResponse(http.StatusBadRequest, "user_id not found", nil, "user_id is required")
 		c.JSON(http.StatusBadRequest, errs)

@@ -4,7 +4,6 @@ import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -53,7 +52,7 @@ func (w *walletRepository) IsWalletExist(userID int) (bool, error) {
 }
 func (w *walletRepository) WalletCredited(walletID, OrderID int, Amount float64) error {
 	err := w.DB.Exec("INSERT INTO wallet_histories (wallet_id, order_id,amount) VALUES (?,?,?) returning id", walletID, OrderID, Amount).Error
-	fmt.Println("VALUSES", walletID, OrderID, Amount)
+
 	if err != nil {
 		return errors.New("inserting into wallet history failed")
 	}

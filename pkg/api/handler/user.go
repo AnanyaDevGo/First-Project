@@ -5,7 +5,7 @@ import (
 	"CrocsClub/pkg/utils/models"
 	"CrocsClub/pkg/utils/response"
 	"errors"
-	"fmt"
+
 	"strconv"
 
 	"net/http"
@@ -122,8 +122,6 @@ func (u *UserHandler) GetCart(c *gin.Context) {
 	idString, _ := c.Get("id")
 	id, _ := idString.(int)
 
-	fmt.Println("card id", id)
-
 	products, err := u.userUseCase.GetCart(id)
 	if err != nil {
 		errorRes := response.ClientResponse(http.StatusBadRequest, "could not retrieve cart", nil, err.Error())
@@ -234,7 +232,7 @@ func (u *UserHandler) AddAddress(c *gin.Context) {
 func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil {
-		fmt.Println("here")
+
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properlyyyyy", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return
@@ -242,7 +240,7 @@ func (i *UserHandler) UpdateQuantity(c *gin.Context) {
 
 	inv, err := strconv.Atoi(c.Query("inventory"))
 	if err != nil {
-		fmt.Println("****here****")
+
 		errorRes := response.ClientResponse(http.StatusBadRequest, "check parameters properly", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errorRes)
 		return

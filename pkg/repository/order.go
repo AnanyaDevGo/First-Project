@@ -5,7 +5,6 @@ import (
 	"CrocsClub/pkg/repository/interfaces"
 	"CrocsClub/pkg/utils/models"
 	"errors"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -23,7 +22,6 @@ func NewOrderRepository(db *gorm.DB) interfaces.OrderRepository {
 func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 
 	var order domain.OrderResponse
-	fmt.Println("order id ............", orderID)
 
 	query := `SELECT * FROM orders WHERE id = $1`
 
@@ -34,8 +32,6 @@ func (i *orderRepository) GetOrders(orderID int) (domain.OrderResponse, error) {
 	return order, nil
 }
 func (i *orderRepository) OrderItems(userid, addressid, paymentid int, total float64) (int, error) {
-
-	fmt.Println("total at repoooo", total)
 
 	var id int
 	query := `
@@ -217,7 +213,6 @@ WHERE
 	if err != nil {
 		return models.CombinedOrderDetails{}, nil
 	}
-	fmt.Println("print", orderDetails.FinalPrice)
 
 	return orderDetails, nil
 }
@@ -306,8 +301,6 @@ WHERE
 		return []models.ItemDetails{}, err
 	}
 
-	fmt.Println("order repo invoice", items)
-
 	return items, nil
 }
 func (repo *orderRepository) GetDetailedOrderThroughId(orderId int) (models.ItemOrderDetails, error) {
@@ -340,7 +333,6 @@ WHERE
 		err = errors.New("error in getting detailed order through id in repository: " + err.Error())
 		return models.ItemOrderDetails{}, err
 	}
-	fmt.Println("body in repo", body.OrderId)
 	return body, nil
 }
 func (i *orderRepository) DebitWallet(userID int, Amount float64) error {
