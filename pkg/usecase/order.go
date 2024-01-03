@@ -35,7 +35,7 @@ func NewOrderUseCase(repo interfaces.OrderRepository, wallet interfaces.WalletRe
 
 func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId int, useWallet bool) (models.OrderDetailsRep, error) {
 	cart, err := i.userUseCase.GetCart(userID)
-	var Finalprice float64
+	var FinalPrice float64
 	if err != nil {
 		return models.OrderDetailsRep{}, err
 	}
@@ -129,8 +129,8 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 				return models.OrderDetailsRep{}, err
 			}
 		}
-		Finalprice = finalprice
-
+		FinalPrice = finalprice
+		fmt.Println("hhhhhhhhhghghghg", FinalPrice)
 		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, Totalamt)
 		if err != nil {
 			return models.OrderDetailsRep{}, err
@@ -162,7 +162,7 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 	Order.Total = int(total)
 	Order.ID = cart.ID
 	Order.PaymentMethod = paymentID
-	Order.FinalPrice = Finalprice
+	Order.FinalPrice = FinalPrice
 
 	return Order, nil
 }
