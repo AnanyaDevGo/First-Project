@@ -36,12 +36,12 @@ type ProductsResponseDisp struct {
 	Image       []string `json:"image"`
 }
 type ProductsResp struct {
-	ID          uint    `json:"id" gorm:"unique;not null"`
-	CategoryID  string  `json:"category_id"`
-	ProductName string  `json:"product_name"`
-	Size        string  `json:"size"`
-	Stock       int     `json:"stock"`
-	Price       float64 `json:"price"`
+	ID          uint     `json:"id" gorm:"unique;not null"`
+	CategoryID  string   `json:"category_id"`
+	ProductName string   `json:"product_name"`
+	Size        string   `json:"size"`
+	Stock       int      `json:"stock"`
+	Price       float64  `json:"price"`
 	Image       []string `json:"image"`
 }
 type MakeOrder struct {
@@ -79,4 +79,7 @@ type ItemDetails struct {
 	Price       float64 `json:"price" `
 	Total       float64 `json:"total_price"`
 	Quantity    int     `json:"quantity"`
+}
+type CatRes struct {
+	Category string `json:"category_name"`
 }

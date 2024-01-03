@@ -11,7 +11,7 @@ type InventoryUseCase interface {
 	ListProducts(int, int) ([]models.ProductsResponse, error)
 	EditInventory(domain.Inventories, int) (domain.Inventories, error)
 	DeleteInventory(id string) error
-	UpdateInventory(productID int, stock int) (models.ProductsResponse, error)
+	UpdateInventory(productID int, stock int) (models.InventoryResponse, error)
 	ShowIndividualProducts(id string) (models.ProductsResponse, error)
 	SearchProductsOnPrefix(prefix string) ([]models.ProductsResponse, error)
 	FilterByCategory(CategoryIdInt int) ([]models.ProductsResponse, error)

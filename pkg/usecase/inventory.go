@@ -126,27 +126,29 @@ func (usecase *inventoryUseCase) DeleteInventory(inventoryID string) error {
 	return nil
 }
 
-func (i inventoryUseCase) UpdateInventory(pid int, stock int) (models.ProductsResponse, error) {
-
+func (i inventoryUseCase) UpdateInventory(pid int, stock int) (models.InventoryResponse, error) {
+	var res models.InventoryResponse
 	if stock <= 0 {
-		return models.ProductsResponse{}, errors.New("invalid input")
+		return models.InventoryResponse{}, errors.New("invalid input")
 	}
 
 	result, err := i.repository.CheckInventory(pid)
 	if err != nil {
-		return models.ProductsResponse{}, err
+		return models.InventoryResponse{}, err
 	}
 
 	if !result {
-		return models.ProductsResponse{}, errors.New("there is no inventory as you mentioned")
+		return models.InventoryResponse{}, errors.New("there is no inventory as you mentioned")
 	}
 
 	newcat, err := i.repository.UpdateInventory(pid, stock)
 	if err != nil {
-		return models.ProductsResponse{}, err
+		return models.InventoryResponse{}, err
 	}
+	res.ProductID = int(newcat.ID)
+	res.Stock = newcat.Stock
 
-	return newcat, err
+	return res, err
 }
 
 func (i *inventoryUseCase) ShowIndividualProducts(id string) (models.ProductsResponse, error) {

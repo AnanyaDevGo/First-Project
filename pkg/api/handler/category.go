@@ -26,7 +26,7 @@ func NewCategoryHandler(usecase services.CategoryUseCase) *CategoryHandler {
 // @Produce json
 // @Tags Admin Category Management
 // @security BearerTokenAuth
-// @Param category body domain.Category true "Category details to be added in JSON format"
+// @Param category body models.CatRes true "Category details to be added in JSON format"
 // @Success 200 {object} response.Response "Successfully added Category"
 // @Failure 400 {object} response.Response "Fields provided are in the wrong format or Could not add the Category"
 // @Router /admin/category [post]

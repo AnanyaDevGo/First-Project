@@ -153,19 +153,7 @@ func (i *InventoryHandler) ListProducts(c *gin.Context) {
 	c.JSON(http.StatusOK, successRes)
 }
 
-// @Summary Edit Inventory
-// @Description Edit details of an existing inventory item.
-// @Accept json
-// @Produce json
-// @security BearerTokenAuth
-// @Tags Admin Product Management
-// @Param inventory_id query int true "ID of the inventory item to edit"
-// @Param body body domain.Inventories true "Updated inventory details in JSON format"
-// @Success 200 {object} response.Response "Inventory item successfully edited"
-// @Failure 400 {object} response.Response "Invalid request format or fields provided in the wrong format"
-// @Failure 404 {object} response.Response "Inventory item not found"
-// @Failure 500 {object} response.Response "Failed to edit the inventory item"
-// @Router /admin/inventories [put]
+
 func (u *InventoryHandler) EditInventory(c *gin.Context) {
 	var inventory domain.Inventories
 
