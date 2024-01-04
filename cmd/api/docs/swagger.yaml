@@ -1,11 +1,4 @@
 definitions:
-  domain.Category:
-    properties:
-      category:
-        type: string
-      id:
-        type: integer
-    type: object
   domain.Coupon:
     properties:
       discount_percentage:
@@ -18,23 +11,6 @@ definitions:
         type: integer
       name:
         type: string
-    type: object
-  domain.Inventories:
-    properties:
-      category:
-        $ref: '#/definitions/domain.Category'
-      category_id:
-        type: integer
-      id:
-        type: integer
-      price:
-        type: number
-      product_name:
-        type: string
-      size:
-        type: string
-      stock:
-        type: integer
     type: object
   models.AddAddress:
     properties:
@@ -77,6 +53,11 @@ definitions:
         type: integer
       quantity:
         type: integer
+    type: object
+  models.CatRes:
+    properties:
+      category_name:
+        type: string
     type: object
   models.CategorytOfferResp:
     properties:
@@ -315,7 +296,7 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/domain.Category'
+          $ref: '#/definitions/models.CatRes'
       produces:
       - application/json
       responses:
@@ -572,46 +553,6 @@ paths:
       security:
       - BearerTokenAuth: []
       summary: Add Inventory
-      tags:
-      - Admin Product Management
-    put:
-      consumes:
-      - application/json
-      description: Edit details of an existing inventory item.
-      parameters:
-      - description: ID of the inventory item to edit
-        in: query
-        name: inventory_id
-        required: true
-        type: integer
-      - description: Updated inventory details in JSON format
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/domain.Inventories'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Inventory item successfully edited
-          schema:
-            $ref: '#/definitions/response.Response'
-        "400":
-          description: Invalid request format or fields provided in the wrong format
-          schema:
-            $ref: '#/definitions/response.Response'
-        "404":
-          description: Inventory item not found
-          schema:
-            $ref: '#/definitions/response.Response'
-        "500":
-          description: Failed to edit the inventory item
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - BearerTokenAuth: []
-      summary: Edit Inventory
       tags:
       - Admin Product Management
   /admin/inventories/stock:

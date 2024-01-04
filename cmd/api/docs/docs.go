@@ -157,7 +157,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Category"
+                            "$ref": "#/definitions/models.CatRes"
                         }
                     }
                 ],
@@ -408,68 +408,6 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Failed to retrieve the product list",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "BearerTokenAuth": []
-                    }
-                ],
-                "description": "Edit details of an existing inventory item.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin Product Management"
-                ],
-                "summary": "Edit Inventory",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID of the inventory item to edit",
-                        "name": "inventory_id",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "description": "Updated inventory details in JSON format",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.Inventories"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Inventory item successfully edited",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request format or fields provided in the wrong format",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Inventory item not found",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Failed to edit the inventory item",
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
@@ -2553,17 +2491,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.Category": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                }
-            }
-        },
         "domain.Coupon": {
             "type": "object",
             "properties": {
@@ -2581,32 +2508,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "domain.Inventories": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "$ref": "#/definitions/domain.Category"
-                },
-                "category_id": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "price": {
-                    "type": "number"
-                },
-                "product_name": {
-                    "type": "string"
-                },
-                "size": {
-                    "type": "string"
-                },
-                "stock": {
-                    "type": "integer"
                 }
             }
         },
@@ -2668,6 +2569,14 @@ const docTemplate = `{
                 },
                 "quantity": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.CatRes": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
                 }
             }
         },
