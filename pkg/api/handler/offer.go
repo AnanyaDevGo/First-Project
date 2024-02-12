@@ -140,7 +140,7 @@ func (of *OfferHandler) GetCategoryOffer(c *gin.Context) {
 		return
 	}
 
-	successRes := response.ClientResponse(http.StatusOK, "Successfully got all offers", categories, nil)
+	successRes := response.ClientResponse(http.StatusOK, "Successfully got all offers!!!", categories, nil)
 	c.JSON(http.StatusOK, successRes)
 
 }

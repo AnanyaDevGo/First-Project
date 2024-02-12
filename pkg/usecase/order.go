@@ -130,7 +130,6 @@ func (i *orderUseCase) OrderItemsFromCart(userID, addressID, paymentID, couponId
 			}
 		}
 		FinalPrice = finalprice
-		fmt.Println("hhhhhhhhhghghghg", FinalPrice)
 		orderID, err := i.orderRepository.OrderItems(userID, addressID, paymentID, Totalamt)
 		if err != nil {
 			return models.OrderDetailsRep{}, err
