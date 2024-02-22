@@ -2,6 +2,8 @@ package repository
 
 import (
 	//"CrocsClub/pkg/utils/models"
+	"CrocsClub/pkg/utils/models"
+	"errors"
 	"regexp"
 	"testing"
 
@@ -94,6 +96,47 @@ func TestCheckUserAvailability(t *testing.T) {
 // 		assert.Equal(t, tt.result, result)
 // 	}
 // }
+
+func TestFindUserByEmail(t *testing.T) {
+	tests := []struct {
+		name        string
+		userLogin   models.UserLogin
+		stub        func(mock sqlmock.Sqlmock)
+		expected    models.UserSignInResponse
+		expectedErr error
+	}{
+		{
+			name: "user does not exist",
+			userLogin: models.UserLogin{
+				Email:    "ananya@gmail.com",
+				Password: "password123",
+			},
+			stub: func(mock sqlmock.Sqlmock) {
+				rows := sqlmock.NewRows([]string{"id", "name", "email", "phone", "password"})
+				mock.ExpectQuery("SELECT \\* FROM users where email = 'ananya@gmail.com' and blocked = false").WillReturnRows(rows)
+
+				mock.ExpectQuery("SELECT \\* FROM users where email = \\? and blocked = false").WithArgs("ananya@gmail.com").WillReturnError(errors.New("database error"))
+			},
+			expected:    models.UserSignInResponse{},
+			expectedErr: errors.New("error checking user details"),
+		},
+	}
+	for _, tt := range tests {
+		mockDB, mock, _ := sqlmock.New()
+		DB, _ := gorm.Open(postgres.New(postgres.Config{
+			Conn: mockDB,
+		}), &gorm.Config{})
+		c := userDataBase{DB}
+
+		tt.stub(mock)
+
+		result, err := c.FindUserByEmail(tt.userLogin)
+
+		assert.Equal(t, tt.expectedErr, err)
+		assert.Equal(t, tt.expected, result)
+	}
+}
+
 func TestUserBlockStatus(t *testing.T) {
 	tests := []struct {
 		name        string
