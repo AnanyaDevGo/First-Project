@@ -26,22 +26,22 @@ func Test_UserSignUp(t *testing.T) {
 		"valid Signup": {
 			input: models.UserDetails{
 				Name:            "anu",
-				Email:           "rahul@gmail.com",
-				Phone:           "7012483965",
-				Password:        "54321",
-				ConfirmPassword: "54321",
+				Email:           "anu@gmail.com",
+				Phone:           "8012483965",
+				Password:        "503321",
+				ConfirmPassword: "503321",
 			},
 			buildstub: func(useCaseMock *mock_usecase.MockUserUseCase, sighupData models.UserDetails) {
-				// err := validator.New().Struct(sighupData)
-				// if err != nil {
-				// 	fmt.Println("validation failed")
-				// }
+				err := validator.New().Struct(sighupData)
+				if err != nil {
+					fmt.Println("validation failed")
+				}
 				useCaseMock.EXPECT().UserSignUp(sighupData).Times(1).Return(models.TokenUsers{
 					Users: models.UserDetailsResponse{
 						Id:    1,
-						Name:  "rahul",
-						Email: "rahul@gmail.com",
-						Phone: "7012483965",
+						Name:  "anu",
+						Email: "anu@gmail.com",
+						Phone: "8012483965",
 					},
 					Token: "aksjgnal.fiugliagbldfgbldf.gdbladfjnb",
 				}, nil)
@@ -52,11 +52,11 @@ func Test_UserSignUp(t *testing.T) {
 		},
 		"user could not sign up": {
 			input: models.UserDetails{
-				Name:            "rahul",
-				Email:           "rahul@gmail.com",
-				Phone:           "7012483965",
-				Password:        "54321",
-				ConfirmPassword: "54321",
+				Name:            "anu",
+				Email:           "anu@gmail.com",
+				Phone:           "8012483965",
+				Password:        "503321",
+				ConfirmPassword: "503321",
 			},
 			buildstub: func(useCaseMock *mock_usecase.MockUserUseCase, signupData models.UserDetails) {
 				err := validator.New().Struct(signupData)

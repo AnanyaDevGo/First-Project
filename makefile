@@ -17,5 +17,5 @@ mock: ##make mock files using mockgen
 	mockgen -source pkg/repository/interfaces/order.go -destination pkg/repository/mock/order_mock.go -package mock
 	mockgen -source pkg/repository/interfaces/otp.go -destination pkg/repository/mock/otp_mock.go -package mock
 	mockgen -source pkg/repository/interfaces/Inventory.go -destination pkg/repository/mock/inventory_mock.go -package mock
-	mockgen 
+
 
