@@ -287,7 +287,7 @@ func (u *userUseCase) GetUserDetails(id int) (models.UserDetailsResponse, error)
 	if err != nil {
 		return models.UserDetailsResponse{}, errors.New("error in getting details")
 	}
-	return details, err
+	return details, nil
 }
 
 func (u *userUseCase) Edit(id int, user models.Edit) (models.Edit, error) {
