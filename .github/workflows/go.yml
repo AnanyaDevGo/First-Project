@@ -21,7 +21,7 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-      name: Deploy to AWS EC2
+    - name: Deploy to AWS EC2
       uses: appleboy/ssh-action@master
       with:
           host: ${{secrets.EC2_PUBLIC_IP}}
