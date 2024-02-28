@@ -41,7 +41,7 @@ func NewAdminHandler(usecase services.AdminUseCase, helper interfaces.Helper) *A
 func (ad *AdminHandler) LoginHandler(c *gin.Context) {
 	var adminDetails models.AdminLogin
 	if err := c.BindJSON(&adminDetails); err != nil {
-		errRes := response.ClientResponse(http.StatusBadRequest, "details not in correct format !", nil, err.Error())
+		errRes := response.ClientResponse(http.StatusBadRequest, "details not in correct format", nil, err.Error())
 		c.JSON(http.StatusBadRequest, errRes)
 		return
 	}
