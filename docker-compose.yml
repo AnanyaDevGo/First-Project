@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: crocsclub
+    networks:
+      - mydb
+    volumes:
+      - database-postgres:/var/lib/postgresql/data
+
+ 
+
+  crocsclubgo:
+    image: crocsclub
+    restart: on-failure
+    environment:
+      DB_HOST: "postgres"
+      DB_NAME: "crocsclub"
+      DB_USER: "postgres"
+      DB_PORT: "5432"
+      DB_PASSWORD: 12345
+    depends_on:
+      - postgres
+    networks:
+      - mydb
+    ports:
+      - "8080:8080"
+
+volumes:
+  database-postgres:
+
+networks:
+  mydb:
+    driver: bridge
