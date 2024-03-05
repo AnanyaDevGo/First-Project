@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crocsclub
+  labels:
+    app: crocsclub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crocsclub
+  template:
+    metadata:
+      labels:
+        app: crocsclub
+    spec:
+      containers:
+        - name: crocsclub
+          image: ananyaep90/crocsclub:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_USER
+              value: saju
+            - name: DB_PASSWORD
+              value: saju
+            - name: DB_NAME
+              value: saju
+            - name: DB_HOST
+              value: postgres-service
+            - name: DB_PORT
+              value: "5432"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crocsclub-service
+spec:
+  selector:
+    app: crocsclub
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 30001
